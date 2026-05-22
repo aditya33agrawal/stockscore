@@ -1,0 +1,422 @@
+{
+  "slug": "it-services",
+  "name": "IT Services",
+  "refreshed_at": "2026-05-20T00:00:00Z",
+  "companies_count": 5,
+  "description": "Large-cap Indian IT exporters. Cash-rich, dividend-paying, currently navigating a generative-AI driven demand reset.",
+  "analyst_note": "Sample data — to be regenerated from live pipeline. TCS leads on profitability and dividend, Infosys on balance-sheet quality, and LTIM is the growth bet despite richer valuation.",
+  "sector_stats": {
+    "median_pe": 27.5,
+    "median_roce": 35.2,
+    "median_opm": 23.1,
+    "median_de": 0.05,
+    "median_dividend_yield": 1.9
+  },
+  "companies": [
+    {
+      "slug": "tcs",
+      "name": "Tata Consultancy Services Ltd",
+      "ticker": "TCS",
+      "cmp": 3920,
+      "final_score": 74.0,
+      "raw_total": 740,
+      "rank": 1,
+      "raw": { "pe": 29.1, "industry_pe": 27.5, "pbv": 14.2, "roe": 50.0, "roce": 65.0, "opm": 26.0, "debt_to_equity": 0.08, "current_ratio": 2.5, "dividend_yield": 1.9, "pledged_pct": 0, "sales_5y_cagr": 9, "profit_5y_cagr": 10 },
+      "categories": [
+        { "name": "Valuation", "earned": 50, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 15, "detail": "PE/IndPE=1.06 (≈1)" },
+          { "label": "Price to Book Value", "points": -10, "detail": "PBV=14.2" },
+          { "label": "Intrinsic Value vs CMP", "points": 15, "detail": "CMP/IV=0.95" },
+          { "label": "PEG Ratio", "points": 30, "detail": "PEG=1.4" }
+        ]},
+        { "name": "Profitability", "earned": 120, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 30, "detail": "OPM≈26% (top quartile)" },
+          { "label": "ROE (Last Year)", "points": 30, "detail": "ROE=50.0%" },
+          { "label": "ROCE (Last Year)", "points": 30, "detail": "ROCE=65.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 30, "detail": "OPM expanding 24→26%" }
+        ]},
+        { "name": "Growth", "earned": 70, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 10, "detail": "Sales 5Y=9%" },
+          { "label": "Profit CAGR 5Y", "points": 10, "detail": "Profit 5Y=10%" },
+          { "label": "TTM Sales vs 5Y avg", "points": 10, "detail": "TTM 8% ≈ 5Y 9%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 12% > 5Y 10%" },
+          { "label": "EPS CAGR 5Y", "points": 15, "detail": "EPS 5Y=12%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 70, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 10, "detail": "QoQ NP +4%" },
+          { "label": "YoY Net Profit", "points": 20, "detail": "YoY NP +11%" },
+          { "label": "Sales 4-qtr YoY", "points": 20, "detail": "4/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 20, "detail": "OPM YoY +2.1pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 85, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 30, "detail": "D/E=0.08" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": 20, "detail": "CR=2.5" },
+          { "label": "Reserves growth (5Y)", "points": 10, "detail": "reserves growing slowly" }
+        ]},
+        { "name": "Cash Flow", "earned": 100, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=95%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 60, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable 72.4%" },
+          { "label": "FII trend (4Q)", "points": 5, "detail": "FII flat" },
+          { "label": "DII trend (4Q)", "points": 20, "detail": "DII +1.1pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 65, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 20, "detail": "DY=1.9%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year (5/5)" },
+          { "label": "Dividend Payout %", "points": 20, "detail": "payout 60% (high)" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 60, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 20, "detail": "70→62 improving" },
+          { "label": "Inventory Days trend (3Y)", "points": 20, "detail": "asset-light" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 20, "detail": "CCC=58 (top quartile)" },
+          { "label": "Working Capital Days trend", "points": 0, "detail": "flat" }
+        ]},
+        { "name": "Price & Technical", "earned": 60, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 20, "detail": "12% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 20, "detail": "Price 5Y 8% ≈ Sales 9%" },
+          { "label": "Up from 52w low", "points": 20, "detail": "9% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "ROCE (Last Year)", "category": "Profitability", "points": 30 },
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 }
+      ],
+      "weaknesses": [
+        { "label": "Price to Book Value", "category": "Valuation", "points": -10 },
+        { "label": "Dividend Payout %", "category": "Dividend", "points": 20 },
+        { "label": "QoQ Net Profit", "category": "Quarterly Momentum", "points": 10 }
+      ]
+    },
+    {
+      "slug": "infosys",
+      "name": "Infosys Ltd",
+      "ticker": "INFY",
+      "cmp": 1495,
+      "final_score": 70.0,
+      "raw_total": 700,
+      "rank": 2,
+      "raw": { "pe": 24.8, "industry_pe": 27.5, "pbv": 7.1, "roe": 30.0, "roce": 39.0, "opm": 21.5, "debt_to_equity": 0.10, "current_ratio": 2.1, "dividend_yield": 2.6, "pledged_pct": 0, "sales_5y_cagr": 11, "profit_5y_cagr": 12 },
+      "categories": [
+        { "name": "Valuation", "earned": 70, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.90" },
+          { "label": "Price to Book Value", "points": 5, "detail": "PBV=7.1" },
+          { "label": "Intrinsic Value vs CMP", "points": 15, "detail": "CMP/IV=0.92" },
+          { "label": "PEG Ratio", "points": 20, "detail": "PEG=1.2" }
+        ]},
+        { "name": "Profitability", "earned": 100, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 20, "detail": "OPM≈21.5% (2nd quartile)" },
+          { "label": "ROE (Last Year)", "points": 30, "detail": "ROE=30.0%" },
+          { "label": "ROCE (Last Year)", "points": 30, "detail": "ROCE=39.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 20, "detail": "OPM flat 21→22%" }
+        ]},
+        { "name": "Growth", "earned": 85, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 18, "detail": "Sales 5Y=11%" },
+          { "label": "Profit CAGR 5Y", "points": 12, "detail": "Profit 5Y=12%" },
+          { "label": "TTM Sales vs 5Y avg", "points": 10, "detail": "TTM 10% ≈ 5Y 11%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 14% > 5Y 12%" },
+          { "label": "EPS CAGR 5Y", "points": 20, "detail": "EPS 5Y=14%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 60, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 10, "detail": "QoQ NP +5%" },
+          { "label": "YoY Net Profit", "points": 20, "detail": "YoY NP +12%" },
+          { "label": "Sales 4-qtr YoY", "points": 20, "detail": "4/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 10, "detail": "OPM YoY +0.5pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 90, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 30, "detail": "D/E=0.10" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": 20, "detail": "CR=2.1" },
+          { "label": "Reserves growth (5Y)", "points": 15, "detail": "reserves growing" }
+        ]},
+        { "name": "Cash Flow", "earned": 100, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=98%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 55, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable 14.8%" },
+          { "label": "FII trend (4Q)", "points": 5, "detail": "FII flat" },
+          { "label": "DII trend (4Q)", "points": 15, "detail": "DII +0.8pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 70, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 20, "detail": "DY=2.6%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year (5/5)" },
+          { "label": "Dividend Payout %", "points": 25, "detail": "payout 58%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 50, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 10, "detail": "65→64 stable" },
+          { "label": "Inventory Days trend (3Y)", "points": 20, "detail": "asset-light" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 10, "detail": "CCC=61 (2nd)" },
+          { "label": "Working Capital Days trend", "points": 10, "detail": "stable" }
+        ]},
+        { "name": "Price & Technical", "earned": 20, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 10, "detail": "8% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 10, "detail": "Price ≈ Sales CAGR" },
+          { "label": "Up from 52w low", "points": 0, "detail": "30% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 },
+        { "label": "ROE (Last Year)", "category": "Profitability", "points": 30 }
+      ],
+      "weaknesses": [
+        { "label": "Price to Book Value", "category": "Valuation", "points": 5 },
+        { "label": "Up from 52w low", "category": "Price & Technical", "points": 0 },
+        { "label": "Down from 52w high", "category": "Price & Technical", "points": 10 }
+      ]
+    },
+    {
+      "slug": "hcl-tech",
+      "name": "HCL Technologies Ltd",
+      "ticker": "HCLTECH",
+      "cmp": 1620,
+      "final_score": 68.0,
+      "raw_total": 680,
+      "rank": 3,
+      "raw": { "pe": 25.6, "industry_pe": 27.5, "pbv": 6.4, "roe": 25.0, "roce": 32.0, "opm": 21.0, "debt_to_equity": 0.08, "current_ratio": 2.3, "dividend_yield": 3.4, "pledged_pct": 0, "sales_5y_cagr": 12, "profit_5y_cagr": 10 },
+      "categories": [
+        { "name": "Valuation", "earned": 65, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.93" },
+          { "label": "Price to Book Value", "points": 5, "detail": "PBV=6.4" },
+          { "label": "Intrinsic Value vs CMP", "points": 15, "detail": "CMP/IV=0.95" },
+          { "label": "PEG Ratio", "points": 15, "detail": "PEG=1.6" }
+        ]},
+        { "name": "Profitability", "earned": 90, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 20, "detail": "OPM≈21% (2nd quartile)" },
+          { "label": "ROE (Last Year)", "points": 30, "detail": "ROE=25.0%" },
+          { "label": "ROCE (Last Year)", "points": 30, "detail": "ROCE=32.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 10, "detail": "OPM flat" }
+        ]},
+        { "name": "Growth", "earned": 85, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 18, "detail": "Sales 5Y=12%" },
+          { "label": "Profit CAGR 5Y", "points": 10, "detail": "Profit 5Y=10%" },
+          { "label": "TTM Sales vs 5Y avg", "points": 10, "detail": "TTM 11% ≈ 5Y" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 13% > 5Y" },
+          { "label": "EPS CAGR 5Y", "points": 22, "detail": "EPS 5Y=11%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 60, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 10, "detail": "QoQ NP +3%" },
+          { "label": "YoY Net Profit", "points": 20, "detail": "YoY NP +13%" },
+          { "label": "Sales 4-qtr YoY", "points": 20, "detail": "4/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 10, "detail": "OPM YoY +0.4pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 85, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 30, "detail": "D/E=0.08" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": 20, "detail": "CR=2.3" },
+          { "label": "Reserves growth (5Y)", "points": 10, "detail": "reserves growing" }
+        ]},
+        { "name": "Cash Flow", "earned": 95, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=93%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 25, "detail": "CFO stable" }
+        ]},
+        { "name": "Shareholding", "earned": 50, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable 60.8%" },
+          { "label": "FII trend (4Q)", "points": 5, "detail": "FII flat" },
+          { "label": "DII trend (4Q)", "points": 10, "detail": "DII +0.4pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 80, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 30, "detail": "DY=3.4%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year" },
+          { "label": "Dividend Payout %", "points": 25, "detail": "payout 65%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 50, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 10, "detail": "stable" },
+          { "label": "Inventory Days trend (3Y)", "points": 20, "detail": "asset-light" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 10, "detail": "CCC=60 (2nd)" },
+          { "label": "Working Capital Days trend", "points": 10, "detail": "stable" }
+        ]},
+        { "name": "Price & Technical", "earned": 20, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 10, "detail": "10% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 10, "detail": "Price ≈ Sales" },
+          { "label": "Up from 52w low", "points": 0, "detail": "32% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 },
+        { "label": "Dividend Yield", "category": "Dividend", "points": 30 }
+      ],
+      "weaknesses": [
+        { "label": "Price to Book Value", "category": "Valuation", "points": 5 },
+        { "label": "Up from 52w low", "category": "Price & Technical", "points": 0 },
+        { "label": "OPM trend (last 4 qtrs)", "category": "Profitability", "points": 10 }
+      ]
+    },
+    {
+      "slug": "wipro",
+      "name": "Wipro Ltd",
+      "ticker": "WIPRO",
+      "cmp": 268,
+      "final_score": 54.0,
+      "raw_total": 540,
+      "rank": 4,
+      "raw": { "pe": 22.4, "industry_pe": 27.5, "pbv": 3.1, "roe": 14.0, "roce": 17.0, "opm": 17.0, "debt_to_equity": 0.18, "current_ratio": 2.0, "dividend_yield": 0.4, "pledged_pct": 0, "sales_5y_cagr": 6, "profit_5y_cagr": 4 },
+      "categories": [
+        { "name": "Valuation", "earned": 80, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.81" },
+          { "label": "Price to Book Value", "points": 15, "detail": "PBV=3.1" },
+          { "label": "Intrinsic Value vs CMP", "points": 15, "detail": "CMP/IV=0.93" },
+          { "label": "PEG Ratio", "points": 20, "detail": "PEG=1.8" }
+        ]},
+        { "name": "Profitability", "earned": 55, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 10, "detail": "OPM≈17% (3rd quartile)" },
+          { "label": "ROE (Last Year)", "points": 10, "detail": "ROE=14.0%" },
+          { "label": "ROCE (Last Year)", "points": 20, "detail": "ROCE=17.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 15, "detail": "OPM stable" }
+        ]},
+        { "name": "Growth", "earned": 35, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 10, "detail": "Sales 5Y=6%" },
+          { "label": "Profit CAGR 5Y", "points": 5, "detail": "Profit 5Y=4%" },
+          { "label": "TTM Sales vs 5Y avg", "points": 0, "detail": "TTM 4% < 5Y 6%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 10, "detail": "TTM 6% ≈ 5Y" },
+          { "label": "EPS CAGR 5Y", "points": 10, "detail": "EPS 5Y=5%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 40, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 10, "detail": "QoQ NP +2%" },
+          { "label": "YoY Net Profit", "points": 10, "detail": "YoY NP +6%" },
+          { "label": "Sales 4-qtr YoY", "points": 10, "detail": "2/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 10, "detail": "OPM YoY +0.3pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 75, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 20, "detail": "D/E=0.18" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": 20, "detail": "CR=2.0" },
+          { "label": "Reserves growth (5Y)", "points": 10, "detail": "reserves growing" }
+        ]},
+        { "name": "Cash Flow", "earned": 100, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=97%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 55, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable 72.9%" },
+          { "label": "FII trend (4Q)", "points": 5, "detail": "FII flat" },
+          { "label": "DII trend (4Q)", "points": 15, "detail": "DII +0.5pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 35, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 5, "detail": "DY=0.4%" },
+          { "label": "Dividend Payout consistency", "points": 15, "detail": "paid 3/5" },
+          { "label": "Dividend Payout %", "points": 15, "detail": "payout 14%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 35, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 10, "detail": "stable" },
+          { "label": "Inventory Days trend (3Y)", "points": 20, "detail": "asset-light" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 0, "detail": "CCC=70 (3rd)" },
+          { "label": "Working Capital Days trend", "points": 5, "detail": "marginal change" }
+        ]},
+        { "name": "Price & Technical", "earned": 30, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 10, "detail": "15% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 10, "detail": "Price ≈ Sales" },
+          { "label": "Up from 52w low", "points": 10, "detail": "18% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 },
+        { "label": "P/E vs Industry PE", "category": "Valuation", "points": 30 }
+      ],
+      "weaknesses": [
+        { "label": "Dividend Yield", "category": "Dividend", "points": 5 },
+        { "label": "Profit CAGR 5Y", "category": "Growth", "points": 5 },
+        { "label": "TTM Sales vs 5Y avg", "category": "Growth", "points": 0 }
+      ]
+    },
+    {
+      "slug": "ltimindtree",
+      "name": "LTIMindtree Ltd",
+      "ticker": "LTIM",
+      "cmp": 5320,
+      "final_score": 65.0,
+      "raw_total": 650,
+      "rank": 5,
+      "raw": { "pe": 34.2, "industry_pe": 27.5, "pbv": 6.8, "roe": 22.0, "roce": 27.0, "opm": 17.5, "debt_to_equity": 0.06, "current_ratio": 2.4, "dividend_yield": 1.2, "pledged_pct": 0, "sales_5y_cagr": 19, "profit_5y_cagr": 21 },
+      "categories": [
+        { "name": "Valuation", "earned": 45, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 0, "detail": "PE/IndPE=1.24" },
+          { "label": "Price to Book Value", "points": 5, "detail": "PBV=6.8" },
+          { "label": "Intrinsic Value vs CMP", "points": 15, "detail": "CMP/IV=0.97" },
+          { "label": "PEG Ratio", "points": 25, "detail": "PEG=1.0" }
+        ]},
+        { "name": "Profitability", "earned": 80, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 10, "detail": "OPM≈17.5% (3rd quartile)" },
+          { "label": "ROE (Last Year)", "points": 30, "detail": "ROE=22.0%" },
+          { "label": "ROCE (Last Year)", "points": 30, "detail": "ROCE=27.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 10, "detail": "OPM flat" }
+        ]},
+        { "name": "Growth", "earned": 110, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 30, "detail": "Sales 5Y=19%" },
+          { "label": "Profit CAGR 5Y", "points": 30, "detail": "Profit 5Y=21%" },
+          { "label": "TTM Sales vs 5Y avg", "points": 0, "detail": "TTM 12% < 5Y 19%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 18% < 5Y but accelerating" },
+          { "label": "EPS CAGR 5Y", "points": 25, "detail": "EPS 5Y=22%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 60, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 10, "detail": "QoQ NP +6%" },
+          { "label": "YoY Net Profit", "points": 20, "detail": "YoY NP +14%" },
+          { "label": "Sales 4-qtr YoY", "points": 20, "detail": "4/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 10, "detail": "OPM YoY +0.6pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 80, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 30, "detail": "D/E=0.06" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": 20, "detail": "CR=2.4" },
+          { "label": "Reserves growth (5Y)", "points": 5, "detail": "reserves growing (slow)" }
+        ]},
+        { "name": "Cash Flow", "earned": 85, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 30, "detail": "CFO/OP avg=82%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 20, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 50, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable 68.6%" },
+          { "label": "FII trend (4Q)", "points": 5, "detail": "FII flat" },
+          { "label": "DII trend (4Q)", "points": 10, "detail": "DII +0.3pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 50, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 10, "detail": "DY=1.2%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year" },
+          { "label": "Dividend Payout %", "points": 15, "detail": "payout 38%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 50, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 10, "detail": "stable" },
+          { "label": "Inventory Days trend (3Y)", "points": 20, "detail": "asset-light" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 10, "detail": "CCC=58 (2nd)" },
+          { "label": "Working Capital Days trend", "points": 10, "detail": "stable" }
+        ]},
+        { "name": "Price & Technical", "earned": 40, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 20, "detail": "21% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 10, "detail": "Price > Sales" },
+          { "label": "Up from 52w low", "points": 10, "detail": "18% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "Sales CAGR 5Y", "category": "Growth", "points": 30 },
+        { "label": "Profit CAGR 5Y", "category": "Growth", "points": 30 },
+        { "label": "ROCE (Last Year)", "category": "Profitability", "points": 30 }
+      ],
+      "weaknesses": [
+        { "label": "P/E vs Industry PE", "category": "Valuation", "points": 0 },
+        { "label": "Price to Book Value", "category": "Valuation", "points": 5 },
+        { "label": "TTM Sales vs 5Y avg", "category": "Growth", "points": 0 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+Pro:wght@400;600&display=swap");
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background: #070B14;
+  color: #EEF2F7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #10B981;
+  color: #070B14;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+.serif {
+  font-family: "Source Serif Pro", Georgia, serif;
+}
+
+.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #1A2233; border-radius: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #2A3447; }
+
+/* Animated grid background for the hero */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+}

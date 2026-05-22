@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "oil-refining",
+    "name": "Oil & Refining",
+    "companies_count": 3,
+    "refreshed_at": "2026-05-18T00:00:00Z",
+    "description": "Indian downstream PSU oil marketing and refining companies. Cyclical earnings driven by crude prices and GRMs.",
+    "top_company": "BPCL",
+    "top_score": 67.0
+  },
+  {
+    "slug": "it-services",
+    "name": "IT Services",
+    "companies_count": 5,
+    "refreshed_at": "2026-05-20T00:00:00Z",
+    "description": "Large-cap Indian IT exporters. Cash-rich, dividend-paying, currently navigating a generative-AI driven demand reset.",
+    "top_company": "TCS",
+    "top_score": 74.0
+  },
+  {
+    "slug": "private-banks",
+    "name": "Private Banks",
+    "companies_count": 5,
+    "refreshed_at": "2026-05-20T00:00:00Z",
+    "description": "Top private-sector banks by market cap. Watch ROA, NIM compression, and deposit growth.",
+    "top_company": "HDFCBANK",
+    "top_score": 71.0
+  },
+  {
+    "slug": "fmcg",
+    "name": "FMCG",
+    "companies_count": 5,
+    "refreshed_at": "2026-05-20T00:00:00Z",
+    "description": "Consumer staples giants. Premium valuations, defensive cash flows, and slow but steady growth.",
+    "top_company": "ITC",
+    "top_score": 73.0
+  },
+  {
+    "slug": "cement",
+    "name": "Cement",
+    "companies_count": 5,
+    "refreshed_at": "2026-05-20T00:00:00Z",
+    "description": "Indian cement majors. Cyclical, capex-heavy, currently consolidating after a wave of M&A.",
+    "top_company": "ULTRACEMCO",
+    "top_score": 68.0
+  }
+]

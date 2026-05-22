@@ -1,0 +1,280 @@
+{
+  "slug": "oil-refining",
+  "name": "Oil & Refining",
+  "refreshed_at": "2026-05-18T00:00:00Z",
+  "companies_count": 3,
+  "description": "Indian downstream PSU oil marketing and refining companies. Cyclical earnings driven by crude prices and gross refining margins (GRMs).",
+  "analyst_note": "All three OMCs print strong cash flow and look statistically cheap, but working-capital efficiency is the consistent drag. BPCL leads on profitability, HPCL on quarterly momentum, IOC on raw size but lags on returns.",
+  "sector_stats": {
+    "median_pe": 9.2,
+    "median_roce": 14.1,
+    "median_opm": 8.2,
+    "median_de": 0.74,
+    "median_dividend_yield": 5.3
+  },
+  "companies": [
+    {
+      "slug": "bharat-petroleum",
+      "name": "Bharat Petroleum Corporation Ltd",
+      "ticker": "BPCL",
+      "cmp": 312.5,
+      "final_score": 67.0,
+      "raw_total": 670,
+      "rank": 1,
+      "classification": "PSU",
+      "assumptions": ["Classified as PSU — promoter trend factor neutralised."],
+      "raw": {
+        "pe": 8.2, "industry_pe": 24.1, "pbv": 1.30, "roe": 17.0, "roce": 16.0,
+        "opm": 8.8, "debt_to_equity": 0.56, "current_ratio": 0.86,
+        "dividend_yield": 6.2, "pledged_pct": 0,
+        "sales_5y_cagr": 9, "profit_5y_cagr": 25
+      },
+      "categories": [
+        { "name": "Valuation", "earned": 110, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.34 (<0.7)" },
+          { "label": "Price to Book Value", "points": 15, "detail": "PBV=1.30" },
+          { "label": "Intrinsic Value vs CMP", "points": 35, "detail": "CMP/IV=0.60" },
+          { "label": "PEG Ratio", "points": 30, "detail": "PEG=0.61" }
+        ]},
+        { "name": "Profitability", "earned": 85, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 20, "detail": "OPM≈8.8% (2nd quartile)" },
+          { "label": "ROE (Last Year)", "points": 20, "detail": "ROE=17.0%" },
+          { "label": "ROCE (Last Year)", "points": 20, "detail": "ROCE=16.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 25, "detail": "OPM expanding 7→10%" }
+        ]},
+        { "name": "Growth", "earned": 80, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 10, "detail": "Sales 5Y=9%" },
+          { "label": "Profit CAGR 5Y", "points": 30, "detail": "Profit 5Y=25%" },
+          { "label": "TTM Sales vs 5Y avg", "points": -10, "detail": "TTM 0% < 5Y 9%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 78% > 5Y 25%" },
+          { "label": "EPS CAGR 5Y", "points": 25, "detail": "EPS 5Y=25%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 80, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 20, "detail": "QoQ NP +16%" },
+          { "label": "YoY Net Profit", "points": 30, "detail": "YoY NP +89%" },
+          { "label": "Sales 4-qtr YoY", "points": 10, "detail": "2/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 20, "detail": "OPM YoY +3.0pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 35, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 20, "detail": "D/E=0.56" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": -15, "detail": "CR=0.86" },
+          { "label": "Reserves growth (5Y)", "points": 5, "detail": "reserves stagnant" }
+        ]},
+        { "name": "Cash Flow", "earned": 100, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=110%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 40, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 0, "detail": "PSU — promoter trend neutralised" },
+          { "label": "FII trend (4Q)", "points": 25, "detail": "FII +4.12pp" },
+          { "label": "DII trend (4Q)", "points": -5, "detail": "DII -3.66pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 80, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 30, "detail": "DY=6.2%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year (5/5)" },
+          { "label": "Dividend Payout %", "points": 25, "detail": "payout 32%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 0, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": -10, "detail": "5→8 worsening" },
+          { "label": "Inventory Days trend (3Y)", "points": -10, "detail": "32→43 worsening" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 0, "detail": "CCC=22 (3rd)" },
+          { "label": "Working Capital Days trend", "points": 20, "detail": "-20→-27 improving" }
+        ]},
+        { "name": "Price & Technical", "earned": 60, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 20, "detail": "28% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 20, "detail": "Price 5Y 5% < Sales 5Y 9%" },
+          { "label": "Up from 52w low", "points": 20, "detail": "5% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "Intrinsic Value vs CMP", "category": "Valuation", "points": 35 },
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 }
+      ],
+      "weaknesses": [
+        { "label": "Current Ratio", "category": "Balance Sheet", "points": -15 },
+        { "label": "TTM Sales vs 5Y avg", "category": "Growth", "points": -10 },
+        { "label": "Debtor Days trend (3Y)", "category": "Operational Efficiency", "points": -10 }
+      ]
+    },
+    {
+      "slug": "hindustan-petroleum",
+      "name": "Hindustan Petroleum Corporation Ltd",
+      "ticker": "HINDPETRO",
+      "cmp": 365.2,
+      "final_score": 62.0,
+      "raw_total": 620,
+      "rank": 2,
+      "classification": "PSU",
+      "raw": {
+        "pe": 7.1, "industry_pe": 24.1, "pbv": 1.16, "roe": 31.0, "roce": 22.0,
+        "opm": 7.0, "debt_to_equity": 0.85, "current_ratio": 0.64,
+        "dividend_yield": 2.9, "pledged_pct": 0,
+        "sales_5y_cagr": 14, "profit_5y_cagr": 11
+      },
+      "categories": [
+        { "name": "Valuation", "earned": 110, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.29 (<0.7)" },
+          { "label": "Price to Book Value", "points": 15, "detail": "PBV=1.16" },
+          { "label": "Intrinsic Value vs CMP", "points": 35, "detail": "CMP/IV=0.66" },
+          { "label": "PEG Ratio", "points": 30, "detail": "PEG=0.06" }
+        ]},
+        { "name": "Profitability", "earned": 60, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": -10, "detail": "OPM≈7.0% (bottom quartile)" },
+          { "label": "ROE (Last Year)", "points": 30, "detail": "ROE=31.0%" },
+          { "label": "ROCE (Last Year)", "points": 30, "detail": "ROCE=22.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 10, "detail": "OPM flat 7→8%" }
+        ]},
+        { "name": "Growth", "earned": 60, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 18, "detail": "Sales 5Y=14%" },
+          { "label": "Profit CAGR 5Y", "points": 12, "detail": "Profit 5Y=11%" },
+          { "label": "TTM Sales vs 5Y avg", "points": -10, "detail": "TTM 2% < 5Y 14%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 167% > 5Y 11%" },
+          { "label": "EPS CAGR 5Y", "points": 15, "detail": "EPS 5Y=12%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 100, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 30, "detail": "QoQ NP +51%" },
+          { "label": "YoY Net Profit", "points": 30, "detail": "YoY NP +78%" },
+          { "label": "Sales 4-qtr YoY", "points": 20, "detail": "3/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 20, "detail": "OPM YoY +3.0pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 25, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 10, "detail": "D/E=0.85" },
+          { "label": "Borrowings trend (3Y)", "points": 25, "detail": "borrowings down" },
+          { "label": "Current Ratio", "points": -15, "detail": "CR=0.64" },
+          { "label": "Reserves growth (5Y)", "points": 5, "detail": "reserves stagnant" }
+        ]},
+        { "name": "Cash Flow", "earned": 100, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=104%" },
+          { "label": "FCF positive years (last 3)", "points": 35, "detail": "FCF positive 3/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 55, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 15, "detail": "Promoter stable" },
+          { "label": "FII trend (4Q)", "points": 25, "detail": "FII +3.71pp" },
+          { "label": "DII trend (4Q)", "points": -5, "detail": "DII -3.58pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 60, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 20, "detail": "DY=2.9%" },
+          { "label": "Dividend Payout consistency", "points": 15, "detail": "paid 4/5" },
+          { "label": "Dividend Payout %", "points": 25, "detail": "payout 29%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": 10, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": 20, "detail": "8→6 improving" },
+          { "label": "Inventory Days trend (3Y)", "points": -10, "detail": "32→37 worsening" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": 10, "detail": "CCC=14 (2nd)" },
+          { "label": "Working Capital Days trend", "points": -10, "detail": "-33→-26 worsening" }
+        ]},
+        { "name": "Price & Technical", "earned": 40, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 20, "detail": "29% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 10, "detail": "Price ≈ Sales CAGR" },
+          { "label": "Up from 52w low", "points": 10, "detail": "14% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "Intrinsic Value vs CMP", "category": "Valuation", "points": 35 },
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "FCF positive years (last 3)", "category": "Cash Flow", "points": 35 }
+      ],
+      "weaknesses": [
+        { "label": "Current Ratio", "category": "Balance Sheet", "points": -15 },
+        { "label": "OPM% (TTM, sector quartile)", "category": "Profitability", "points": -10 },
+        { "label": "TTM Sales vs 5Y avg", "category": "Growth", "points": -10 }
+      ]
+    },
+    {
+      "slug": "indian-oil",
+      "name": "Indian Oil Corporation Ltd",
+      "ticker": "IOC",
+      "cmp": 144.8,
+      "final_score": 53.0,
+      "raw_total": 530,
+      "rank": 3,
+      "classification": "PSU",
+      "assumptions": ["Classified as PSU — promoter trend factor neutralised."],
+      "raw": {
+        "pe": 8.6, "industry_pe": 24.1, "pbv": 0.94, "roe": 7.0, "roce": 7.0,
+        "opm": 8.8, "debt_to_equity": 0.74, "current_ratio": 0.69,
+        "dividend_yield": 5.3, "pledged_pct": 0,
+        "sales_5y_cagr": 9, "profit_5y_cagr": 22
+      },
+      "categories": [
+        { "name": "Valuation", "earned": 90, "max": 120, "items": [
+          { "label": "P/E vs Industry PE", "points": 30, "detail": "PE/IndPE=0.36 (<0.7)" },
+          { "label": "Price to Book Value", "points": 25, "detail": "PBV=0.94" },
+          { "label": "Intrinsic Value vs CMP", "points": 35, "detail": "CMP/IV=0.61" },
+          { "label": "PEG Ratio", "points": 0, "detail": "PEG=-0.24 (flagged — negative)" }
+        ]},
+        { "name": "Profitability", "earned": 10, "max": 120, "items": [
+          { "label": "OPM% (TTM, sector quartile)", "points": 20, "detail": "OPM≈8.8% (2nd quartile)" },
+          { "label": "ROE (Last Year)", "points": -10, "detail": "ROE=7.0%" },
+          { "label": "ROCE (Last Year)", "points": -10, "detail": "ROCE=7.0%" },
+          { "label": "OPM trend (last 4 qtrs)", "points": 10, "detail": "OPM flat 8→11%" }
+        ]},
+        { "name": "Growth", "earned": 80, "max": 130, "items": [
+          { "label": "Sales CAGR 5Y", "points": 10, "detail": "Sales 5Y=9%" },
+          { "label": "Profit CAGR 5Y", "points": 30, "detail": "Profit 5Y=22%" },
+          { "label": "TTM Sales vs 5Y avg", "points": -10, "detail": "TTM 1% < 5Y 9%" },
+          { "label": "TTM Profit vs 5Y avg", "points": 25, "detail": "TTM 268% > 5Y 22%" },
+          { "label": "EPS CAGR 5Y", "points": 25, "detail": "EPS 5Y=22%" }
+        ]},
+        { "name": "Quarterly Momentum", "earned": 90, "max": 100, "items": [
+          { "label": "QoQ Net Profit", "points": 30, "detail": "QoQ NP +65%" },
+          { "label": "YoY Net Profit", "points": 30, "detail": "YoY NP +529%" },
+          { "label": "Sales 4-qtr YoY", "points": 10, "detail": "2/4 qtrs growing YoY" },
+          { "label": "OPM% last qtr vs year-ago", "points": 20, "detail": "OPM YoY +7.0pp" }
+        ]},
+        { "name": "Balance Sheet", "earned": 25, "max": 100, "items": [
+          { "label": "Debt to Equity", "points": 10, "detail": "D/E=0.74" },
+          { "label": "Borrowings trend (3Y)", "points": 10, "detail": "borrowings stable" },
+          { "label": "Current Ratio", "points": -15, "detail": "CR=0.69" },
+          { "label": "Reserves growth (5Y)", "points": 20, "detail": "reserves consistently growing" }
+        ]},
+        { "name": "Cash Flow", "earned": 85, "max": 100, "items": [
+          { "label": "CFO/Operating Profit (avg 3Y)", "points": 35, "detail": "CFO/OP avg=105%" },
+          { "label": "FCF positive years (last 3)", "points": 20, "detail": "FCF positive 2/3" },
+          { "label": "CFO trend (3Y)", "points": 30, "detail": "CFO improving" }
+        ]},
+        { "name": "Shareholding", "earned": 40, "max": 100, "items": [
+          { "label": "Promoter trend (4Q)", "points": 0, "detail": "PSU — promoter trend neutralised" },
+          { "label": "FII trend (4Q)", "points": 25, "detail": "FII +2.36pp" },
+          { "label": "DII trend (4Q)", "points": -5, "detail": "DII -1.19pp" },
+          { "label": "Pledged %", "points": 20, "detail": "Pledged 0%" }
+        ]},
+        { "name": "Dividend", "earned": 80, "max": 80, "items": [
+          { "label": "Dividend Yield", "points": 30, "detail": "DY=5.3%" },
+          { "label": "Dividend Payout consistency", "points": 25, "detail": "paid every year (5/5)" },
+          { "label": "Dividend Payout %", "points": 25, "detail": "payout 30%" }
+        ]},
+        { "name": "Operational Efficiency", "earned": -10, "max": 80, "items": [
+          { "label": "Debtor Days trend (3Y)", "points": -10, "detail": "7→9 worsening" },
+          { "label": "Inventory Days trend (3Y)", "points": -10, "detail": "59→63 worsening" },
+          { "label": "Cash Conversion Cycle (quartile)", "points": -10, "detail": "CCC=39 (worst)" },
+          { "label": "Working Capital Days trend", "points": 20, "detail": "-26→-42 improving" }
+        ]},
+        { "name": "Price & Technical", "earned": 40, "max": 70, "items": [
+          { "label": "Down from 52w high", "points": 20, "detail": "30% below high" },
+          { "label": "Price 5Y vs Sales 5Y CAGR", "points": 0, "detail": "Price 5Y 13% >> Sales 5Y 9%" },
+          { "label": "Up from 52w low", "points": 20, "detail": "1% above low" }
+        ]}
+      ],
+      "penalties": [],
+      "strengths": [
+        { "label": "Intrinsic Value vs CMP", "category": "Valuation", "points": 35 },
+        { "label": "CFO/Operating Profit (avg 3Y)", "category": "Cash Flow", "points": 35 },
+        { "label": "P/E vs Industry PE", "category": "Valuation", "points": 30 }
+      ],
+      "weaknesses": [
+        { "label": "Current Ratio", "category": "Balance Sheet", "points": -15 },
+        { "label": "ROE (Last Year)", "category": "Profitability", "points": -10 },
+        { "label": "ROCE (Last Year)", "category": "Profitability", "points": -10 }
+      ]
+    }
+  ]
+}
