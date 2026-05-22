@@ -1,0 +1,109 @@
+{
+  "sectors": [
+    {
+      "slug": "oil-gas",
+      "name": "Oil & Gas",
+      "description": "Public sector oil refining, marketing and exploration companies in India.",
+      "analyst_note": "PSU-heavy sector; margins highly sensitive to crude oil prices and government subsidy policy.",
+      "companies": ["BPCL", "IOC", "HINDPETRO", "ONGC", "OIL", "RELIANCE"]
+    },
+    {
+      "slug": "banking",
+      "name": "Banking",
+      "description": "Public and private sector banks providing retail, corporate and digital banking services.",
+      "analyst_note": "Credit growth, NPA trends, CASA ratio and RBI policy rates are major sector drivers.",
+      "companies": ["SBIN", "HDFCBANK", "ICICIBANK", "AXISBANK", "KOTAKBANK", "INDUSINDBK"]
+    },
+    {
+      "slug": "information-technology",
+      "name": "Information Technology",
+      "description": "Software services, cloud computing, consulting and digital transformation companies.",
+      "analyst_note": "Revenue largely depends on US and European enterprise spending and currency movement.",
+      "companies": ["TCS", "INFY", "WIPRO", "HCLTECH", "TECHM", "LTIM"]
+    },
+    {
+      "slug": "pharmaceuticals",
+      "name": "Pharmaceuticals",
+      "description": "Drug manufacturers, biotechnology firms and healthcare solution providers.",
+      "analyst_note": "USFDA approvals, export demand and domestic healthcare spending strongly impact valuations.",
+      "companies": ["SUNPHARMA", "DRREDDY", "CIPLA", "DIVISLAB", "LUPIN", "TORNTPHARM"]
+    },
+    {
+      "slug": "automobile",
+      "name": "Automobile",
+      "description": "Passenger vehicle, commercial vehicle and two-wheeler manufacturers.",
+      "analyst_note": "EV adoption, rural demand and commodity prices influence profitability.",
+      "companies": ["MARUTI", "TATAMOTORS", "M&M", "BAJAJ-AUTO", "HEROMOTOCO", "EICHERMOT"]
+    },
+    {
+      "slug": "renewable-energy",
+      "name": "Renewable Energy",
+      "description": "Companies involved in solar, wind and clean energy generation.",
+      "analyst_note": "Government incentives and clean energy transition policies are long-term growth drivers.",
+      "companies": ["ADANIGREEN", "TATAPOWER", "SUZLON", "NHPC", "SJVN", "BORORENEW"]
+    },
+    {
+      "slug": "fmcg",
+      "name": "FMCG",
+      "description": "Fast-moving consumer goods companies producing daily-use products.",
+      "analyst_note": "Defensive sector with stable cash flows; rural consumption trends are important indicators.",
+      "companies": ["HINDUNILVR", "ITC", "NESTLEIND", "DABUR", "GODREJCP", "BRITANNIA"]
+    },
+    {
+      "slug": "telecom",
+      "name": "Telecom",
+      "description": "Telecommunication and digital connectivity service providers.",
+      "analyst_note": "ARPU growth, 5G rollout and subscriber additions remain key performance metrics.",
+      "companies": ["BHARTIARTL", "IDEA", "TATACOMM", "ROUTE", "TEJASNET", "HFCL"]
+    },
+    {
+      "slug": "metal-mining",
+      "name": "Metal & Mining",
+      "description": "Steel, aluminium, copper and diversified mining companies.",
+      "analyst_note": "Commodity cycles and global demand heavily influence earnings volatility.",
+      "companies": ["TATASTEEL", "JSWSTEEL", "HINDALCO", "VEDL", "NMDC", "SAIL"]
+    },
+    {
+      "slug": "power",
+      "name": "Power",
+      "description": "Power generation, transmission and distribution companies.",
+      "analyst_note": "Infrastructure expansion and rising electricity demand support long-term sector growth.",
+      "companies": ["NTPC", "POWERGRID", "ADANIPOWER", "TORNTPOWER", "CESC", "NHPC"]
+    },
+    {
+      "slug": "capital-goods",
+      "name": "Capital Goods",
+      "description": "Engineering, industrial equipment and infrastructure solution providers.",
+      "analyst_note": "Government capex and manufacturing growth strongly support order books.",
+      "companies": ["LT", "SIEMENS", "ABB", "BHEL", "CGPOWER", "POLYCAB"]
+    },
+    {
+      "slug": "cement",
+      "name": "Cement",
+      "description": "Manufacturers of cement and construction materials.",
+      "analyst_note": "Infrastructure spending and real estate activity are major growth catalysts.",
+      "companies": ["ULTRACEMCO", "SHREECEM", "ACC", "AMBUJACEM", "DALBHARAT", "RAMCOCEM"]
+    },
+    {
+      "slug": "consumer-durables",
+      "name": "Consumer Durables",
+      "description": "Appliance, electronics and household equipment manufacturers.",
+      "analyst_note": "Urban demand and premiumization trends are driving revenue growth.",
+      "companies": ["TITAN", "VOLTAS", "WHIRLPOOL", "DIXON", "HAVELLS", "BLUESTARCO"]
+    },
+    {
+      "slug": "real-estate",
+      "name": "Real Estate",
+      "description": "Residential, commercial and mixed-use property developers.",
+      "analyst_note": "Interest rates, housing demand and urbanization trends impact sector performance.",
+      "companies": ["DLF", "GODREJPROP", "OBEROIRLTY", "LODHA", "PHOENIXLTD", "PRESTIGE"]
+    },
+    {
+      "slug": "aviation",
+      "name": "Aviation",
+      "description": "Airline operators and aviation-related service companies.",
+      "analyst_note": "Fuel costs and passenger traffic recovery significantly affect profitability.",
+      "companies": ["INDIGO", "SPICEJET", "GMRAIRPORT", "CELEBI", "TAALENT", "GLOBALVECT"]
+    }
+  ]
+}

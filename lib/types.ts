@@ -83,5 +83,6 @@ export interface SectorIndexEntry {
   refreshed_at: string;
   description: string;
   top_company?: string;
+  top_ticker?: string;
   top_score?: number;
 }

@@ -1,34 +1,45 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
-import { loadSectorIndex } from "@/lib/data";
+import { loadSectorIndex, loadSectorsConfig } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
+import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
 export default async function Home() {
-  const sectors = await loadSectorIndex();
+  const [sectorsConfig, scrapedIndex] = await Promise.all([
+    loadSectorsConfig(),
+    loadSectorIndex(),
+  ]);
+
+  const scrapedMap = new Map(scrapedIndex.map((s) => [s.slug, s]));
+  const totalScraped = scrapedIndex.reduce((a, s) => a + s.companies_count, 0);
+
+  const sectors = sectorsConfig.map((cfg) => ({
+    ...cfg,
+    scraped: scrapedMap.get(cfg.slug) ?? null,
+  }));
 
   return (
     <div>
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 hero-grid" />
-        <div className="relative mx-auto max-w-5xl px-6 pt-24 pb-20 text-center">
+        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-14 sm:pt-24 pb-12 sm:pb-20 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
             <Sparkles className="h-3.5 w-3.5" />
-            Built by Aditya Agrawal · Updated weekly
+            Stockscore · Updated weekly
           </span>
-          <h1 className="mt-6 text-5xl md:text-6xl font-bold tracking-tight text-chalk-50 leading-[1.05]">
-            Fundamental analysis,
-            <br />
+          <h1 className="mt-6 text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-chalk-50 leading-[1.1]">
+            Fundamental analysis,{" "}
             <span className="text-accent">made transparent.</span>
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-chalk-300">
+          <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-chalk-300">
             Score every company in an Indian sector against its peers — across
             10 categories, 1000 points — and see exactly where each point was
             earned or lost.
           </p>
 
           <div className="mt-10">
-            <SectorSearch sectors={sectors} />
+            <SectorSearch sectors={scrapedIndex} />
           </div>
 
           <div className="mt-4 text-xs text-chalk-300/70">
@@ -38,11 +49,11 @@ export default async function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-16">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
           How it works
         </h2>
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:gap-6 sm:grid-cols-3">
           {[
             {
               icon: Database,
@@ -77,59 +88,87 @@ export default async function Home() {
       </section>
 
       {/* SECTORS GRID */}
-      <section className="mx-auto max-w-6xl px-6 py-12">
-        <div className="flex items-end justify-between mb-6">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-              Sectors covered
-            </h2>
-            <p className="mt-2 text-2xl font-semibold text-chalk-50">
-              {sectors.length} sectors, {" "}
-              {sectors.reduce((a, s) => a + s.companies_count, 0)} companies
-              scored.
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-12">
+        <div className="mb-6">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            Sectors covered
+          </h2>
+          <p className="mt-2 text-2xl font-semibold text-chalk-50">
+            {sectorsConfig.length} sectors
+            {totalScraped > 0 && (
+              <span className="text-chalk-300 font-normal text-lg">
+                {" "}· {totalScraped} companies scored
+              </span>
+            )}
+          </p>
+          {scrapedIndex.length < sectorsConfig.length && (
+            <p className="mt-1 text-xs text-chalk-300/50">
+              {scrapedIndex.length} of {sectorsConfig.length} sectors have data — refresh any card below to fetch.
             </p>
-          </div>
+          )}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sectors.map((s) => (
-            <Link
-              key={s.slug}
-              href={`/sector/${s.slug}`}
-              className="group rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 hover:border-accent/40 hover:bg-ink-900 transition-colors"
-            >
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-semibold text-chalk-50 group-hover:text-accent transition-colors">
-                  {s.name}
-                </h3>
-                <span className="num text-xs text-chalk-300/70">
-                  {s.companies_count}
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-chalk-300 line-clamp-2">
-                {s.description}
-              </p>
-              {s.top_company && (
-                <div className="mt-4 pt-4 border-t border-ink-700/40 flex items-center justify-between text-xs">
-                  <span className="text-chalk-300/70">Top pick</span>
-                  <span className="num text-chalk-100">
-                    {s.top_company}{" "}
-                    <span className="text-accent">
-                      {s.top_score?.toFixed(1)}
+          {sectors.map((s) => {
+            const scraped = s.scraped;
+            return (
+              <div
+                key={s.slug}
+                className="group rounded-xl border border-ink-700/60 bg-ink-900/40 hover:border-accent/40 hover:bg-ink-900 transition-colors flex flex-col"
+              >
+                {/* Main content */}
+                <div className="p-5 flex-1">
+                  <div className="flex items-baseline justify-between">
+                    <h3 className={`font-semibold transition-colors group-hover:text-accent ${scraped ? "text-chalk-50" : "text-chalk-300"}`}>
+                      {s.name}
+                    </h3>
+                    <span className="num text-xs text-chalk-300/60">
+                      {scraped ? scraped.companies_count : s.companies.length}
                     </span>
-                  </span>
+                  </div>
+                  <p className={`mt-2 text-sm line-clamp-2 ${scraped ? "text-chalk-300" : "text-chalk-300/50"}`}>
+                    {s.description}
+                  </p>
+
+                  {scraped?.top_company ? (
+                    <div className="mt-4 pt-4 border-t border-ink-700/40 flex items-center justify-between text-xs">
+                      <span className="text-chalk-300/70">Top pick</span>
+                      <span className="num text-chalk-100">
+                        {scraped.top_ticker ?? scraped.top_company}{" "}
+                        <span className="text-accent">{scraped.top_score?.toFixed(1)}</span>
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mt-4 pt-4 border-t border-ink-700/30">
+                      <span className="text-xs text-chalk-300/30">
+                        No data yet — refresh to fetch
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="mt-3 flex items-center justify-end text-xs text-chalk-300 group-hover:text-accent">
-                View sector <ArrowRight className="h-3 w-3 ml-1" />
+
+                {/* Footer: view link + refresh button */}
+                <div className="px-5 pb-4 flex items-center justify-between gap-2">
+                  {scraped ? (
+                    <Link
+                      href={`/sector/${s.slug}`}
+                      className="inline-flex items-center text-xs text-chalk-300 hover:text-accent transition-colors"
+                    >
+                      View sector <ArrowRight className="h-3 w-3 ml-1" />
+                    </Link>
+                  ) : (
+                    <span />
+                  )}
+                  <SectorRefreshButton sectorSlug={s.slug} />
+                </div>
               </div>
-            </Link>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* MY PITCH */}
-      <section className="mx-auto max-w-3xl px-6 py-16">
+      <section className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
           Why I built this
         </h2>

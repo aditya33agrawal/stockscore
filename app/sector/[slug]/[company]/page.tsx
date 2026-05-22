@@ -6,11 +6,15 @@ import {
   ThumbsUp,
   ThumbsDown,
   ExternalLink,
+  ChevronDown,
 } from "lucide-react";
 import clsx from "clsx";
-import { allSectorSlugs, loadSector, pointsColor } from "@/lib/data";
+import { allSectorSlugs, loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
+import { extractChartData } from "@/lib/company-data";
 import { ScoreBadge } from "@/components/ScoreBadge";
 import { CategoryCard } from "@/components/CategoryCard";
+import { FinancialCharts } from "@/components/FinancialCharts";
+import { FinancialTable } from "@/components/FinancialTable";
 
 export async function generateStaticParams() {
   const slugs = await allSectorSlugs();
@@ -48,6 +52,12 @@ export default async function CompanyPage({
   if (!sector) notFound();
   const co = sector.companies.find((c) => c.slug === params.company);
   if (!co) notFound();
+
+  const detail = await loadCompanyDetail(co.ticker);
+  const chartData = detail ? extractChartData(detail, co.ticker) : null;
+  const peers = sector.companies
+    .filter((c) => c.slug !== co.slug)
+    .map((c) => ({ name: c.name, symbol: c.ticker, ticker: c.ticker }));
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -239,6 +249,188 @@ export default async function CompanyPage({
           </div>
         </div>
       </section>
+
+      {/* COMPANY PROFILE */}
+      {detail && (detail.about || detail.key_points) && (
+        <section className="mb-10 grid gap-6 md:grid-cols-2">
+          {detail.about && (
+            <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">About</h3>
+              <p className="text-sm text-chalk-300 leading-relaxed">{detail.about.replace(/\[\d+\]/g, "")}</p>
+            </div>
+          )}
+          {detail.key_points && (
+            <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Key Points</h3>
+              <p className="text-sm text-chalk-300 leading-relaxed whitespace-pre-line">{detail.key_points.replace(/\[\d+\]/g, "").trim()}</p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ALL KEY RATIOS */}
+      {detail && Object.keys(detail.ratios).length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">All Key Ratios</h2>
+          <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
+              {Object.entries(detail.ratios).map(([k, v]) => (
+                <div key={k}>
+                  <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
+                  <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* GROWTH & CAGR + PROS & CONS */}
+      {detail && (
+        <section className="mb-10 grid gap-6 lg:grid-cols-2">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {Object.entries(detail.growth_tables).map(([title, rows]) => (
+                <div key={title} className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-4">
+                  <p className="text-xs font-semibold text-chalk-300 mb-2">{title}</p>
+                  <div className="space-y-1">
+                    {Object.entries(rows).map(([period, value]) => (
+                      <div key={period} className="flex justify-between text-xs">
+                        <span className="text-chalk-300/70">{period}</span>
+                        <span className={`num font-semibold ${parseFloat(value) >= 0 ? "text-accent" : "text-bad"}`}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {(detail.pros_cons.pros.length > 0 || detail.pros_cons.cons.length > 0) && (
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Screener Analysis</h2>
+              <div className="space-y-3">
+                {detail.pros_cons.pros.length > 0 && (
+                  <div className="rounded-xl border border-accent/20 bg-accent/5 p-4">
+                    <p className="text-xs font-semibold text-accent mb-2">Positives</p>
+                    <ul className="space-y-1.5">
+                      {detail.pros_cons.pros.map((p, i) => (
+                        <li key={i} className="text-xs text-chalk-300 flex gap-2">
+                          <span className="text-accent shrink-0">+</span>{p}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {detail.pros_cons.cons.length > 0 && (
+                  <div className="rounded-xl border border-bad/20 bg-bad/5 p-4">
+                    <p className="text-xs font-semibold text-bad mb-2">Concerns</p>
+                    <ul className="space-y-1.5">
+                      {detail.pros_cons.cons.map((c, i) => (
+                        <li key={i} className="text-xs text-chalk-300 flex gap-2">
+                          <span className="text-bad shrink-0">−</span>{c}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* FINANCIAL CHARTS */}
+      {chartData && (
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Financial Charts</h2>
+          <FinancialCharts primaryData={chartData} primaryName={co.name} peers={peers} />
+        </section>
+      )}
+
+      {/* FINANCIAL TABLES */}
+      {detail && (
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Financial Tables</h2>
+          <div className="space-y-2">
+            {(
+              [
+                ["Quarterly Results", detail.financial_tables.quarters],
+                ["Profit & Loss", detail.financial_tables.profit_loss],
+                ["Balance Sheet", detail.financial_tables.balance_sheet],
+                ["Cash Flow", detail.financial_tables.cash_flow],
+                ["Annual Ratios", detail.financial_tables.ratios],
+                ["Shareholding Pattern", detail.financial_tables.shareholding],
+                ["Peer Comparison", detail.financial_tables.peers],
+              ] as [string, string | null][]
+            ).map(([title, csv]) => (
+              <details key={title} className="group rounded-xl border border-ink-700/60 bg-ink-900/40">
+                <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
+                  <span className="text-sm font-medium text-chalk-100">{title}</span>
+                  <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="border-t border-ink-700/40">
+                  <FinancialTable csv={csv} />
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ANNOUNCEMENTS */}
+      {detail && (detail.announcements.important.length > 0 || detail.announcements.recent.length > 0) && (
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Announcements</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {detail.announcements.important.length > 0 && (
+              <div>
+                <h3 className="text-xs font-semibold text-chalk-300/70 uppercase tracking-wider mb-2">Important</h3>
+                <div className="space-y-2">
+                  {detail.announcements.important.map((a, i) => (
+                    <a
+                      key={i}
+                      href={a.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="block rounded-lg border border-ink-700/60 bg-ink-900/40 px-4 py-3 hover:border-accent/30 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-xs text-chalk-100 leading-snug flex-1">{a.summary || a.title}</p>
+                        <ExternalLink className="h-3 w-3 text-chalk-300/40 shrink-0 mt-0.5" />
+                      </div>
+                      <p className="text-xs text-chalk-300/50 mt-1.5 num">{a.date}</p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {detail.announcements.recent.length > 0 && (
+              <div>
+                <h3 className="text-xs font-semibold text-chalk-300/70 uppercase tracking-wider mb-2">Recent</h3>
+                <div className="space-y-2">
+                  {detail.announcements.recent.map((a, i) => (
+                    <a
+                      key={i}
+                      href={a.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="block rounded-lg border border-ink-700/60 bg-ink-900/40 px-4 py-3 hover:border-accent/30 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-xs text-chalk-100 leading-snug flex-1">{a.summary || a.title}</p>
+                        <ExternalLink className="h-3 w-3 text-chalk-300/40 shrink-0 mt-0.5" />
+                      </div>
+                      <p className="text-xs text-chalk-300/50 mt-1.5 num">{a.date}</p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

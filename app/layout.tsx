@@ -6,13 +6,13 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   metadataBase: new URL("https://aditya-finance.vercel.app"),
   title: {
-    default: "Aditya Agrawal — Sector-Relative Equity Scoring",
-    template: "%s — Aditya Agrawal",
+    default: "Stockscore — Sector-Relative Equity Scoring",
+    template: "%s — Stockscore",
   },
   description:
-    "Transparent fundamental analysis of Indian equities, scored sector by sector. A portfolio project by Aditya Agrawal.",
+    "Transparent fundamental analysis of Indian equities, scored sector by sector.",
   openGraph: {
-    title: "Aditya Agrawal — Sector-Relative Equity Scoring",
+    title: "Stockscore — Sector-Relative Equity Scoring",
     description:
       "Transparent fundamental analysis of Indian equities, scored sector by sector.",
     type: "website",

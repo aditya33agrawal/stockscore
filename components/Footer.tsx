@@ -39,13 +39,17 @@ export function Footer() {
       </div>
       <div className="border-t border-ink-700/40 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-xs text-chalk-300/70">
-          <p>© {new Date().getFullYear()} Aditya Agrawal. Built with Next.js.</p>
+          <p>© {new Date().getFullYear()} Stockscore. Built with Next.js.</p>
           <p>
-            Data sourced from{" "}
+            Data from{" "}
             <Link href="https://www.screener.in" className="underline">
               screener.in
             </Link>
-            . For educational use only — not investment advice.
+            . For educational use only —{" "}
+            <Link href="/terms" className="underline hover:text-chalk-300">
+              not investment advice
+            </Link>
+            .
           </p>
         </div>
       </div>

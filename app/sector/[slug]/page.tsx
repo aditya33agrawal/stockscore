@@ -5,6 +5,7 @@ import { allSectorSlugs, formatDate, loadSector } from "@/lib/data";
 import { Leaderboard } from "@/components/Leaderboard";
 import { RadarCompare } from "@/components/RadarCompare";
 import { ScoreBarChart } from "@/components/ScoreBar";
+import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
 export async function generateStaticParams() {
   const slugs = await allSectorSlugs();
@@ -66,6 +67,7 @@ export default async function SectorPage({
             </Link>
           </div>
         </div>
+        <SectorRefreshButton sectorSlug={sector.slug} />
       </header>
 
       {/* SECTOR CONTEXT BOX */}
