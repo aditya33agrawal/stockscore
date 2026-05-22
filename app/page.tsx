@@ -7,10 +7,17 @@ import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [sectorsConfig, scrapedIndex] = await Promise.all([
-    loadSectorsConfig(),
-    loadSectorIndex(),
-  ]);
+  let sectorsConfig: Awaited<ReturnType<typeof loadSectorsConfig>>;
+  let scrapedIndex: Awaited<ReturnType<typeof loadSectorIndex>>;
+  try {
+    [sectorsConfig, scrapedIndex] = await Promise.all([
+      loadSectorsConfig(),
+      loadSectorIndex(),
+    ]);
+  } catch (err) {
+    console.error("[page] Failed to load data:", err);
+    throw err;
+  }
 
   const scrapedMap = new Map(scrapedIndex.map((s) => [s.slug, s]));
   const totalScraped = scrapedIndex.reduce((a, s) => a + s.companies_count, 0);
