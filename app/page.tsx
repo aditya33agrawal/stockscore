@@ -4,6 +4,8 @@ import { loadSectorIndex, loadSectorsConfig } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
 import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [sectorsConfig, scrapedIndex] = await Promise.all([
     loadSectorsConfig(),
