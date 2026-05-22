@@ -1,4 +1,3 @@
-import "server-only";
 import postgres from "postgres";
 
 declare global {
@@ -11,7 +10,7 @@ function createClient() {
   if (!connStr) throw new Error("DB_CONNECTION_STRING is not set");
   return postgres(connStr, {
     ssl: "require",
-    max: 5,
+    max: 1,
     idle_timeout: 20,
     connect_timeout: 10,
   });

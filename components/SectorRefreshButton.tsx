@@ -160,6 +160,7 @@ function classColor(c: string): string {
 // ---------------------------------------------------------------------------
 
 export function SectorRefreshButton({ sectorSlug }: { sectorSlug: string }) {
+  if (!process.env.NEXT_PUBLIC_ENABLE_REFRESH) return null;
   const [uiState, setUiState] = useState<UIState>("idle");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
