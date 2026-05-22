@@ -161,7 +161,9 @@ export default async function Home() {
                   ) : (
                     <span />
                   )}
-                  <SectorRefreshButton sectorSlug={s.slug} />
+                  {process.env.NEXT_PUBLIC_ENABLE_REFRESH && (
+                    <SectorRefreshButton sectorSlug={s.slug} />
+                  )}
                 </div>
               </div>
             );
