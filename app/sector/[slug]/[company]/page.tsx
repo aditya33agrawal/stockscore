@@ -9,25 +9,14 @@ import {
   ChevronDown,
 } from "lucide-react";
 import clsx from "clsx";
-import { allSectorSlugs, loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
+import { loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
 import { extractChartData } from "@/lib/company-data";
 import { ScoreBadge } from "@/components/ScoreBadge";
 import { CategoryCard } from "@/components/CategoryCard";
 import { FinancialCharts } from "@/components/FinancialCharts";
 import { FinancialTable } from "@/components/FinancialTable";
 
-export async function generateStaticParams() {
-  const slugs = await allSectorSlugs();
-  const all: { slug: string; company: string }[] = [];
-  for (const slug of slugs) {
-    const sector = await loadSector(slug);
-    if (!sector) continue;
-    for (const co of sector.companies) {
-      all.push({ slug, company: co.slug });
-    }
-  }
-  return all;
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

@@ -1,16 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Layers, TrendingUp } from "lucide-react";
-import { allSectorSlugs, formatDate, loadSector } from "@/lib/data";
+import { formatDate, loadSector } from "@/lib/data";
 import { Leaderboard } from "@/components/Leaderboard";
 import { RadarCompare } from "@/components/RadarCompare";
 import { ScoreBarChart } from "@/components/ScoreBar";
 import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
-export async function generateStaticParams() {
-  const slugs = await allSectorSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
