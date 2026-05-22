@@ -8,32 +8,41 @@ import sql from "./db";
 export { scoreColor, scoreBg, pointsColor, formatDate } from "./format";
 
 export async function loadSectorIndex(): Promise<SectorIndexEntry[]> {
-  const rows = await sql<
-    {
-      slug: string;
-      name: string;
-      companies_count: number;
-      refreshed_at: string;
-      description: string;
-      top_company: string | null;
-      top_ticker: string | null;
-      top_score: number | null;
-    }[]
-  >`
-    SELECT slug, name, companies_count, refreshed_at, description, top_company, top_ticker, top_score
-    FROM sectors
-    ORDER BY name
-  `;
-  return rows.map((r) => ({
-    slug: r.slug,
-    name: r.name,
-    companies_count: r.companies_count,
-    refreshed_at: r.refreshed_at,
-    description: r.description,
-    top_company: r.top_company ?? undefined,
-    top_ticker: r.top_ticker ?? undefined,
-    top_score: r.top_score != null ? Number(r.top_score) : undefined,
-  }));
+  try {
+    const queryPromise = sql<
+      {
+        slug: string;
+        name: string;
+        companies_count: number;
+        refreshed_at: string;
+        description: string;
+        top_company: string | null;
+        top_ticker: string | null;
+        top_score: number | null;
+      }[]
+    >`
+      SELECT slug, name, companies_count, refreshed_at, description, top_company, top_ticker, top_score
+      FROM sectors
+      ORDER BY name
+    `;
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("DB query timed out")), 8000)
+    );
+    const rows = await Promise.race([queryPromise, timeoutPromise]);
+    return rows.map((r) => ({
+      slug: r.slug,
+      name: r.name,
+      companies_count: r.companies_count,
+      refreshed_at: r.refreshed_at,
+      description: r.description,
+      top_company: r.top_company ?? undefined,
+      top_ticker: r.top_ticker ?? undefined,
+      top_score: r.top_score != null ? Number(r.top_score) : undefined,
+    }));
+  } catch (err) {
+    console.error("[data] loadSectorIndex failed:", err);
+    return [];
+  }
 }
 
 export interface SectorConfigEntry {
