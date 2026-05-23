@@ -2,11 +2,21 @@
 
 import { useMemo, useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Search, TrendingUp } from "lucide-react";
+import { Search, TrendingUp, Building2 } from "lucide-react";
 import type { SectorIndexEntry } from "@/lib/types";
-import { formatDate } from "@/lib/format";
+import type { CompanyIndexEntry } from "@/lib/data";
 
-export function SectorSearch({ sectors }: { sectors: SectorIndexEntry[] }) {
+type Result =
+  | { kind: "sector"; sector: SectorIndexEntry }
+  | { kind: "company"; company: CompanyIndexEntry };
+
+export function SectorSearch({
+  sectors,
+  companies = [],
+}: {
+  sectors: SectorIndexEntry[];
+  companies?: CompanyIndexEntry[];
+}) {
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -21,15 +31,25 @@ export function SectorSearch({ sectors }: { sectors: SectorIndexEntry[] }) {
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
-  const matches = useMemo(() => {
+  const results = useMemo<Result[]>(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return sectors;
-    return sectors.filter(
-      (s) =>
-        s.name.toLowerCase().includes(needle) ||
-        s.description.toLowerCase().includes(needle),
-    );
-  }, [q, sectors]);
+    if (!needle) return sectors.slice(0, 5).map((s) => ({ kind: "sector", sector: s }));
+    const sMatches: Result[] = sectors
+      .filter(
+        (s) =>
+          s.name.toLowerCase().includes(needle) ||
+          s.description.toLowerCase().includes(needle),
+      )
+      .map((s) => ({ kind: "sector", sector: s }));
+    const cMatches: Result[] = companies
+      .filter(
+        (c) =>
+          c.name.toLowerCase().includes(needle) ||
+          c.ticker.toLowerCase().includes(needle),
+      )
+      .map((c) => ({ kind: "company", company: c }));
+    return [...sMatches, ...cMatches].slice(0, 5);
+  }, [q, sectors, companies]);
 
   return (
     <div ref={ref} className="relative mx-auto max-w-2xl">
@@ -40,55 +60,63 @@ export function SectorSearch({ sectors }: { sectors: SectorIndexEntry[] }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => setFocused(true)}
-          placeholder="Enter a sector — e.g., Oil & Refining, Private Banks…"
+          placeholder="Search a sector or stock — e.g., Private Banks, HDFC…"
           className="w-full rounded-xl border border-ink-700/80 bg-ink-900/80 py-4 pl-12 pr-4 text-chalk-50 placeholder:text-chalk-300/60 outline-none ring-0 transition focus:border-accent/50 focus:bg-ink-900 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.08)]"
         />
       </div>
 
       {focused && (
         <div className="absolute left-0 right-0 top-full mt-2 z-30 max-h-[420px] overflow-auto scrollbar-thin rounded-xl border border-ink-700/80 bg-ink-900 shadow-2xl shadow-black/40">
-          {matches.length === 0 ? (
+          {results.length === 0 ? (
             <div className="px-5 py-6 text-sm text-chalk-300">
-              No sector matches <span className="text-chalk-50">"{q}"</span> yet.
-              I'm adding new sectors regularly —{" "}
-              <a
-                href="mailto:aditya33agrawal@gmail.com"
-                className="text-accent hover:underline"
-              >
-                email me
-              </a>{" "}
-              and I'll prioritise it.
+              No match for <span className="text-chalk-50">&quot;{q}&quot;</span>.
             </div>
           ) : (
             <ul className="divide-y divide-ink-700/40">
-              {matches.map((s) => (
-                <li key={s.slug}>
-                  <Link
-                    href={`/sector/${s.slug}`}
-                    className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-ink-800/60 transition-colors"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
+              {results.map((r, i) =>
+                r.kind === "sector" ? (
+                  <li key={`s-${r.sector.slug}-${i}`}>
+                    <Link
+                      href={`/sector/${r.sector.slug}`}
+                      className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-ink-800/60 transition-colors"
+                    >
+                      <div className="min-w-0 flex items-center gap-3">
                         <TrendingUp className="h-4 w-4 text-accent shrink-0" />
-                        <span className="font-medium text-chalk-50">
-                          {s.name}
-                        </span>
+                        <div className="min-w-0">
+                          <div className="font-medium text-chalk-50">
+                            {r.sector.name}
+                          </div>
+                          <p className="text-xs text-chalk-300/80 line-clamp-1">
+                            Sector · {r.sector.companies_count} companies
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-chalk-300/80 mt-0.5 line-clamp-1">
-                        {s.description}
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-xs num text-chalk-300">
-                        {s.companies_count} companies
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wider text-chalk-300/60 mt-0.5">
-                        {formatDate(s.refreshed_at)}
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                    </Link>
+                  </li>
+                ) : (
+                  <li key={`c-${r.company.ticker}-${i}`}>
+                    <Link
+                      href={`/sector/${r.company.sector_slug}/${r.company.slug}`}
+                      className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-ink-800/60 transition-colors"
+                    >
+                      <div className="min-w-0 flex items-center gap-3">
+                        <Building2 className="h-4 w-4 text-chalk-300 shrink-0" />
+                        <div className="min-w-0">
+                          <div className="font-medium text-chalk-50 truncate">
+                            {r.company.name}
+                          </div>
+                          <p className="text-xs text-chalk-300/80">
+                            {r.company.ticker} · {r.company.sector_name}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="num text-xs text-accent shrink-0">
+                        {r.company.final_score.toFixed(1)}
+                      </span>
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           )}
         </div>

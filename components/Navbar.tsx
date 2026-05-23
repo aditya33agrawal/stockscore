@@ -5,11 +5,12 @@ import { LineChart, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "Sectors" },
+  { href: "/sectors", label: "Sectors" },
   { href: "/methodology", label: "Methodology" },
+  { href: "/asset-allocation", label: "Asset Allocation" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/terms", label: "Terms" },
-  { href: "/resume", label: "Resume" },
   { href: "/contact", label: "Contact" },
 ];
 

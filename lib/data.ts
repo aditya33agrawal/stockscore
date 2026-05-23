@@ -94,6 +94,41 @@ export async function loadSector(slug: string): Promise<SectorData | null> {
   };
 }
 
+export interface CompanyIndexEntry {
+  name: string;
+  ticker: string;
+  slug: string;
+  sector_slug: string;
+  sector_name: string;
+  final_score: number;
+}
+
+export async function loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
+  try {
+    const rows = await sql<
+      { slug: string; name: string; companies: unknown }[]
+    >`SELECT slug, name, companies FROM sectors`;
+    const out: CompanyIndexEntry[] = [];
+    for (const r of rows) {
+      const cos = (r.companies as { slug: string; name: string; ticker: string; final_score: number }[]) ?? [];
+      for (const c of cos) {
+        out.push({
+          name: c.name,
+          ticker: c.ticker,
+          slug: c.slug,
+          sector_slug: r.slug,
+          sector_name: r.name,
+          final_score: c.final_score,
+        });
+      }
+    }
+    return out;
+  } catch (err) {
+    console.error("[data] loadCompaniesIndex failed:", err);
+    return [];
+  }
+}
+
 export async function allSectorSlugs(): Promise<string[]> {
   const idx = await loadSectorIndex();
   return idx.map((s) => s.slug);

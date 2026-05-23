@@ -16,6 +16,31 @@ import sql, { ensureTables } from "./db";
 
 type Log = (msg: string) => void;
 
+const FRESH_DAYS = 7;
+const FRESH_MS = FRESH_DAYS * 24 * 60 * 60 * 1000;
+
+async function findFreshCompany(
+  companyName: string,
+  sectorSlug: string,
+): Promise<{ symbol: string; data: unknown; refreshed_at: string } | null> {
+  try {
+    const cutoff = new Date(Date.now() - FRESH_MS).toISOString();
+    const rows = await sql<
+      { symbol: string; data: unknown; refreshed_at: string }[]
+    >`
+      SELECT symbol, data, refreshed_at::text AS refreshed_at
+      FROM companies
+      WHERE sector_slug = ${sectorSlug}
+        AND (name ILIKE ${companyName} OR symbol ILIKE ${companyName})
+        AND refreshed_at > ${cutoff}::timestamptz
+      LIMIT 1
+    `;
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
@@ -214,10 +239,25 @@ export async function runPipeline(log: Log, targetSectorSlug?: string): Promise<
   for (const sector of sectorsToRun) {
     const scored: Company[] = [];
     const rawDataMap: Map<string, RawCompanyData> = new Map();
+    const skippedSymbols = new Set<string>();
 
     log(`\n[sector] ${sector.name} (${sector.companies.length} companies)`);
 
     for (const companyName of sector.companies) {
+      const fresh = await findFreshCompany(companyName, sector.slug);
+      if (fresh) {
+        const ageDays = Math.floor(
+          (Date.now() - new Date(fresh.refreshed_at).getTime()) / (24 * 3600 * 1000),
+        );
+        const cachedScore = (fresh.data as { score?: Company })?.score;
+        if (cachedScore) {
+          scored.push({ ...cachedScore, rank: 0 });
+          skippedSymbols.add(fresh.symbol);
+          log(`  [company] ${companyName} — fresh (${ageDays}d old), skip ✓`);
+          continue;
+        }
+      }
+
       log(`  [company] ${companyName} — searching …`);
       try {
         const result = await scrapeCompany(session, companyName, log);
@@ -242,6 +282,7 @@ export async function runPipeline(log: Log, targetSectorSlug?: string): Promise<
     const refreshedAt = new Date().toISOString();
 
     for (const company of scored) {
+      if (skippedSymbols.has(company.ticker)) continue;
       const rawData = rawDataMap.get(company.ticker);
       if (rawData) {
         try {

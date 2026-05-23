@@ -1,24 +1,25 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
-import { loadSectorIndex, loadSectorsConfig } from "@/lib/data";
+import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
 import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [sectorsConfig, scrapedIndex] = await Promise.all([
+  const [sectorsConfig, scrapedIndex, companies] = await Promise.all([
     loadSectorsConfig(),
     loadSectorIndex(),
+    loadCompaniesIndex(),
   ]);
 
   const scrapedMap = new Map(scrapedIndex.map((s) => [s.slug, s]));
   const totalScraped = scrapedIndex.reduce((a, s) => a + s.companies_count, 0);
 
-  const sectors = sectorsConfig.map((cfg) => ({
-    ...cfg,
-    scraped: scrapedMap.get(cfg.slug) ?? null,
-  }));
+  const sectors = sectorsConfig
+    .map((cfg) => ({ ...cfg, scraped: scrapedMap.get(cfg.slug) ?? null }))
+    .sort((a, b) => (b.scraped?.top_score ?? -1) - (a.scraped?.top_score ?? -1))
+    .slice(0, 9);
 
   return (
     <div>
@@ -41,11 +42,11 @@ export default async function Home() {
           </p>
 
           <div className="mt-10">
-            <SectorSearch sectors={scrapedIndex} />
+            <SectorSearch sectors={scrapedIndex} companies={companies} />
           </div>
 
           <div className="mt-4 text-xs text-chalk-300/70">
-            Or browse all {sectors.length} sectors below.
+            Top 9 sectors below · {sectorsConfig.length} sectors covered.
           </div>
         </div>
       </section>
@@ -91,23 +92,26 @@ export default async function Home() {
 
       {/* SECTORS GRID */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-12">
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-            Sectors covered
-          </h2>
-          <p className="mt-2 text-2xl font-semibold text-chalk-50">
-            {sectorsConfig.length} sectors
-            {totalScraped > 0 && (
-              <span className="text-chalk-300 font-normal text-lg">
-                {" "}· {totalScraped} companies scored
-              </span>
-            )}
-          </p>
-          {scrapedIndex.length < sectorsConfig.length && (
-            <p className="mt-1 text-xs text-chalk-300/50">
-              {scrapedIndex.length} of {sectorsConfig.length} sectors have data — refresh any card below to fetch.
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+              Top sectors
+            </h2>
+            <p className="mt-2 text-2xl font-semibold text-chalk-50">
+              {sectorsConfig.length} sectors
+              {totalScraped > 0 && (
+                <span className="text-chalk-300 font-normal text-lg">
+                  {" "}· {totalScraped} companies scored
+                </span>
+              )}
             </p>
-          )}
+          </div>
+          <Link
+            href="/sectors"
+            className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors"
+          >
+            See all sectors <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
