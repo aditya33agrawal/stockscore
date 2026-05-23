@@ -276,27 +276,25 @@ export default async function CompanyPage({
 
       {/* GROWTH & CAGR + PROS & CONS */}
       {detail && (
-        <section className="mb-10 grid gap-6 lg:grid-cols-2">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {Object.entries(detail.growth_tables).map(([title, rows]) => (
-                <div key={title} className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-4">
-                  <p className="text-xs font-semibold text-chalk-300 mb-2">{title}</p>
-                  <div className="space-y-1">
-                    {Object.entries(rows).map(([period, value]) => (
-                      <div key={period} className="flex justify-between text-xs">
-                        <span className="text-chalk-300/70">{period}</span>
-                        <span className={`num font-semibold ${parseFloat(value) >= 0 ? "text-accent" : "text-bad"}`}>{value}</span>
-                      </div>
-                    ))}
-                  </div>
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {Object.entries(detail.growth_tables).map(([title, rows]) => (
+              <div key={title} className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-4">
+                <p className="text-xs font-semibold text-chalk-300 mb-2">{title}</p>
+                <div className="space-y-1">
+                  {Object.entries(rows).map(([period, value]) => (
+                    <div key={period} className="flex justify-between text-xs">
+                      <span className="text-chalk-300/70">{period}</span>
+                      <span className={`num font-semibold ${parseFloat(value) >= 0 ? "text-accent" : "text-bad"}`}>{value}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
-          {(detail.pros_cons.pros.length > 0 || detail.pros_cons.cons.length > 0) && (
+          {/* {(detail.pros_cons.pros.length > 0 || detail.pros_cons.cons.length > 0) && (
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Screener Analysis</h2>
               <div className="space-y-3">
@@ -326,7 +324,7 @@ export default async function CompanyPage({
                 )}
               </div>
             </div>
-          )}
+          )} */}
         </section>
       )}
 

@@ -27,7 +27,7 @@ export function ScoreBadge({
     >
       <span className="leading-none">{score.toFixed(1)}</span>
       <span className="text-[10px] uppercase tracking-widest text-chalk-300/70 mt-1">
-        {raw ? `${raw}/1000` : "/ 100"}
+        {raw ? `${raw}/100` : "/ 100"}
       </span>
     </div>
   );
