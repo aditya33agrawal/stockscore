@@ -11,6 +11,8 @@
     "refresh:sector": "npx tsx scripts/refresh.ts"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "cheerio": "^1.2.0",
     "clsx": "2.1.1",
     "lucide-react": "0.439.0",

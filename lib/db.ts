@@ -10,9 +10,10 @@ function createClient() {
   if (!connStr) throw new Error("DB_CONNECTION_STRING is not set");
   return postgres(connStr, {
     ssl: "require",
-    max: 1,
-    idle_timeout: 20,
-    connect_timeout: 10,
+    max: 5,
+    idle_timeout: 30,
+    max_lifetime: 1800,
+    connect_timeout: 15,
     prepare: false,
   });
 }
