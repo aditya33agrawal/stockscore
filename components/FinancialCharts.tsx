@@ -6,10 +6,8 @@ import {
   ComposedChart,
   BarChart,
   LineChart,
-  AreaChart,
   Bar,
   Line,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -168,14 +166,6 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
     sales: primaryData.quarterlySales[i],
     profit: primaryData.quarterlyNetProfit[i],
     opm: primaryData.quarterlyOpm[i],
-  }));
-
-  const shChartRows = primaryData.shLabels.map((label, i) => ({
-    label: shortQuarter(label),
-    promoter: primaryData.shPromoter[i],
-    fii: primaryData.shFii[i],
-    dii: primaryData.shDii[i],
-    public: primaryData.shPublic[i],
   }));
 
   const hasPeers = selectedPeers.length > 0;
@@ -347,9 +337,9 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
           </ResponsiveContainer>
         </ChartPanel>
 
-        <ChartPanel title="Quarterly Revenue & Net Profit">
+        <ChartPanel title="Quarterly Revenue & OPM %">
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={qtChartRows}>
+            <ComposedChart data={qtChartRows}>
               <CartesianGrid {...GRID} />
               <XAxis
                 dataKey="label"
@@ -358,18 +348,32 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 axisLine={false}
               />
               <YAxis
+                yAxisId="rev"
                 tickFormatter={fmtCr}
                 tick={AXIS_STYLE}
                 tickLine={false}
                 axisLine={false}
                 width={48}
               />
+              <YAxis
+                yAxisId="opm"
+                orientation="right"
+                tickFormatter={fmtPct}
+                tick={AXIS_STYLE}
+                tickLine={false}
+                axisLine={false}
+                width={40}
+                domain={["auto", "auto"]}
+              />
               <Tooltip
                 {...TOOLTIP_STYLE}
-                formatter={(value: number) => fmtCr(value)}
+                formatter={(value: number, name: string) =>
+                  name === "OPM %" ? fmtPct(value) : fmtCr(value)
+                }
               />
               <Legend wrapperStyle={{ fontSize: 11, color: "#9FB0C8" }} />
               <Bar
+                yAxisId="rev"
                 dataKey="sales"
                 name="Sales"
                 fill="#10B981"
@@ -377,13 +381,24 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 maxBarSize={20}
               />
               <Bar
+                yAxisId="rev"
                 dataKey="profit"
                 name="Net Profit"
                 fill="#3B82F6"
                 radius={[2, 2, 0, 0]}
                 maxBarSize={20}
               />
-            </BarChart>
+              <Line
+                yAxisId="opm"
+                type="monotone"
+                dataKey="opm"
+                name="OPM %"
+                stroke="#F59E0B"
+                strokeWidth={2}
+                dot={{ r: 3, fill: "#F59E0B" }}
+                connectNulls
+              />
+            </ComposedChart>
           </ResponsiveContainer>
         </ChartPanel>
 
@@ -502,67 +517,6 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
           </ResponsiveContainer>
         </ChartPanel>
 
-        <ChartPanel title="Shareholding Pattern">
-          <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={shChartRows}>
-              <CartesianGrid {...GRID} />
-              <XAxis
-                dataKey="label"
-                tick={AXIS_STYLE}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                tickFormatter={fmtPct}
-                tick={AXIS_STYLE}
-                tickLine={false}
-                axisLine={false}
-                width={44}
-              />
-              <Tooltip
-                {...TOOLTIP_STYLE}
-                formatter={(value: number) => fmtPct(value)}
-              />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#9FB0C8" }} />
-              <Area
-                type="monotone"
-                dataKey="promoter"
-                name="Promoters"
-                stackId="1"
-                stroke="#10B981"
-                fill="#10B981"
-                fillOpacity={0.6}
-              />
-              <Area
-                type="monotone"
-                dataKey="fii"
-                name="FIIs"
-                stackId="1"
-                stroke="#3B82F6"
-                fill="#3B82F6"
-                fillOpacity={0.6}
-              />
-              <Area
-                type="monotone"
-                dataKey="dii"
-                name="DIIs"
-                stackId="1"
-                stroke="#F59E0B"
-                fill="#F59E0B"
-                fillOpacity={0.6}
-              />
-              <Area
-                type="monotone"
-                dataKey="public"
-                name="Public"
-                stackId="1"
-                stroke="#A855F7"
-                fill="#A855F7"
-                fillOpacity={0.6}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </ChartPanel>
       </div>
     </div>
   );

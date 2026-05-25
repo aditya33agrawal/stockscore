@@ -38,6 +38,16 @@ export interface CompanyRaw {
   market_cap?: number;
   sales_5y_cagr?: number;
   profit_5y_cagr?: number;
+  dma50?: number;
+  dma200?: number;
+  /** 52-week high price */
+  high52w?: number;
+  /** 52-week low price */
+  low52w?: number;
+  /** 1-year stock price CAGR (%) */
+  stock_1y_cagr?: number;
+  /** 3-year stock price CAGR (%) */
+  stock_3y_cagr?: number;
 }
 
 export interface Company {

@@ -50,4 +50,31 @@ export async function ensureTables() {
     )
   `;
   await sql`ALTER TABLE sectors ADD COLUMN IF NOT EXISTS top_ticker TEXT`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS market_sectors (
+      slug          TEXT PRIMARY KEY,
+      name          TEXT NOT NULL,
+      refreshed_at  TIMESTAMPTZ NOT NULL,
+      metrics       JSONB NOT NULL
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS market_sectors_meta (
+      id                  INT PRIMARY KEY DEFAULT 1,
+      last_full_refresh   TIMESTAMPTZ
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS chart_data (
+      symbol            TEXT PRIMARY KEY,
+      fetched_at        TIMESTAMPTZ NOT NULL,
+      last_candle_date  DATE NOT NULL,
+      source            TEXT NOT NULL,
+      range_years       INT NOT NULL DEFAULT 10,
+      payload           JSONB NOT NULL
+    )
+  `;
 }

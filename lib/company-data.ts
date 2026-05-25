@@ -57,7 +57,10 @@ export interface ChartData {
   shPromoter: (number | null)[];
   shFii: (number | null)[];
   shDii: (number | null)[];
+  shGovt: (number | null)[];
   shPublic: (number | null)[];
+  annualRoe: (number | null)[];
+  annualDe: (number | null)[];
 }
 
 export function parseFinancialCSV(
@@ -113,6 +116,39 @@ export function toNum(s: string | undefined | null): number | null {
     .replace(/\s/g, "");
   const n = parseFloat(cleaned);
   return isNaN(n) ? null : n;
+}
+
+/**
+ * Shorten financial table column headers: "Mar 2025" → "M'25", "Jun 23" → "J'23", "TTM" → "TTM"
+ */
+export function shortLabel(l: string): string {
+  if (!l || l === "TTM") return l;
+  const monthMap: Record<string, string> = { Mar: "M", Jun: "J", Sep: "S", Dec: "D" };
+  for (const [month, abbr] of Object.entries(monthMap)) {
+    if (l.startsWith(month)) {
+      const yrMatch = l.match(/(\d{2,4})\s*$/);
+      if (yrMatch) return `${abbr}'${yrMatch[1].slice(-2)}`;
+    }
+  }
+  const m = l.match(/\d{4}/);
+  return m ? `'${m[0].slice(2)}` : l;
+}
+
+/**
+ * Average CFO / Net Profit ratio over the last 3 available annual periods.
+ * A ratio >= 1 means earnings are fully backed by operating cash.
+ */
+export function computeCashConversionRatio(
+  cfoCrArr: (number | null)[],
+  profitArr: (number | null)[]
+): number | null {
+  const pairs = cfoCrArr
+    .map((cfo, i) => ({ cfo, profit: profitArr[i] }))
+    .filter(({ cfo, profit }) => cfo !== null && profit !== null && profit! > 0);
+  if (pairs.length === 0) return null;
+  const recent = pairs.slice(-3);
+  const avg = recent.reduce((sum, { cfo, profit }) => sum + cfo! / profit!, 0) / recent.length;
+  return parseFloat(avg.toFixed(2));
 }
 
 export function extractChartData(detail: CompanyDetail, symbol: string): ChartData {
@@ -209,6 +245,7 @@ export function extractChartData(detail: CompanyDetail, symbol: string): ChartDa
   const promoterVals = sh.rowMap["Promoters"] ?? [];
   const fiiVals = sh.rowMap["FIIs"] ?? [];
   const diiVals = sh.rowMap["DIIs"] ?? [];
+  const govtVals = sh.rowMap["Government"] ?? [];
   const publicVals = sh.rowMap["Public"] ?? [];
 
   const shPromoter = shLabels.map((_, i) =>
@@ -220,9 +257,30 @@ export function extractChartData(detail: CompanyDetail, symbol: string): ChartDa
   const shDii = shLabels.map((_, i) =>
     toNum((diiVals[i] ?? "").replace(/%/g, ""))
   );
+  const shGovt = shLabels.map((_, i) =>
+    toNum((govtVals[i] ?? "").replace(/%/g, ""))
+  );
   const shPublic = shLabels.map((_, i) =>
     toNum((publicVals[i] ?? "").replace(/%/g, ""))
   );
+
+  const roeVals = ratTable.rowMap["Return on equity %"] ?? [];
+  const annualRoe = annualLabels.map((lbl) => {
+    const i = ratTable.headers.indexOf(lbl);
+    if (i < 0) return null;
+    const raw = roeVals[i] ?? null;
+    if (raw === null) return null;
+    return toNum(raw.replace(/%/g, ""));
+  });
+
+  const annualDe = annualLabels.map((lbl) => {
+    const bsi = bsLabels.indexOf(lbl);
+    if (bsi < 0) return null;
+    const eq = bsEquity[bsi];
+    const borr = bsBorrowings[bsi];
+    if (!eq || eq === 0) return null;
+    return borr !== null ? parseFloat((borr / eq).toFixed(2)) : null;
+  });
 
   return {
     company: symbol,
@@ -245,6 +303,9 @@ export function extractChartData(detail: CompanyDetail, symbol: string): ChartDa
     shPromoter,
     shFii,
     shDii,
+    shGovt,
     shPublic,
+    annualRoe,
+    annualDe,
   };
 }

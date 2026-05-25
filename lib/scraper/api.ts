@@ -74,7 +74,7 @@ export async function fetchQuickRatios(
     const html = await res.text();
     const $ = load(html);
     const result: Record<string, string> = {};
-    $('li[data-source="quick-ratio"]').each((_, li) => {
+    $("li").each((_, li) => {
       const k = $(li).find(".name").text().trim();
       const v = $(li).find(".value").text().replace(/\s+/g, " ").trim();
       if (k) result[k] = v;

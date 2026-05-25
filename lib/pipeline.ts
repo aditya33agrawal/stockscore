@@ -210,7 +210,7 @@ async function upsertSectorDb(sectorData: SectorData, topCompany: Company | unde
   `;
 }
 
-export async function runPipeline(log: Log, targetSectorSlug?: string): Promise<void> {
+export async function runPipeline(log: Log, targetSectorSlug?: string, force = false): Promise<void> {
   log("[pipeline] Loading config …");
   const config = await loadConfig();
 
@@ -244,17 +244,19 @@ export async function runPipeline(log: Log, targetSectorSlug?: string): Promise<
     log(`\n[sector] ${sector.name} (${sector.companies.length} companies)`);
 
     for (const companyName of sector.companies) {
-      const fresh = await findFreshCompany(companyName, sector.slug);
-      if (fresh) {
-        const ageDays = Math.floor(
-          (Date.now() - new Date(fresh.refreshed_at).getTime()) / (24 * 3600 * 1000),
-        );
-        const cachedScore = (fresh.data as { score?: Company })?.score;
-        if (cachedScore) {
-          scored.push({ ...cachedScore, rank: 0 });
-          skippedSymbols.add(fresh.symbol);
-          log(`  [company] ${companyName} — fresh (${ageDays}d old), skip ✓`);
-          continue;
+      if (!force) {
+        const fresh = await findFreshCompany(companyName, sector.slug);
+        if (fresh) {
+          const ageDays = Math.floor(
+            (Date.now() - new Date(fresh.refreshed_at).getTime()) / (24 * 3600 * 1000),
+          );
+          const cachedScore = (fresh.data as { score?: Company })?.score;
+          if (cachedScore) {
+            scored.push({ ...cachedScore, rank: 0 });
+            skippedSymbols.add(fresh.symbol);
+            log(`  [company] ${companyName} — fresh (${ageDays}d old), skip ✓`);
+            continue;
+          }
         }
       }
 

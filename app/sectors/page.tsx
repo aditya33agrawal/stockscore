@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { BarChart2 } from "lucide-react";
 import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
 import { SectorsBrowser } from "@/components/SectorsBrowser";
 
@@ -33,9 +35,18 @@ export default async function SectorsPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-accent">
           All Sectors
         </p>
-        <h1 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50">
-          Browse every sector & stock
-        </h1>
+        <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50">
+            Browse every sector & stock
+          </h1>
+          <Link
+            href="/sectors/compare"
+            className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors shrink-0"
+          >
+            <BarChart2 className="h-3.5 w-3.5" />
+            Compare all sectors
+          </Link>
+        </div>
         <p className="mt-3 text-chalk-300">
           {sectors.length} sectors · {companies.length} companies scored.
         </p>

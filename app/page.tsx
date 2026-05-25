@@ -24,7 +24,7 @@ export default async function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-x-hidden">
         <div className="absolute inset-0 hero-grid" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-14 sm:pt-24 pb-12 sm:pb-20 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
@@ -106,12 +106,20 @@ export default async function Home() {
               )}
             </p>
           </div>
-          <Link
-            href="/sectors"
-            className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors"
-          >
-            See all sectors <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/sectors/compare"
+              className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors"
+            >
+              Compare sectors <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <Link
+              href="/sectors"
+              className="inline-flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-sm text-accent hover:bg-accent/20 transition-colors"
+            >
+              See all <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

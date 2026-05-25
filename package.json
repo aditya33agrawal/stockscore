@@ -1,5 +1,5 @@
 {
-  "name": "aditya-agrawal-finance",
+  "name": "stock-score",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,13 +8,19 @@
     "start": "next start",
     "lint": "next lint",
     "refresh": "npx tsx scripts/refresh.ts",
-    "refresh:sector": "npx tsx scripts/refresh.ts"
+    "refresh:force": "npx tsx scripts/refresh.ts --force",
+    "refresh:sector": "npx tsx scripts/refresh.ts",
+    "refresh:market": "npx tsx scripts/refresh-market.ts",
+    "refresh:market:force": "npx tsx scripts/refresh-market.ts --force",
+    "refresh:charts": "npx tsx scripts/refresh-charts.ts",
+    "refresh:charts:force": "npx tsx scripts/refresh-charts.ts --force"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "cheerio": "^1.2.0",
     "clsx": "2.1.1",
+    "lightweight-charts": "^4.2.3",
     "lucide-react": "0.439.0",
     "next": "^14.2.33",
     "postgres": "^3.4.9",

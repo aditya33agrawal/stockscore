@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
-  AlertTriangle,
   ThumbsUp,
   ThumbsDown,
   ExternalLink,
@@ -15,6 +14,24 @@ import { ScoreBadge } from "@/components/ScoreBadge";
 import { CategoryCard } from "@/components/CategoryCard";
 import { FinancialCharts } from "@/components/FinancialCharts";
 import { FinancialTable } from "@/components/FinancialTable";
+import { MetricCard } from "@/components/MetricCard";
+import { AnnouncementList } from "@/components/AnnouncementList";
+import { PriceChart } from "@/components/PriceChart";
+import {
+  evaluatePE,
+  evaluateROE,
+  evaluateROCE,
+  evaluateOPM,
+  evaluateDE,
+  evaluateDividend,
+  evaluateSalesProfit,
+  evaluateTrend,
+  evaluateCashConversion,
+} from "@/lib/evaluators";
+import type { MetricCardProps } from "@/components/MetricCard";
+import { PeerComparisonTable } from "@/components/PeerComparisonTable";
+import { PriceRuler } from "@/components/PriceRuler";
+import { RadarCompare } from "@/components/RadarCompare";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +49,57 @@ export async function generateMetadata({
   };
 }
 
+// Ordered groups for All Key Ratios
+const RATIO_GROUPS: { label: string; keys: string[] }[] = [
+  {
+    label: "Valuation",
+    keys: [
+      "Current Price",
+      "Market Cap",
+      "High / Low",
+      "Stock P/E",
+      "Industry PE",
+      "PEG Ratio",
+      "Price to book value",
+      "Book Value",
+      "Intrinsic Value",
+      "Face Value",
+    ],
+  },
+  {
+    label: "Returns & Margins",
+    keys: [
+      "ROE",
+      "ROCE",
+      "ROCE 5Yr",
+      "Dividend Yield",
+      "Profit Var 10Yrs",
+      "Sales Var 10Yrs",
+    ],
+  },
+  {
+    label: "Leverage & Debt",
+    keys: [
+      "Debt to equity",
+      "Pledged percentage",
+      "Debt",
+      "Secured loan",
+      "Unsecured loan",
+      "Debt 5Years back",
+      "Debt 10Years back",
+    ],
+  },
+  {
+    label: "Technicals",
+    keys: [
+      "DMA 50",
+      "DMA 200",
+      "Down from 52w high",
+      "Up from 52w low",
+    ],
+  },
+];
+
 export default async function CompanyPage({
   params,
 }: {
@@ -47,6 +115,235 @@ export default async function CompanyPage({
   const peers = sector.companies
     .filter((c) => c.slug !== co.slug)
     .map((c) => ({ name: c.name, symbol: c.ticker, ticker: c.ticker }));
+
+  // Build MetricCard data
+  const metricCards: MetricCardProps[] = [];
+
+  if (chartData) {
+    const evPE = evaluatePE(co.raw);
+    metricCards.push({
+      title: "Valuation: P/E",
+      headline: co.raw.pe ? `${co.raw.pe.toFixed(1)}x` : "N/A",
+      badge: co.raw.pe && co.raw.industry_pe
+        ? {
+            label: co.raw.pe < co.raw.industry_pe * 0.8
+              ? "Cheap vs sector"
+              : co.raw.pe > co.raw.industry_pe * 1.2
+              ? "Pricier than sector"
+              : "In line with sector",
+            tone: co.raw.pe < co.raw.industry_pe * 0.8
+              ? "good"
+              : co.raw.pe > co.raw.industry_pe * 1.2
+              ? "warn"
+              : "neutral",
+          }
+        : undefined,
+      sentence: evPE.sentence,
+      sentenceTone: evPE.tone,
+      spark: co.raw.pe && co.raw.industry_pe
+        ? {
+            type: "comparison",
+            rows: [
+              { label: "Stock P/E", value: co.raw.pe },
+              { label: "Industry P/E", value: co.raw.industry_pe },
+            ],
+            formatter: "x",
+          }
+        : undefined,
+    });
+
+    const evROE = evaluateROE(co.raw);
+    metricCards.push({
+      title: "Return on Equity",
+      headline: co.raw.roe ? `${co.raw.roe.toFixed(1)}%` : "N/A",
+      badge: co.raw.roe
+        ? { label: co.raw.roe >= 20 ? "Strong" : co.raw.roe >= 12 ? "Decent" : "Weak", tone: co.raw.roe >= 20 ? "good" : co.raw.roe >= 12 ? "neutral" : "warn" }
+        : undefined,
+      sentence: evROE.sentence,
+      sentenceTone: evROE.tone,
+      spark: chartData.annualRoe.some((v) => v !== null)
+        ? {
+            type: "line",
+            rows: chartData.annualLabels.map((l, i) => ({ label: l, value: chartData.annualRoe[i] })),
+            label: "ROE %",
+            formatter: "pct",
+          }
+        : undefined,
+    });
+
+    const evROCE = evaluateROCE(co.raw);
+    metricCards.push({
+      title: "Return on Capital Employed",
+      headline: co.raw.roce ? `${co.raw.roce.toFixed(1)}%` : "N/A",
+      badge: co.raw.roce
+        ? { label: co.raw.roce >= 20 ? "Excellent" : co.raw.roce >= 12 ? "Decent" : "Below par", tone: co.raw.roce >= 20 ? "good" : co.raw.roce >= 12 ? "neutral" : "warn" }
+        : undefined,
+      sentence: evROCE.sentence,
+      sentenceTone: evROCE.tone,
+      spark: chartData.annualRoce.some((v) => v !== null)
+        ? {
+            type: "line",
+            rows: chartData.annualLabels.map((l, i) => ({ label: l, value: chartData.annualRoce[i] })),
+            label: "ROCE %",
+            formatter: "pct",
+          }
+        : undefined,
+    });
+
+    const evOPM = evaluateOPM(co.raw);
+    metricCards.push({
+      title: "Operating Margin (OPM)",
+      headline: co.raw.opm ? `${co.raw.opm.toFixed(1)}%` : "N/A",
+      badge: co.raw.opm
+        ? { label: co.raw.opm >= 20 ? "Wide margin" : co.raw.opm >= 10 ? "Healthy" : "Thin margin", tone: co.raw.opm >= 20 ? "good" : co.raw.opm >= 10 ? "neutral" : "warn" }
+        : undefined,
+      sentence: evOPM.sentence,
+      sentenceTone: evOPM.tone,
+      spark: chartData.quarterlyOpm.some((v) => v !== null)
+        ? {
+            type: "bar",
+            rows: chartData.quarterlyLabels.slice(-8).map((l, i) => ({
+              label: l,
+              value: chartData.quarterlyOpm[chartData.quarterlyLabels.length - 8 + i] ?? null,
+            })),
+            label: "OPM %",
+            formatter: "pct",
+          }
+        : undefined,
+    });
+
+    const evDE = evaluateDE(co.raw);
+    metricCards.push({
+      title: "Debt to Equity",
+      headline: co.raw.debt_to_equity != null ? `${co.raw.debt_to_equity.toFixed(2)}` : "N/A",
+      badge: co.raw.debt_to_equity != null
+        ? { label: co.raw.debt_to_equity < 0.3 ? "Debt-free" : co.raw.debt_to_equity < 1 ? "Low leverage" : "High leverage", tone: co.raw.debt_to_equity < 0.3 ? "good" : co.raw.debt_to_equity < 1 ? "neutral" : "warn" }
+        : undefined,
+      sentence: evDE.sentence,
+      sentenceTone: evDE.tone,
+      spark: chartData.annualDe.some((v) => v !== null)
+        ? {
+            type: "line",
+            rows: chartData.annualLabels.map((l, i) => ({ label: l, value: chartData.annualDe[i] })),
+            label: "D/E",
+            formatter: "ratio",
+          }
+        : undefined,
+    });
+
+    const evSP = evaluateSalesProfit(co.raw);
+    metricCards.push({
+      title: "Revenue & Profit Growth",
+      headline: co.raw.sales_5y_cagr && co.raw.profit_5y_cagr
+        ? `${co.raw.profit_5y_cagr.toFixed(0)}% profit CAGR`
+        : co.raw.profit_5y_cagr
+        ? `${co.raw.profit_5y_cagr.toFixed(0)}% 5Y`
+        : "—",
+      sentence: evSP.sentence,
+      sentenceTone: evSP.tone,
+      spark: chartData.annualSales.some((v) => v !== null)
+        ? {
+            type: "dualBar",
+            rows: chartData.annualLabels.map((l, i) => ({
+              label: l,
+              value: chartData.annualSales[i],
+              value2: chartData.annualNetProfit[i],
+            })),
+            label: "Sales",
+            label2: "Net Profit",
+            formatter: "cr",
+          }
+        : undefined,
+    });
+
+    const evDiv = evaluateDividend(co.raw);
+    metricCards.push({
+      title: "Dividend Yield",
+      headline: co.raw.dividend_yield ? `${co.raw.dividend_yield.toFixed(2)}%` : "Nil",
+      badge: co.raw.dividend_yield
+        ? { label: co.raw.dividend_yield >= 3 ? "Strong yield" : co.raw.dividend_yield >= 1 ? "Moderate" : "Low", tone: co.raw.dividend_yield >= 3 ? "good" : "neutral" }
+        : { label: "No dividend", tone: "neutral" },
+      sentence: evDiv.sentence,
+      sentenceTone: evDiv.tone,
+    });
+
+    // Cash Conversion Quality
+    const evCC = evaluateCashConversion(chartData.cfCfo, chartData.annualNetProfit);
+    if (evCC.ratio !== null) {
+      metricCards.push({
+        title: "Earnings Quality (CFO / PAT)",
+        headline: `${(evCC.ratio * 100).toFixed(0)}%`,
+        badge: { label: evCC.ratio >= 1.0 ? "Cash-backed" : evCC.ratio >= 0.7 ? "Reasonable" : "Watch earnings", tone: evCC.ratio >= 1.0 ? "good" : evCC.ratio >= 0.7 ? "neutral" : "warn" },
+        sentence: evCC.sentence,
+        sentenceTone: evCC.tone,
+        spark: chartData.cfCfo.some((v) => v !== null)
+          ? {
+              type: "dualBar",
+              rows: chartData.cfLabels.map((l, i) => ({
+                label: l,
+                value: chartData.cfCfo[i],
+                value2: chartData.annualNetProfit[chartData.annualLabels.indexOf(l)] ?? null,
+              })),
+              label: "CFO",
+              label2: "Net Profit",
+              formatter: "cr",
+            }
+          : undefined,
+      });
+    }
+
+    // Promoter Holding
+    const shLen = chartData.shPromoter.length;
+    const latestPromoter = shLen > 0 ? chartData.shPromoter[shLen - 1] : null;
+    const prevPromoter = shLen > 4 ? chartData.shPromoter[shLen - 5] : shLen > 0 ? chartData.shPromoter[0] : null;
+    const promoterDelta = latestPromoter != null && prevPromoter != null ? latestPromoter - prevPromoter : null;
+    const isPledgedHigh = co.raw.pledged_pct != null && co.raw.pledged_pct > 10;
+    metricCards.push({
+      title: "Promoter Holding",
+      headline: latestPromoter != null ? `${latestPromoter.toFixed(1)}%` : "N/A",
+      badge: isPledgedHigh
+        ? { label: `${co.raw.pledged_pct!.toFixed(1)}% pledged ⚠`, tone: "warn" }
+        : promoterDelta != null
+        ? {
+            label: promoterDelta > 0.5 ? `↑ ${promoterDelta.toFixed(1)}pp` : promoterDelta < -0.5 ? `↓ ${Math.abs(promoterDelta).toFixed(1)}pp` : "Stable",
+            tone: promoterDelta > 0.5 ? "good" : promoterDelta < -0.5 ? "warn" : "neutral",
+          }
+        : undefined,
+      sentence: isPledgedHigh
+        ? `${co.raw.pledged_pct!.toFixed(1)}% of promoter shares are pledged — a key risk if the stock corrects sharply.`
+        : promoterDelta != null && Math.abs(promoterDelta) > 0.5
+        ? `Promoters ${promoterDelta > 0 ? "increased" : "reduced"} stake by ${Math.abs(promoterDelta).toFixed(1)}pp over the last year.`
+        : `Promoters hold ${latestPromoter?.toFixed(1) ?? "?"}% — stable ownership structure.`,
+      sentenceTone: isPledgedHigh ? "warn" : promoterDelta != null && promoterDelta > 0.5 ? "good" : promoterDelta != null && promoterDelta < -0.5 ? "warn" : "neutral",
+      spark: chartData.shPromoter.some((v) => v !== null)
+        ? {
+            type: "line",
+            rows: chartData.shLabels.map((l, i) => ({ label: l, value: chartData.shPromoter[i] })),
+            label: "Promoter %",
+            formatter: "pct",
+          }
+        : undefined,
+    });
+  }
+
+  // Compute trend info
+  const trendInfo = evaluateTrend(co.cmp, co.raw);
+
+  // Parse 52-week high/low from ratios
+  function parse52wHL(value: string | undefined): { high: number | null; low: number | null } {
+    if (!value) return { high: null, low: null };
+    const parts = value.split("/").map((p) => parseFloat(p.replace(/[₹,\s]/g, "")));
+    return {
+      high: parts[0] > 0 ? parts[0] : null,
+      low: parts[1] > 0 ? parts[1] : null,
+    };
+  }
+  const { high: high52w, low: low52w } = parse52wHL(detail?.ratios["High / Low"]);
+
+  // Build ordered ratios
+  const ratiosMap = detail?.ratios ?? {};
+  const allKeys = Object.keys(ratiosMap);
+  const usedKeys = new Set<string>();
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -79,20 +376,24 @@ export default async function CompanyPage({
                   {co.classification}
                 </span>
               )}
+              {/* Trend Tag */}
+              <span
+                title={trendInfo.sentence}
+                className={clsx(
+                  "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider cursor-help",
+                  trendInfo.trend === "up" && trendInfo.strength === "strong" && "border-accent bg-accent/20 text-accent",
+                  trendInfo.trend === "up" && trendInfo.strength !== "strong" && "border-accent/40 bg-accent/10 text-accent",
+                  trendInfo.trend === "down" && trendInfo.strength === "strong" && "border-bad bg-bad/20 text-bad",
+                  trendInfo.trend === "down" && trendInfo.strength !== "strong" && "border-bad/40 bg-bad/10 text-bad",
+                  trendInfo.trend === "sideways" && "border-warn/40 bg-warn/10 text-warn"
+                )}
+              >
+                {trendInfo.label}
+              </span>
             </div>
           </div>
           <ScoreBadge score={co.final_score} raw={co.raw_total} size="lg" />
         </div>
-
-        {co.assumptions && co.assumptions.length > 0 && (
-          <div className="mt-5 flex items-start gap-2 rounded-lg border border-warn/20 bg-warn/5 px-3 py-2">
-            <AlertTriangle className="h-4 w-4 text-warn shrink-0 mt-0.5" />
-            <div className="text-xs text-chalk-300">
-              <span className="font-semibold text-warn">Assumptions: </span>
-              {co.assumptions.join(" · ")}
-            </div>
-          </div>
-        )}
 
         <div className="mt-5 flex flex-wrap gap-2">
           <a
@@ -106,6 +407,19 @@ export default async function CompanyPage({
         </div>
       </header>
 
+      {/* PRICE RULER — 52w range + DMA positions */}
+      {(co.raw.dma50 || co.raw.dma200 || high52w || low52w) && (
+        <section className="mb-8">
+          <PriceRuler
+            cmp={co.cmp}
+            dma50={co.raw.dma50}
+            dma200={co.raw.dma200}
+            high52w={high52w}
+            low52w={low52w}
+          />
+        </section>
+      )}
+
       {/* CATEGORY BREAKDOWN */}
       <section className="mb-10">
         <div className="flex items-baseline justify-between mb-4">
@@ -118,6 +432,10 @@ export default async function CompanyPage({
           >
             How is this calculated? →
           </Link>
+        </div>
+        {/* Radar chart — visual fingerprint of the company's score profile */}
+        <div className="mb-5">
+          <RadarCompare companies={[co]} />
         </div>
         <div className="grid gap-3">
           {co.categories.map((cat) => (
@@ -195,49 +513,41 @@ export default async function CompanyPage({
         </div>
       </section>
 
-      {/* RAW DATA */}
-      <section className="mb-10">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">
-          Raw financial snapshot
-        </h2>
-        <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              ["P/E", co.raw.pe?.toFixed(1)],
-              ["Industry P/E", co.raw.industry_pe?.toFixed(1)],
-              ["P/BV", co.raw.pbv?.toFixed(2)],
-              ["ROE", co.raw.roe ? `${co.raw.roe}%` : null],
-              ["ROCE", co.raw.roce ? `${co.raw.roce}%` : null],
-              ["OPM (TTM)", co.raw.opm ? `${co.raw.opm}%` : null],
-              ["D/E", co.raw.debt_to_equity?.toFixed(2)],
-              ["Current Ratio", co.raw.current_ratio?.toFixed(2)],
-              [
-                "Dividend Yield",
-                co.raw.dividend_yield ? `${co.raw.dividend_yield}%` : null,
-              ],
-              [
-                "Pledged",
-                co.raw.pledged_pct != null ? `${co.raw.pledged_pct}%` : null,
-              ],
-              [
-                "Sales 5Y CAGR",
-                co.raw.sales_5y_cagr ? `${co.raw.sales_5y_cagr}%` : null,
-              ],
-              [
-                "Profit 5Y CAGR",
-                co.raw.profit_5y_cagr ? `${co.raw.profit_5y_cagr}%` : null,
-              ],
-            ]
-              .filter(([, v]) => v != null)
-              .map(([label, value]) => (
-                <div key={label as string}>
-                  <p className="text-xs text-chalk-300/70">{label}</p>
-                  <p className="num font-semibold text-chalk-50 mt-1">{value}</p>
-                </div>
-              ))}
+      {/* FINANCIALS AT A GLANCE — replaces raw snapshot */}
+      {metricCards.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+              Financials at a Glance
+            </h2>
+            <Link href="/learn" className="text-xs text-chalk-300 hover:text-accent">
+              Learn what these mean →
+            </Link>
           </div>
-        </div>
-      </section>
+          <div className="grid gap-4 md:grid-cols-2">
+            {metricCards.map((card) => (
+              <MetricCard key={card.title} {...card} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* PEER COMPARISON */}
+      {sector.companies.length > 1 && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+              How Does It Compare?
+            </h2>
+            <span className="text-xs text-chalk-300/50">{sector.name} · {sector.companies.length} companies</span>
+          </div>
+          <PeerComparisonTable
+            companies={sector.companies}
+            currentSlug={co.slug}
+            sectorSlug={sector.slug}
+          />
+        </section>
+      )}
 
       {/* COMPANY PROFILE */}
       {detail && (detail.about || detail.key_points) && (
@@ -257,24 +567,53 @@ export default async function CompanyPage({
         </section>
       )}
 
-      {/* ALL KEY RATIOS */}
+      {/* ALL KEY RATIOS — grouped */}
       {detail && Object.keys(detail.ratios).length > 0 && (
         <section className="mb-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">All Key Ratios</h2>
-          <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
-              {Object.entries(detail.ratios).map(([k, v]) => (
-                <div key={k}>
-                  <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
-                  <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{v}</p>
+          <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 space-y-6">
+            {RATIO_GROUPS.map((group) => {
+              const groupEntries = group.keys
+                .filter((k) => ratiosMap[k] != null)
+                .map((k) => { usedKeys.add(k); return [k, ratiosMap[k]] as [string, string]; });
+              if (groupEntries.length === 0) return null;
+              return (
+                <div key={group.label}>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">{group.label}</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
+                    {groupEntries.map(([k, v]) => (
+                      <div key={k}>
+                        <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
+                        <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{v}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+            {/* Tail: any keys not in any group */}
+            {(() => {
+              const remaining = allKeys.filter((k) => !usedKeys.has(k));
+              if (remaining.length === 0) return null;
+              return (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">Other</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
+                    {remaining.map((k) => (
+                      <div key={k}>
+                        <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
+                        <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{ratiosMap[k]}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </section>
       )}
 
-      {/* GROWTH & CAGR + PROS & CONS */}
+      {/* GROWTH & CAGR */}
       {detail && (
         <section className="mb-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
@@ -293,40 +632,14 @@ export default async function CompanyPage({
               </div>
             ))}
           </div>
-
-          {/* {(detail.pros_cons.pros.length > 0 || detail.pros_cons.cons.length > 0) && (
-            <div>
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Screener Analysis</h2>
-              <div className="space-y-3">
-                {detail.pros_cons.pros.length > 0 && (
-                  <div className="rounded-xl border border-accent/20 bg-accent/5 p-4">
-                    <p className="text-xs font-semibold text-accent mb-2">Positives</p>
-                    <ul className="space-y-1.5">
-                      {detail.pros_cons.pros.map((p, i) => (
-                        <li key={i} className="text-xs text-chalk-300 flex gap-2">
-                          <span className="text-accent shrink-0">+</span>{p}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {detail.pros_cons.cons.length > 0 && (
-                  <div className="rounded-xl border border-bad/20 bg-bad/5 p-4">
-                    <p className="text-xs font-semibold text-bad mb-2">Concerns</p>
-                    <ul className="space-y-1.5">
-                      {detail.pros_cons.cons.map((c, i) => (
-                        <li key={i} className="text-xs text-chalk-300 flex gap-2">
-                          <span className="text-bad shrink-0">−</span>{c}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          )} */}
         </section>
       )}
+
+      {/* PRICE CHART (technicals) */}
+      <section className="mb-10">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Price & Technicals</h2>
+        <PriceChart symbol={co.ticker} />
+      </section>
 
       {/* FINANCIAL CHARTS */}
       {chartData && (
@@ -358,7 +671,7 @@ export default async function CompanyPage({
                   <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
                 </summary>
                 <div className="border-t border-ink-700/40">
-                  <FinancialTable csv={csv} />
+                  <FinancialTable csv={csv} title={title} />
                 </div>
               </details>
             ))}
@@ -366,54 +679,22 @@ export default async function CompanyPage({
         </section>
       )}
 
-      {/* ANNOUNCEMENTS */}
+      {/* ANNOUNCEMENTS — compressed to 1 each with "View all" */}
       {detail && (detail.announcements.important.length > 0 || detail.announcements.recent.length > 0) && (
         <section className="mb-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Announcements</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {detail.announcements.important.length > 0 && (
-              <div>
-                <h3 className="text-xs font-semibold text-chalk-300/70 uppercase tracking-wider mb-2">Important</h3>
-                <div className="space-y-2">
-                  {detail.announcements.important.map((a, i) => (
-                    <a
-                      key={i}
-                      href={a.url}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="block rounded-lg border border-ink-700/60 bg-ink-900/40 px-4 py-3 hover:border-accent/30 transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-xs text-chalk-100 leading-snug flex-1">{a.summary || a.title}</p>
-                        <ExternalLink className="h-3 w-3 text-chalk-300/40 shrink-0 mt-0.5" />
-                      </div>
-                      <p className="text-xs text-chalk-300/50 mt-1.5 num">{a.date}</p>
-                    </a>
-                  ))}
-                </div>
-              </div>
+              <AnnouncementList
+                announcements={detail.announcements.important}
+                heading="Important"
+              />
             )}
             {detail.announcements.recent.length > 0 && (
-              <div>
-                <h3 className="text-xs font-semibold text-chalk-300/70 uppercase tracking-wider mb-2">Recent</h3>
-                <div className="space-y-2">
-                  {detail.announcements.recent.map((a, i) => (
-                    <a
-                      key={i}
-                      href={a.url}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="block rounded-lg border border-ink-700/60 bg-ink-900/40 px-4 py-3 hover:border-accent/30 transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-xs text-chalk-100 leading-snug flex-1">{a.summary || a.title}</p>
-                        <ExternalLink className="h-3 w-3 text-chalk-300/40 shrink-0 mt-0.5" />
-                      </div>
-                      <p className="text-xs text-chalk-300/50 mt-1.5 num">{a.date}</p>
-                    </a>
-                  ))}
-                </div>
-              </div>
+              <AnnouncementList
+                announcements={detail.announcements.recent}
+                heading="Recent"
+              />
             )}
           </div>
         </section>

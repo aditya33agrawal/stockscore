@@ -1,4 +1,5 @@
-import { parseFinancialCSV } from "@/lib/company-data";
+import { parseFinancialCSV, shortLabel } from "@/lib/company-data";
+import { FinancialTableChart } from "./FinancialTableChart";
 
 interface Props {
   csv: string | null;
@@ -26,12 +27,9 @@ export function FinancialTable({ csv, title }: Props) {
   }
 
   return (
-    <div className="overflow-x-auto">
-      {title && (
-        <p className="px-5 py-3 text-xs font-semibold uppercase tracking-widest text-accent border-b border-ink-700/40">
-          {title}
-        </p>
-      )}
+    <div>
+      {title && <FinancialTableChart csv={csv} title={title} />}
+      <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
           <tr className="bg-ink-800/60">
@@ -41,9 +39,10 @@ export function FinancialTable({ csv, title }: Props) {
             {headers.map((h) => (
               <th
                 key={h}
-                className="px-3 py-2.5 text-right font-semibold text-chalk-300 whitespace-nowrap max-w-[80px] truncate"
+                className="px-3 py-2.5 text-right font-semibold text-chalk-300 whitespace-nowrap"
+                title={h}
               >
-                {h}
+                {shortLabel(h)}
               </th>
             ))}
           </tr>
@@ -69,6 +68,7 @@ export function FinancialTable({ csv, title }: Props) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

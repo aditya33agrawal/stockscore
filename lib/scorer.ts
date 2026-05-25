@@ -121,6 +121,8 @@ interface Metrics {
   debtEquity: number;
   pledgedPct: number;
   cmp: number;
+  dma50: number;
+  dma200: number;
 
   salesCagr5y: number;
   salesCagr3y: number;
@@ -287,6 +289,8 @@ function extractMetrics(raw: RawCompanyData): Metrics {
     debtEquity,
     pledgedPct,
     cmp,
+    dma50: parseNum(r["DMA 50"]),
+    dma200: parseNum(r["DMA 200"]),
     salesCagr5y: parsePercent(sg["5 Years"] ?? sg["5 Yrs"]),
     salesCagr3y: parsePercent(sg["3 Years"] ?? sg["3 Yrs"]),
     salesCagrTtm: parsePercent(sg["TTM"]),
@@ -686,6 +690,10 @@ export function scoreCompany(raw: RawCompanyData): Omit<Company, "rank"> {
     market_cap: m.marketCap || undefined,
     sales_5y_cagr: m.salesCagr5y || undefined,
     profit_5y_cagr: m.profitCagr5y || undefined,
+    high52w: m.high52w || undefined,
+    low52w: m.low52w || undefined,
+    stock_1y_cagr: m.stockCagr1y || undefined,
+    stock_3y_cagr: m.stockCagr3y || undefined,
   };
 
   const assumptions: string[] = [];
