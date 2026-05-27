@@ -3,6 +3,8 @@ import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
 import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
 import { SectorRefreshButton } from "@/components/SectorRefreshButton";
+import { scoreGradient, scoreColor, classificationLabel, classificationStyle } from "@/lib/format";
+import clsx from "clsx";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +15,7 @@ export default async function Home() {
     loadCompaniesIndex(),
   ]);
 
-  const scrapedMap = new Map(scrapedIndex.map((s) => [s.slug, s]));
+  const scrapedMap  = new Map(scrapedIndex.map((s) => [s.slug, s]));
   const totalScraped = scrapedIndex.reduce((a, s) => a + s.companies_count, 0);
 
   const sectors = sectorsConfig
@@ -23,99 +25,120 @@ export default async function Home() {
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative">
+      {/* ── HERO ──────────────────────────────────────── */}
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0 hero-grid" />
-        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-14 sm:pt-24 pb-12 sm:pb-20 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
-            <Sparkles className="h-3.5 w-3.5" />
-            Stockscore · Updated weekly
-          </span>
-          <h1 className="mt-6 text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-chalk-50 leading-[1.1]">
-            Fundamental analysis,{" "}
-            <span className="text-accent">made transparent.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-chalk-300">
-            Score every company in an Indian sector against its peers — across
-            10 categories, 1000 points — and see exactly where each point was
-            earned or lost.
-          </p>
+        {/* Cyan orb */}
+        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%)" }} />
 
-          <div className="mt-10">
-            <SectorSearch sectors={scrapedIndex} companies={companies} />
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-24 text-center">
+          {/* Live badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/8 px-4 py-1.5 text-xs font-semibold text-accent mb-8 tracking-wide uppercase">
+            <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
+            Live · Updated weekly
           </div>
 
-          <div className="mt-4 text-xs text-chalk-300/70">
-            Top 9 sectors below · {sectorsConfig.length} sectors covered.
+          <h1 className="text-[clamp(36px,5vw,72px)] font-bold tracking-tight text-chalk-50 leading-[1.05] mb-5">
+            See{" "}
+            <span className="gradient-text">exactly why</span>
+            <br />
+            a stock scores high.
+          </h1>
+
+          <p className="max-w-xl mx-auto text-[17px] text-chalk-200/80 leading-relaxed mb-10">
+            Transparent, rule-based fundamental analysis of every Indian sector
+            across 10 categories. No black boxes — every +/− is traceable to a rule.
+          </p>
+
+          <SectorSearch sectors={scrapedIndex} companies={companies} />
+
+          {/* Stats strip */}
+          <div className="mt-10 inline-flex items-center gap-8 sm:gap-12 glass border-subtle rounded-2xl px-8 sm:px-12 py-5">
+            {[
+              { num: sectorsConfig.length.toString(), label: "Sectors" },
+              { num: `${totalScraped}+`,              label: "Companies" },
+              { num: "10",                            label: "Score Categories" },
+            ].map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="num text-[28px] font-bold text-chalk-50 leading-none tracking-tight">
+                  <span className="gradient-text">{s.num}</span>
+                </div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-chalk-300/60 mt-1.5">
+                  {s.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-16">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-          How it works
-        </h2>
-        <div className="mt-6 grid gap-4 sm:gap-6 sm:grid-cols-3">
+      {/* ── HOW IT WORKS ─────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-3">How it works</p>
+        <h2 className="text-2xl font-bold tracking-tight text-chalk-50 mb-4">From raw filings to a score you can trust.</h2>
+        <p className="max-w-2xl text-[15px] text-chalk-300/60 leading-relaxed mb-10">
+          Our pipeline does the work in three steps. You see every input, every rule, and every adjustment that produces the final number — nothing is hidden behind a black-box model.
+        </p>
+
+        <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
           {[
             {
               icon: Database,
               title: "Scrape",
-              body: "Python pipeline pulls 5 years of financials, last 12 quarters, shareholding, and key ratios for every company in a sector — direct from screener.in.",
+              body: "Our pipeline pulls 5 years of annual financials, 12 quarters of results, shareholding patterns and key ratios for every company in a sector — sourced directly from screener.in.",
             },
             {
               icon: BarChart3,
               title: "Score",
-              body: "A 10-category, 1000-point rubric mixes absolute thresholds with peer-relative quartiles. Every +/- point is traceable to a specific rule.",
+              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — is traceable to a specific, documented rule.",
             },
             {
               icon: Sparkles,
               title: "Visualise",
-              body: "Sector leaderboards, radar overlays, and per-company breakdowns let you see the story behind the score — not just the number.",
+              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score, so you can see why a company ranks where it does.",
             },
           ].map((s, i) => (
             <div
               key={i}
-              className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-6"
+              className="glass border-subtle rounded-2xl p-6 hover:border-[rgba(0,210,255,0.2)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent ring-1 ring-accent/30">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 text-accent mb-4">
                 <s.icon className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 font-semibold text-chalk-50">
+              <h3 className="font-bold text-[15px] text-chalk-50 mb-2">
                 {i + 1}. {s.title}
               </h3>
-              <p className="mt-2 text-sm text-chalk-300">{s.body}</p>
+              <p className="text-sm text-chalk-200/70 leading-relaxed">{s.body}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* SECTORS GRID */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-12">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      {/* ── SECTORS GRID ─────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-16 sm:pb-20">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-              Top sectors
-            </h2>
-            <p className="mt-2 text-2xl font-semibold text-chalk-50">
-              {sectorsConfig.length} sectors
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-2">Top Sectors</p>
+            <h2 className="text-2xl font-bold tracking-tight text-chalk-50">
+              {sectorsConfig.length} sectors{" "}
               {totalScraped > 0 && (
-                <span className="text-chalk-300 font-normal text-lg">
-                  {" "}· {totalScraped} companies scored
+                <span className="text-chalk-300/60 font-normal text-xl">
+                  · {totalScraped} companies scored
                 </span>
               )}
-            </p>
+            </h2>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2.5">
             <Link
               href="/sectors/compare"
-              className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-2 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgba(255,255,255,0.15)] transition-all"
             >
-              Compare sectors <ArrowRight className="h-3.5 w-3.5" />
+              Compare <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <Link
               href="/sectors"
-              className="inline-flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-sm text-accent hover:bg-accent/20 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-accent/25 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent hover:bg-accent/15 hover:border-accent/40 transition-all"
             >
               See all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -125,48 +148,76 @@ export default async function Home() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {sectors.map((s) => {
             const scraped = s.scraped;
+            const score   = scraped?.top_score ?? null;
+            const gradient = score != null ? scoreGradient(score) : undefined;
+
             return (
               <div
                 key={s.slug}
-                className="group rounded-xl border border-ink-700/60 bg-ink-900/40 hover:border-accent/40 hover:bg-ink-900 transition-colors flex flex-col"
+                className="group glass border-subtle rounded-2xl p-6 flex flex-col hover:border-[rgba(0,210,255,0.18)] hover:-translate-y-0.5 transition-all duration-200"
               >
-                {/* Main content */}
-                <div className="p-5 flex-1">
-                  <div className="flex items-baseline justify-between">
-                    <h3 className={`font-semibold transition-colors group-hover:text-accent ${scraped ? "text-chalk-50" : "text-chalk-300"}`}>
+                {/* Tag + name */}
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/60 mb-1.5">
+                      {scraped ? `${scraped.companies_count} companies` : `${s.companies.length} companies`}
+                    </p>
+                    <h3 className={clsx(
+                      "font-bold text-[16px] leading-tight transition-colors",
+                      scraped ? "text-chalk-50 group-hover:text-accent" : "text-chalk-300/60",
+                    )}>
                       {s.name}
                     </h3>
-                    <span className="num text-xs text-chalk-300/60">
-                      {scraped ? scraped.companies_count : s.companies.length}
-                    </span>
                   </div>
-                  <p className={`mt-2 text-sm line-clamp-2 ${scraped ? "text-chalk-300" : "text-chalk-300/50"}`}>
-                    {s.description}
-                  </p>
 
-                  {scraped?.top_company ? (
-                    <div className="mt-4 pt-4 border-t border-ink-700/40 flex items-center justify-between text-xs">
-                      <span className="text-chalk-300/70">Top pick</span>
-                      <span className="num text-chalk-100">
-                        {scraped.top_ticker ?? scraped.top_company}{" "}
-                        <span className="text-accent">{scraped.top_score?.toFixed(1)}</span>
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="mt-4 pt-4 border-t border-ink-700/30">
-                      <span className="text-xs text-chalk-300/30">
-                        No data yet — refresh to fetch
-                      </span>
+                  {/* Score */}
+                  {score != null && (
+                    <div className="text-right shrink-0">
+                      <div className={clsx("num text-2xl font-bold leading-none", scoreColor(score))}>
+                        {score.toFixed(1)}
+                      </div>
+                      <div className="text-[9px] text-chalk-300/30 mt-0.5 num">/100</div>
                     </div>
                   )}
                 </div>
 
-                {/* Footer: view link + refresh button */}
-                <div className="px-5 pb-4 flex items-center justify-between gap-2">
+                {/* Progress bar */}
+                {score != null && (
+                  <div className="h-0.5 w-full rounded-full mb-4 overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${score}%`, background: gradient }}
+                    />
+                  </div>
+                )}
+
+                <p className={clsx(
+                  "text-sm line-clamp-2 leading-relaxed flex-1",
+                  scraped ? "text-chalk-300/50" : "text-chalk-300/30",
+                )}>
+                  {s.description}
+                </p>
+
+                {/* Footer */}
+                {scraped?.top_company ? (
+                  <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)] flex items-center justify-between">
+                    <span className="text-[11px] text-chalk-300/60">Top pick</span>
+                    <span className="num text-[12px] font-semibold text-chalk-100">
+                      {scraped.top_ticker ?? scraped.top_company}{" "}
+                      <span className="text-accent">{scraped.top_score?.toFixed(1)}</span>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.04)]">
+                    <span className="text-[11px] text-chalk-300/40">No data yet — refresh to fetch</span>
+                  </div>
+                )}
+
+                <div className="mt-3 flex items-center justify-between gap-2">
                   {scraped ? (
                     <Link
                       href={`/sector/${s.slug}`}
-                      className="inline-flex items-center text-xs text-chalk-300 hover:text-accent transition-colors"
+                      className="inline-flex items-center text-xs font-medium text-chalk-300/40 hover:text-accent transition-colors"
                     >
                       View sector <ArrowRight className="h-3 w-3 ml-1" />
                     </Link>
@@ -183,30 +234,28 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* MY PITCH */}
+      {/* ── WHY I BUILT THIS ─────────────────────────── */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-          Why I built this
-        </h2>
-        <div className="mt-4 space-y-4 text-chalk-200 serif text-lg leading-relaxed">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-3">Why I built this</p>
+        <div className="space-y-5 text-[16px] leading-[1.8] text-chalk-200/75">
           <p>
-            I'm a full-stack developer transitioning to wealth management. I've
+            I&apos;m a full-stack developer transitioning to wealth management. I&apos;ve
             been investing my own money since 2021 — first in direct equities,
-            then across asset classes — and I've guided seven friends and
-            family members through their first investing decisions.
+            then across asset classes — and I offer pro-bono consulting to
+            first-time investors who want to learn how to think about their money.
           </p>
           <p>
             Screeners exist. Reports exist. But neither shows you{" "}
-            <em>why</em> a company scores well. This project is my answer to
-            that gap — and a way to put my fundamental-analysis approach in
+            <em className="text-chalk-100 not-italic font-medium">why</em> a company scores well.
+            This project is my answer to that gap — and a way to put my fundamental-analysis approach in
             front of anyone who wants to see it.
           </p>
-          <p className="text-chalk-300 text-base">
+          <p>
             <Link
               href="/about"
-              className="text-accent hover:underline inline-flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 text-accent hover:text-accent-soft text-sm font-semibold transition-colors"
             >
-              Read more about me <ArrowRight className="h-3 w-3" />
+              Read more about me <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </p>
         </div>

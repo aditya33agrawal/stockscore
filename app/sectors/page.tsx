@@ -30,24 +30,24 @@ export default async function SectorsPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-14">
-      <header className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+      <header className="mb-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-2">
           All Sectors
         </p>
-        <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50">
             Browse every sector & stock
           </h1>
           <Link
             href="/sectors/compare"
-            className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-sm text-chalk-100 hover:bg-ink-800 transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-2 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgba(255,255,255,0.15)] transition-all shrink-0"
           >
             <BarChart2 className="h-3.5 w-3.5" />
-            Compare all sectors
+            Compare all
           </Link>
         </div>
-        <p className="mt-3 text-chalk-300">
+        <p className="mt-3 text-chalk-300/40 text-sm">
           {sectors.length} sectors · {companies.length} companies scored.
         </p>
       </header>

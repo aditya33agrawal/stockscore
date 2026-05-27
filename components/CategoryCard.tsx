@@ -2,9 +2,22 @@
 
 import { useState } from "react";
 import clsx from "clsx";
-import { ChevronDown, Info } from "lucide-react";
+import { Info, Plus, Minus } from "lucide-react";
 import type { CategoryScore } from "@/lib/types";
 import { pointsColor } from "@/lib/format";
+
+// Category bars use classic green / amber / red — easier to read at a glance
+function categoryBarColor(pct: number): string {
+  if (pct >= 70) return "#10B981";   // green
+  if (pct >= 40) return "#F59E0B";   // amber
+  return "#F87171";                  // red
+}
+
+function categoryTextColor(pct: number): string {
+  if (pct >= 70) return "text-emerald-400";
+  if (pct >= 40) return "text-warn";
+  return "text-bad";
+}
 
 const CATEGORY_RATIONALE: Record<string, string> = {
   "Quality of Business":
@@ -36,25 +49,32 @@ const CATEGORY_RATIONALE: Record<string, string> = {
 function Tooltip({ text }: { text: string }) {
   const [visible, setVisible] = useState(false);
   return (
-    <span className="relative inline-flex items-center ml-1 align-middle">
-      <button
-        type="button"
-        onMouseEnter={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
+    <span
+      className="relative inline-flex items-center ml-1.5 align-middle"
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+        setVisible((v) => !v);
+      }}
+    >
+      <span
+        role="img"
+        aria-label="Factor methodology"
+        tabIndex={0}
         onFocus={() => setVisible(true)}
         onBlur={() => setVisible(false)}
-        aria-label="Factor methodology"
-        className="text-chalk-300/40 hover:text-chalk-300 transition-colors focus:outline-none"
+        className="text-chalk-300/25 hover:text-accent/60 transition-colors focus:outline-none cursor-help"
       >
         <Info className="h-3 w-3" />
-      </button>
+      </span>
       {visible && (
         <span
           role="tooltip"
           className="
-            absolute left-5 top-0 z-50 w-64 rounded-lg
-            border border-ink-600/80 bg-ink-900 shadow-xl
-            px-3 py-2 text-xs text-chalk-200 leading-relaxed
+            absolute left-5 top-0 z-50 w-64 rounded-xl
+            glass border-subtle shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+            px-3.5 py-2.5 text-xs text-chalk-200 leading-relaxed
             pointer-events-none
           "
         >
@@ -67,65 +87,80 @@ function Tooltip({ text }: { text: string }) {
 
 export function CategoryCard({ category }: { category: CategoryScore }) {
   const [open, setOpen] = useState(false);
-  const pct = (category.earned / category.max) * 100;
-  const tone = pct >= 70 ? "accent" : pct >= 40 ? "warn" : "bad";
+  const pct       = (category.earned / category.max) * 100;
+  const barColor  = categoryBarColor(pct);
+  const earnedColor = categoryTextColor(pct);
 
   return (
-    <div className="rounded-xl border border-ink-700/60 bg-ink-900/60 overflow-hidden">
+    <div
+      className={clsx(
+        "glass border-subtle rounded-2xl overflow-hidden transition-all duration-200",
+        open && "border-[rgba(0,210,255,0.15)]",
+      )}
+    >
+      {/* ── Collapsed header ─────────────────────────── */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-5 py-4 hover:bg-ink-800/40 transition-colors text-left"
+        className="w-full flex items-center justify-between gap-4 px-6 py-4 hover:bg-[rgba(0,210,255,0.03)] transition-colors text-left"
       >
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-semibold text-chalk-50 truncate">{category.name}</h3>
-            <span className="num text-sm text-chalk-300 shrink-0">
-              <span
-                className={clsx(
-                  "font-semibold",
-                  tone === "accent" ? "text-accent" : tone === "warn" ? "text-warn" : "text-bad",
-                )}
-              >
-                {category.earned.toFixed !== undefined ? category.earned.toFixed(1) : category.earned}
-              </span>{" "}
-              / {category.max}
+          {/* Name + score */}
+          <div className="flex items-baseline justify-between gap-4 mb-1.5">
+            <h3 className="font-semibold text-[15px] text-chalk-50 truncate flex items-center gap-1.5">
+              <span className="truncate">{category.name}</span>
+              {CATEGORY_RATIONALE[category.name] && (
+                <Tooltip text={CATEGORY_RATIONALE[category.name]} />
+              )}
+            </h3>
+            <span className="num text-sm text-chalk-300/40 shrink-0">
+              <span className={clsx("font-bold", earnedColor)}>
+                {typeof category.earned === "number" ? category.earned.toFixed(1) : category.earned}
+              </span>
+              {" "}<span className="text-chalk-300/25">/ {category.max}</span>
             </span>
           </div>
-          <p className="text-xs text-chalk-300/80 mt-1 truncate">
+
+          {/* Rationale */}
+          <p className="text-[12px] text-chalk-300/40 truncate leading-snug mb-3">
             {CATEGORY_RATIONALE[category.name] ?? ""}
           </p>
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-ink-800">
+
+          {/* Progress bar — green / amber / red */}
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-700/50">
             <div
-              className={clsx(
-                "h-full rounded-full transition-all",
-                tone === "accent" ? "bg-accent" : tone === "warn" ? "bg-warn" : "bg-bad",
-              )}
-              style={{ width: `${Math.max(0, Math.min(100, pct))}%` }}
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${Math.max(0, Math.min(100, pct))}%`, background: barColor }}
             />
           </div>
         </div>
-        <ChevronDown
-          className={clsx(
-            "h-4 w-4 text-chalk-300 transition-transform shrink-0",
-            open && "rotate-180",
-          )}
-        />
+
+        {/* Toggle icon */}
+        <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-lg bg-ink-700/40 text-chalk-300/40 hover:bg-ink-700/60 hover:text-chalk-50 transition-all">
+          {open ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+        </span>
       </button>
 
+      {/* ── Expanded items ────────────────────────────── */}
       {open && (
-        <div className="border-t border-ink-700/60 bg-ink-950/40 px-5 py-3">
-          <ul className="divide-y divide-ink-700/40">
+        <div className="border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.02)] px-6 py-2">
+          <ul>
             {category.items.map((item, i) => (
-              <li key={i} className="flex items-center justify-between gap-4 py-2.5 text-sm">
+              <li
+                key={i}
+                className="flex items-start justify-between gap-4 py-3 border-b border-[rgba(255,255,255,0.04)] last:border-0"
+              >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center">
-                    <p className="text-chalk-100">{item.label}</p>
+                    <p className="text-[13px] font-medium text-chalk-100">{item.label}</p>
                     {item.tooltip && <Tooltip text={item.tooltip} />}
                   </div>
-                  <p className="text-xs text-chalk-300/70 num mt-0.5">{item.detail}</p>
+                  <p className="num text-[11px] text-chalk-300/40 mt-0.5 leading-snug">{item.detail}</p>
                 </div>
                 <span
-                  className={clsx("num font-semibold shrink-0", pointsColor(item.points))}
+                  className={clsx(
+                    "num text-sm font-bold shrink-0 mt-0.5",
+                    pointsColor(item.points),
+                  )}
                 >
                   {item.points > 0 ? "+" : ""}
                   {typeof item.points === "number" ? item.points.toFixed(1) : item.points}

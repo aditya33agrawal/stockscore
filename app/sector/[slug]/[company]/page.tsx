@@ -37,6 +37,8 @@ import type { MetricCardProps } from "@/components/MetricCard";
 import { PeerComparisonTable } from "@/components/PeerComparisonTable";
 import { PriceRuler } from "@/components/PriceRuler";
 import { RadarCompare } from "@/components/RadarCompare";
+import { CompanySideNav } from "@/components/CompanySideNav";
+import { BookmarkButton } from "@/components/BookmarkButton";
 
 export const dynamic = "force-dynamic";
 
@@ -365,25 +367,26 @@ export default async function CompanyPage({
   const usedKeys = new Set<string>();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 scroll-smooth">
+      <CompanySideNav />
       <Link
         href={`/sector/${sector.slug}`}
-        className="inline-flex items-center gap-1.5 text-sm text-chalk-300 hover:text-chalk-50 mb-6"
+        className="inline-flex items-center gap-1.5 text-sm text-chalk-300/40 hover:text-accent transition-colors mb-8"
       >
-        <ArrowLeft className="h-4 w-4" /> Back to {sector.name}
+        <ArrowLeft className="h-4 w-4" /> {sector.name}
       </Link>
 
       {/* HEADER */}
-      <header className="rounded-2xl border border-ink-700/60 bg-ink-900/40 p-6 mb-8">
+      <header id="overview" className="glass border-subtle rounded-2xl p-6 sm:p-8 mb-8 scroll-mt-24">
         <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0">
-            <p className="text-xs uppercase tracking-widest text-accent">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-2">
               Rank {co.rank} of {sector.companies.length} in {sector.name}
             </p>
-            <h1 className="mt-2 text-3xl md:text-4xl font-bold tracking-tight text-chalk-50">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50 mb-3">
               {co.name}
             </h1>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-chalk-300 num">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-chalk-300/50 num">
               <span className="font-semibold text-chalk-100">{co.ticker}</span>
               <span>CMP ₹{co.cmp.toLocaleString("en-IN")}</span>
               {co.raw.pe && <span>P/E {co.raw.pe.toFixed(1)}</span>}
@@ -391,7 +394,7 @@ export default async function CompanyPage({
                 <span>Industry P/E {co.raw.industry_pe.toFixed(1)}</span>
               )}
               {co.classification && (
-                <span className="rounded-md border border-ink-700/60 px-2 py-0.5 text-xs uppercase tracking-wider">
+                <span className="rounded-md border border-accent/20 bg-accent/8 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-accent">
                   {co.classification}
                 </span>
               )}
@@ -437,7 +440,7 @@ export default async function CompanyPage({
               )}
             </div>
           </div>
-          <ScoreBadge score={co.final_score} raw={co.raw_total} size="lg" />
+          <ScoreBadge score={co.final_score} classification={co.classification} raw={co.raw_total} size="lg" />
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
@@ -445,26 +448,50 @@ export default async function CompanyPage({
             href={`https://www.screener.in/company/${co.ticker}/consolidated/`}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 rounded-md border border-ink-700/60 bg-ink-900 px-3 py-1.5 text-xs hover:bg-ink-800 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-3 py-1.5 text-xs font-medium text-chalk-300/50 hover:border-[rgba(255,255,255,0.15)] hover:text-chalk-50 transition-all"
           >
             View on Screener <ExternalLink className="h-3 w-3" />
           </a>
+          <BookmarkButton
+            sectorSlug={sector.slug}
+            companySlug={co.slug}
+            companyTicker={co.ticker}
+            companyName={co.name}
+          />
         </div>
       </header>
 
       {/* CATEGORY BREAKDOWN */}
-      <section className="mb-10">
-        <div className="flex items-baseline justify-between mb-4">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
-            Score breakdown
-          </h2>
+      <section id="breakdown" className="mb-10 scroll-mt-24">
+        <div className="flex items-baseline justify-between mb-3">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1">Score Breakdown</p>
+            <h2 className="text-xl font-bold text-chalk-50 flex items-center gap-2">
+              10 categories · every point explained
+              <span className="group/why relative inline-flex items-center">
+                <span
+                  aria-label="Why these categories"
+                  className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-chalk-300/30 text-[10px] text-chalk-300/60 cursor-help"
+                >i</span>
+                <span className="pointer-events-none absolute left-6 top-0 z-50 w-72 rounded-xl glass border-subtle px-3.5 py-2.5 text-xs text-chalk-200 leading-relaxed opacity-0 group-hover/why:opacity-100 transition-opacity shadow-xl">
+                  These 10 categories cover the questions a fundamental analyst actually asks: profitability, growth, leverage, cash quality, who owns the stock, and how it&apos;s priced. Each one is independently scored so you can see where the company is strong and where it isn&apos;t.
+                </span>
+              </span>
+            </h2>
+          </div>
           <Link
             href="/methodology"
-            className="text-xs text-chalk-300 hover:text-accent"
+            className="text-xs text-chalk-300/40 hover:text-accent transition-colors"
           >
-            How is this calculated? →
+            Methodology →
           </Link>
         </div>
+        {/* Source / disclaimer */}
+        <p className="mb-5 text-[12px] text-chalk-300/50 leading-relaxed">
+          <span className="font-semibold text-chalk-300/80">Source:</span> based on my own research,
+          parameters, and judgement — <span className="text-chalk-100">not investment advice.</span> Use it as one
+          input alongside annual reports and your own due diligence.
+        </p>
         {/* Radar chart — visual fingerprint of the company's score profile */}
         <div className="grid gap-3">
           {co.categories.map((cat) => (
@@ -482,11 +509,11 @@ export default async function CompanyPage({
 
       {/* BONUSES */}
       {co.bonuses && co.bonuses.length > 0 && (
-        <section className="mb-6">
+        <section id="bonuses" className="mb-6 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">
             Bonus points
           </h2>
-          <ul className="rounded-xl border border-accent/30 bg-accent/5 divide-y divide-accent/10">
+          <ul className="glass rounded-2xl border border-accent/20 bg-accent/[0.04] divide-y divide-accent/[0.08]">
             {co.bonuses.map((b, i) => (
               <li key={i} className="flex items-center justify-between px-5 py-3">
                 <div className="flex items-center gap-2">
@@ -505,11 +532,11 @@ export default async function CompanyPage({
 
       {/* PENALTIES */}
       {co.penalties.length > 0 && (
-        <section className="mb-10">
+        <section id="penalties" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-bad mb-3">
             Penalty deductions
           </h2>
-          <ul className="rounded-xl border border-bad/30 bg-bad/5 divide-y divide-bad/10">
+          <ul className="glass rounded-2xl border border-bad/20 bg-bad/[0.04] divide-y divide-bad/[0.08]">
             {co.penalties.map((p, i) => (
               <li
                 key={i}
@@ -527,8 +554,8 @@ export default async function CompanyPage({
       )}
 
       {/* STRENGTHS / WEAKNESSES */}
-      <section className="mb-10 grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-accent/20 bg-accent/5 p-5">
+      <section id="strengths" className="mb-10 grid gap-4 md:grid-cols-2 scroll-mt-24">
+        <div className="glass rounded-2xl border border-accent/15 bg-accent/[0.04] p-5">
           <div className="flex items-center gap-2 mb-3">
             <ThumbsUp className="h-4 w-4 text-accent" />
             <h3 className="font-semibold text-chalk-50">Key Strengths</h3>
@@ -547,7 +574,7 @@ export default async function CompanyPage({
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-bad/20 bg-bad/5 p-5">
+        <div className="glass rounded-2xl border border-bad/15 bg-bad/[0.04] p-5">
           <div className="flex items-center gap-2 mb-3">
             <ThumbsDown className="h-4 w-4 text-bad" />
             <h3 className="font-semibold text-chalk-50">Key Risks</h3>
@@ -572,7 +599,7 @@ export default async function CompanyPage({
       {metricCards.length > 0 && (
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-4">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
               Financials at a Glance
             </h2>
             <Link href="/learn" className="text-xs text-chalk-300 hover:text-accent">
@@ -589,9 +616,9 @@ export default async function CompanyPage({
 
       {/* PEER COMPARISON */}
       {sector.companies.length > 1 && (
-        <section className="mb-10">
+        <section id="peers" className="mb-10 scroll-mt-24">
           <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-accent">
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
               How Does It Compare?
             </h2>
             <span className="text-xs text-chalk-300/50">{sector.name} · {sector.companies.length} companies</span>
@@ -606,15 +633,15 @@ export default async function CompanyPage({
 
       {/* COMPANY PROFILE */}
       {detail && (detail.about || detail.key_points) && (
-        <section className="mb-10 grid gap-6 md:grid-cols-2">
+        <section id="about-company" className="mb-10 grid gap-6 md:grid-cols-2 scroll-mt-24">
           {detail.about && (
-            <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
+            <div className="glass border-subtle rounded-2xl p-5">
               <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">About</h3>
               <p className="text-sm text-chalk-300 leading-relaxed">{detail.about.replace(/\[\d+\]/g, "")}</p>
             </div>
           )}
           {detail.key_points && (
-            <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5">
+            <div className="glass border-subtle rounded-2xl p-5">
               <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Key Points</h3>
               <p className="text-sm text-chalk-300 leading-relaxed whitespace-pre-line">{detail.key_points.replace(/\[\d+\]/g, "").trim()}</p>
             </div>
@@ -624,7 +651,7 @@ export default async function CompanyPage({
 
       {/* ALL KEY RATIOS — grouped */}
       {detail && Object.keys(detail.ratios).length > 0 && (
-        <section className="mb-10">
+        <section id="ratios" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">All Key Ratios</h2>
           <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 space-y-6">
             {RATIO_GROUPS.map((group) => {
@@ -670,11 +697,11 @@ export default async function CompanyPage({
 
       {/* GROWTH & CAGR */}
       {detail && (
-        <section className="mb-10">
+        <section id="growth" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {Object.entries(detail.growth_tables).map(([title, rows]) => (
-              <div key={title} className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-4">
+              <div key={title} className="glass border-subtle rounded-2xl p-4">
                 <p className="text-xs font-semibold text-chalk-300 mb-2">{title}</p>
                 <div className="space-y-1">
                   {Object.entries(rows).map(([period, value]) => (
@@ -691,7 +718,7 @@ export default async function CompanyPage({
       )}
 
       {/* PRICE CHART (technicals) */}
-      <section className="mb-10">
+      <section id="technicals" className="mb-10 scroll-mt-24">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Price & Technicals</h2>
         <PriceChart symbol={co.ticker} />
       </section>
@@ -711,7 +738,7 @@ export default async function CompanyPage({
 
       {/* FINANCIAL CHARTS */}
       {chartData && (
-        <section className="mb-10">
+        <section id="charts" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Financial Charts</h2>
           <FinancialCharts primaryData={chartData} primaryName={co.name} peers={peers} />
         </section>
@@ -720,7 +747,7 @@ export default async function CompanyPage({
       {/* FACTOR BREAKDOWN — v2 detail tab */}
       {co.factor_breakdown && co.factor_breakdown.length > 0 && (
         <section className="mb-10">
-          <details className="group rounded-xl border border-ink-700/60 bg-ink-900/40">
+          <details className="group glass border-subtle rounded-2xl">
             <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
               <div>
                 <span className="text-sm font-semibold text-chalk-100">Factor Breakdown (v2)</span>
@@ -795,7 +822,7 @@ export default async function CompanyPage({
 
       {/* FINANCIAL TABLES */}
       {detail && (
-        <section className="mb-10">
+        <section id="tables" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Financial Tables</h2>
           <div className="space-y-2">
             {(
@@ -809,7 +836,7 @@ export default async function CompanyPage({
                 ["Peer Comparison", detail.financial_tables.peers],
               ] as [string, string | null][]
             ).map(([title, csv]) => (
-              <details key={title} className="group rounded-xl border border-ink-700/60 bg-ink-900/40">
+              <details key={title} className="group glass border-subtle rounded-2xl">
                 <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
                   <span className="text-sm font-medium text-chalk-100">{title}</span>
                   <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
@@ -825,7 +852,7 @@ export default async function CompanyPage({
 
       {/* ANNOUNCEMENTS — compressed to 1 each with "View all" */}
       {detail && (detail.announcements.important.length > 0 || detail.announcements.recent.length > 0) && (
-        <section className="mb-10">
+        <section id="announcements" className="mb-10 scroll-mt-24">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Announcements</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {detail.announcements.important.length > 0 && (

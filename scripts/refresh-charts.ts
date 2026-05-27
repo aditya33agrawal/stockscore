@@ -40,6 +40,8 @@ async function main() {
     skipped = 0,
     errored = 0;
 
+  const defaulters: { ticker: string; reason: string }[] = [];
+
   async function worker(id: number) {
     while (queue.length) {
       const ticker = queue.shift();
@@ -58,10 +60,12 @@ async function main() {
           console.log(`  [w${id}] ${ticker} — up to date, skip`);
         } else {
           errored++;
+          defaulters.push({ ticker, reason: "no data" });
           console.log(`  [w${id}] ${ticker} ✗ no data`);
         }
       } catch (err) {
         errored++;
+        defaulters.push({ ticker, reason: String(err) });
         console.log(`  [w${id}] ${ticker} ✗ ERROR: ${String(err)}`);
       }
       await sleep(250);
@@ -73,6 +77,13 @@ async function main() {
   console.log(
     `\n[charts] done — saved=${saved} skipped=${skipped} errored=${errored} total=${symbols.length}`
   );
+
+  if (defaulters.length > 0) {
+    console.log(`\n[charts] ⚠️  defaulters (${defaulters.length}):`);
+    for (const { ticker, reason } of defaulters) {
+      console.log(`  • ${ticker.padEnd(20)} ${reason}`);
+    }
+  }
 }
 
 main()

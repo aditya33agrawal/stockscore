@@ -7,7 +7,7 @@ import type { SectorIndexEntry } from "@/lib/types";
 import type { CompanyIndexEntry } from "@/lib/data";
 
 type Result =
-  | { kind: "sector"; sector: SectorIndexEntry }
+  | { kind: "sector";  sector:  SectorIndexEntry }
   | { kind: "company"; company: CompanyIndexEntry };
 
 export function SectorSearch({
@@ -17,22 +17,17 @@ export function SectorSearch({
   sectors: SectorIndexEntry[];
   companies?: CompanyIndexEntry[];
 }) {
-  const [q, setQ] = useState("");
+  const [q, setQ]           = useState("");
   const [focused, setFocused] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref      = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setFocused(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setFocused(false);
     };
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setFocused(false);
-        inputRef.current?.blur();
-      }
+      if (e.key === "Escape") { setFocused(false); inputRef.current?.blur(); }
     };
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKey);
@@ -47,18 +42,10 @@ export function SectorSearch({
   const results = useMemo<Result[]>(() => {
     if (!needle) return [];
     const sMatches: Result[] = sectors
-      .filter(
-        (s) =>
-          s.name.toLowerCase().includes(needle) ||
-          s.description.toLowerCase().includes(needle),
-      )
+      .filter((s) => s.name.toLowerCase().includes(needle) || s.description.toLowerCase().includes(needle))
       .map((s) => ({ kind: "sector", sector: s }));
     const cMatches: Result[] = companies
-      .filter(
-        (c) =>
-          c.name.toLowerCase().includes(needle) ||
-          c.ticker.toLowerCase().includes(needle),
-      )
+      .filter((c) => c.name.toLowerCase().includes(needle) || c.ticker.toLowerCase().includes(needle))
       .map((c) => ({ kind: "company", company: c }));
     return [...sMatches, ...cMatches].slice(0, 8);
   }, [needle, sectors, companies]);
@@ -66,47 +53,59 @@ export function SectorSearch({
   const showDropdown = focused && needle.length > 0;
 
   return (
-    <div ref={ref} className="relative mx-auto max-w-2xl">
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-chalk-300" />
+    <div ref={ref} className="relative mx-auto max-w-xl">
+      {/* Input */}
+      <div
+        className={`
+          flex items-center gap-3 rounded-2xl border px-5 py-1 transition-all duration-200
+          ${focused
+            ? "border-accent/30 bg-ink-900 shadow-[0_0_40px_rgba(0,210,255,0.1)]"
+            : "border-[rgba(255,255,255,0.1)] bg-ink-900/80 hover:border-[rgba(255,255,255,0.15)]"
+          }
+        `}
+      >
+        <Search className="h-4 w-4 shrink-0 text-accent/50" />
         <input
           ref={inputRef}
           type="text"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => setFocused(true)}
-          placeholder="Search a sector or stock — e.g., Private Banks, HDFC…"
-          className="w-full rounded-xl border border-ink-700/80 bg-ink-900/80 py-4 pl-12 pr-4 text-chalk-50 placeholder:text-chalk-300/60 outline-none ring-0 transition focus:border-accent/50 focus:bg-ink-900 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.08)]"
+          placeholder="Search sector or company…"
+          className="flex-1 bg-transparent py-3 text-[15px] text-chalk-50 placeholder:text-chalk-300/30 outline-none"
         />
+        <kbd className="hidden sm:inline-block shrink-0 num text-[11px] text-chalk-300/25 border border-[rgba(255,255,255,0.07)] rounded px-1.5 py-0.5">
+          ⌘K
+        </kbd>
       </div>
 
+      {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin rounded-xl border border-ink-700/80 bg-ink-900 shadow-2xl shadow-black/60">
+        <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin glass border-subtle rounded-2xl shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
           {results.length === 0 ? (
-            <div className="px-5 py-6 text-sm text-chalk-300">
-              No match for <span className="text-chalk-50">&quot;{q}&quot;</span>.
+            <div className="px-5 py-6 text-sm text-chalk-300/50">
+              No match for <span className="text-chalk-50">&ldquo;{q}&rdquo;</span>
             </div>
           ) : (
-            <ul className="divide-y divide-ink-700/40">
+            <ul>
               {results.map((r, i) =>
                 r.kind === "sector" ? (
                   <li key={`s-${r.sector.slug}-${i}`}>
                     <Link
                       href={`/sector/${r.sector.slug}`}
                       onClick={() => { setFocused(false); setQ(""); }}
-                      className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-ink-800/60 transition-colors"
+                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.06] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0"
                     >
-                      <div className="min-w-0 flex items-center gap-3">
-                        <TrendingUp className="h-4 w-4 text-accent shrink-0" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-accent shrink-0">
+                          <TrendingUp className="h-3.5 w-3.5" />
+                        </span>
                         <div className="min-w-0">
-                          <div className="font-medium text-chalk-50">
-                            {r.sector.name}
-                          </div>
-                          <p className="text-xs text-chalk-300/80 line-clamp-1">
-                            Sector · {r.sector.companies_count} companies
-                          </p>
+                          <p className="font-semibold text-chalk-50 text-sm truncate">{r.sector.name}</p>
+                          <p className="text-[11px] text-chalk-300/40 mt-0.5">Sector · {r.sector.companies_count} companies</p>
                         </div>
                       </div>
+                      <span className="text-[10px] font-medium text-accent/50 shrink-0">Sector →</span>
                     </Link>
                   </li>
                 ) : (
@@ -114,20 +113,18 @@ export function SectorSearch({
                     <Link
                       href={`/sector/${r.company.sector_slug}/${r.company.slug}`}
                       onClick={() => { setFocused(false); setQ(""); }}
-                      className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-ink-800/60 transition-colors"
+                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.06] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0"
                     >
-                      <div className="min-w-0 flex items-center gap-3">
-                        <Building2 className="h-4 w-4 text-chalk-300 shrink-0" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-ink-700/60 text-chalk-300/50 shrink-0">
+                          <Building2 className="h-3.5 w-3.5" />
+                        </span>
                         <div className="min-w-0">
-                          <div className="font-medium text-chalk-50 truncate">
-                            {r.company.name}
-                          </div>
-                          <p className="text-xs text-chalk-300/80">
-                            {r.company.ticker} · {r.company.sector_name}
-                          </p>
+                          <p className="font-semibold text-chalk-50 text-sm truncate">{r.company.name}</p>
+                          <p className="text-[11px] text-chalk-300/40 mt-0.5 num">{r.company.ticker} · {r.company.sector_name}</p>
                         </div>
                       </div>
-                      <span className="num text-xs text-accent shrink-0">
+                      <span className="num text-sm font-bold text-accent shrink-0">
                         {r.company.final_score.toFixed(1)}
                       </span>
                     </Link>

@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "refresh": "npx tsx scripts/refresh.ts",
-    "refresh:force": "npx tsx scripts/refresh.ts --force",
+    "refresh": "npx tsx scripts/refresh.ts && npx tsx scripts/refresh-market.ts && npx tsx scripts/refresh-charts.ts",
+    "refresh:force": "npx tsx scripts/refresh.ts --force && npx tsx scripts/refresh-market.ts --force && npx tsx scripts/refresh-charts.ts --force",
     "refresh:sector": "npx tsx scripts/refresh.ts",
     "refresh:market": "npx tsx scripts/refresh-market.ts",
     "refresh:market:force": "npx tsx scripts/refresh-market.ts --force",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.2.0",
     "clsx": "2.1.1",
     "lightweight-charts": "^4.2.3",
@@ -33,6 +34,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "20.14.10",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",

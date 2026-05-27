@@ -97,7 +97,7 @@ export default function ContactPage() {
             <p className="text-xs text-chalk-300/70 uppercase tracking-wider">
               Based in
             </p>
-            <p className="text-chalk-50 font-medium">Bengaluru, India</p>
+            <p className="text-chalk-50 font-medium">Bengaluru, KA, India</p>
           </div>
         </div>
       </div>

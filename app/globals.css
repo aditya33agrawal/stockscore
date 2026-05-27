@@ -2,41 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+Pro:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
+/* ── CSS custom properties ── */
 :root {
   color-scheme: dark;
+  --accent:        #00D2FF;
+  --violet:        #7C3AED;
+  --glow-cyan:     0 0 40px rgba(0, 210, 255, 0.15);
+  --glow-violet:   0 0 40px rgba(124, 58, 237, 0.15);
+  --panel-bg:      rgba(255, 255, 255, 0.025);
+  --panel-border:  rgba(255, 255, 255, 0.06);
 }
 
 html, body {
-  background: #070B14;
-  color: #EEF2F7;
+  background: #03060F;
+  color: #E8F4FF;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: #10B981;
-  color: #070B14;
+  background: #00D2FF;
+  color: #03060F;
 }
 
+/* ── Tabular-nums utility ── */
 .num {
   font-variant-numeric: tabular-nums;
   font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
 }
 
-.serif {
-  font-family: "Source Serif Pro", Georgia, serif;
+/* ── Glass card ── */
+.glass {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
-.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: #1A2233; border-radius: 8px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #2A3447; }
+/* ── Subtle border ── */
+.border-subtle {
+  border: 1px solid var(--panel-border);
+}
 
-/* Animated grid background for the hero */
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #00D2FF, #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Cyan glow ── */
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+/* ── Hero grid (cyan-tinted) ── */
 .hero-grid {
   background-image:
-    linear-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar          { height: 6px; width: 6px; }
+::-webkit-scrollbar-track    { background: #03060F; }
+::-webkit-scrollbar-thumb    { background: #132035; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #1E3050; }
+
+.scrollbar-thin::-webkit-scrollbar        { height: 6px; width: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb  { background: #132035; border-radius: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #1E3050; }
+
+/* ── Live pulse animation ── */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.live-dot {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* ── Score bar fill animations ── */
+@keyframes score-fill {
+  from { width: 0%; }
+}
+.score-bar-animated {
+  animation: score-fill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Shimmer skeleton ── */
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position:  800px 0; }
+}
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.08) 40%,
+    rgba(0,210,255,0.06)   50%,
+    rgba(255,255,255,0.08) 60%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ── Top progress bar loader ── */
+@keyframes progress-bar {
+  0%   { width: 0%;   opacity: 1; }
+  60%  { width: 85%;  opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+.page-loader-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00D2FF, #7C3AED);
+  z-index: 9999;
+  animation: progress-bar 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.6);
 }

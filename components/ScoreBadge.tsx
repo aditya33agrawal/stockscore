@@ -1,49 +1,78 @@
 import clsx from "clsx";
-import { scoreBg, scoreColor } from "@/lib/format";
+import { scoreColor, classificationLabel, classificationStyle } from "@/lib/format";
 
+/* ── ScoreBadge ──────────────────────────────────────────────────────────────
+ * Displays the numerical score + optional classification pill.
+ * Replaces the old opaque rectangle with a clean number-first layout.
+ */
 export function ScoreBadge({
   score,
+  classification,
   size = "md",
   raw,
 }: {
   score: number;
+  classification?: string;
   size?: "sm" | "md" | "lg";
   raw?: number;
 }) {
-  const sizes = {
-    sm: "h-10 w-16 text-base",
-    md: "h-16 w-24 text-2xl",
-    lg: "h-24 w-32 text-4xl",
+  const sizeMap = {
+    sm: { score: "text-2xl",  label: "text-[10px]", gap: "gap-1"   },
+    md: { score: "text-4xl",  label: "text-[11px]", gap: "gap-1.5" },
+    lg: { score: "text-6xl",  label: "text-xs",     gap: "gap-2"   },
   } as const;
 
+  const { score: scoreSize, label: labelSize, gap } = sizeMap[size];
+
   return (
-    <div
-      className={clsx(
-        "inline-flex flex-col items-center justify-center rounded-xl border num font-semibold",
-        sizes[size],
-        scoreBg(score),
-        scoreColor(score),
-      )}
-    >
-      <span className="leading-none">{score.toFixed(1)}</span>
-      <span className="text-[10px] uppercase tracking-widest text-chalk-300/70 mt-1">
-        {raw ? `${raw}/100` : "/ 100"}
+    <div className={clsx("inline-flex flex-col items-center", gap)}>
+      {/* Large mono score number */}
+      <span className={clsx("num font-bold leading-none tracking-tight", scoreSize, scoreColor(score))}>
+        {score.toFixed(1)}
       </span>
+
+      {/* Max points */}
+      <span className="num text-[10px] text-chalk-300/35 leading-none">
+        {raw != null ? `${raw}/100` : "/ 100"}
+      </span>
+
+      {/* Classification pill */}
+      {classification && (
+        <span
+          className={clsx(
+            "mt-0.5 inline-block rounded-md border px-2 py-0.5 font-bold uppercase tracking-wider leading-none",
+            labelSize,
+            classificationStyle(classification),
+          )}
+        >
+          {classificationLabel(classification)}
+        </span>
+      )}
     </div>
   );
 }
 
+/* ── ScoreBar ────────────────────────────────────────────────────────────────
+ * Slim progress bar with gradient fill.
+ */
 export function ScoreBar({ score }: { score: number }) {
   const pct = Math.max(0, Math.min(100, score));
+  const gradient =
+    score >= 70
+      ? "linear-gradient(90deg, #00D2FF, #7C3AED)"
+      : score >= 50
+      ? "linear-gradient(90deg, #F59E0B, #FBBF24)"
+      : "#F87171";
+
   return (
-    <div className="relative h-2 w-full overflow-hidden rounded-full bg-ink-800">
+    <div className="relative h-1 w-full overflow-hidden rounded-full bg-ink-700/60">
       <div
-        className={clsx(
-          "h-full rounded-full transition-all",
-          score >= 70 ? "bg-accent" : score >= 50 ? "bg-warn" : "bg-bad",
-        )}
-        style={{ width: `${pct}%` }}
+        className="h-full rounded-full transition-all duration-500"
+        style={{ width: `${pct}%`, background: gradient }}
       />
     </div>
   );
 }
+
+/* Legacy alias — keeps old import paths working */
+export { ScoreBar as ScoreBarChart };

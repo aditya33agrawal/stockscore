@@ -89,4 +89,39 @@ export async function ensureTables() {
       synced_at    TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+
+  // Auth: users
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id            BIGSERIAL PRIMARY KEY,
+      email         TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      name          TEXT,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  // Auth: sessions (opaque token in httpOnly cookie)
+  await sql`
+    CREATE TABLE IF NOT EXISTS sessions (
+      token       TEXT PRIMARY KEY,
+      user_id     BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      expires_at  TIMESTAMPTZ NOT NULL
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS sessions_user_idx ON sessions(user_id)`;
+
+  // Bookmarks
+  await sql`
+    CREATE TABLE IF NOT EXISTS bookmarks (
+      user_id        BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      sector_slug    TEXT NOT NULL,
+      company_slug   TEXT NOT NULL,
+      company_ticker TEXT,
+      company_name   TEXT,
+      created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (user_id, sector_slug, company_slug)
+    )
+  `;
 }

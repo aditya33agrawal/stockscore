@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stockscore — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ===================== THEME SWITCHER ===================== */
+  body { font-family: 'Inter', sans-serif; background: #050912; color: #e8edf5; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .serif { font-family: 'Fraunces', serif; }
+
+  /* === THEME SELECTOR BAR === */
+  .theme-selector {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(5,9,18,0.95); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 24px;
+  }
+  .theme-selector span {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); margin-right: 8px;
+  }
+  .theme-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+    background: transparent; color: rgba(255,255,255,0.5); cursor: pointer;
+    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .theme-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.25); }
+
+  .theme-section { display: none; }
+  .theme-section.visible { display: block; }
+
+  /* ============================================================ */
+  /*  THEME A: AURORA — emerald + violet, frosted glass luxury     */
+  /* ============================================================ */
+  #theme-a {
+    background: #060a14;
+    min-height: 100vh;
+    padding-top: 52px;
+  }
+
+  /* Navbar */
+  .a-nav {
+    position: sticky; top: 52px; z-index: 40;
+    background: rgba(6,10,20,0.7); backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; padding: 0 32px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .a-nav-inner {
+    position: sticky; top: 52px; z-index: 40;
+    background: rgba(6,10,20,0.7); backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .a-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .a-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #10b981, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff;
+    box-shadow: 0 0 20px rgba(16,185,129,0.3);
+  }
+  .a-logo-text { font-size: 15px; font-weight: 700; color: #f0f4f8; }
+  .a-logo-text em { color: #10b981; font-style: normal; }
+  .a-nav-links { display: flex; gap: 2px; }
+  .a-nav-link {
+    padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.18s;
+  }
+  .a-nav-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .a-nav-link.active { color: #10b981; background: rgba(16,185,129,0.1); }
+  .a-nav-cta {
+    padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff; border: none; cursor: pointer; letter-spacing: -0.01em;
+    box-shadow: 0 0 20px rgba(16,185,129,0.25);
+  }
+
+  /* Hero */
+  .a-hero {
+    position: relative; overflow: hidden;
+    padding: 100px 32px 80px; text-align: center;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .a-hero-orb1 {
+    position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .a-hero-orb2 {
+    position: absolute; top: 0; right: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .a-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 20px;
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
+    font-size: 11px; font-weight: 600; color: #10b981; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .a-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #10b981;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .a-h1 {
+    font-size: clamp(38px, 5vw, 72px); font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.04em; color: #f0f6ff; margin-bottom: 20px;
+  }
+  .a-h1 .grad {
+    background: linear-gradient(135deg, #10b981 0%, #6366f1 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .a-sub {
+    font-size: 17px; color: rgba(255,255,255,0.45); max-width: 520px;
+    margin: 0 auto 44px; line-height: 1.7; font-weight: 400;
+  }
+  .a-search {
+    display: flex; align-items: center; gap: 0; max-width: 520px; margin: 0 auto;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 4px 4px 4px 18px; overflow: hidden;
+    box-shadow: 0 0 40px rgba(16,185,129,0.08);
+  }
+  .a-search:focus-within { border-color: rgba(16,185,129,0.4); box-shadow: 0 0 40px rgba(16,185,129,0.15); }
+  .a-search-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: #f0f4f8; font-size: 14px; font-family: 'Inter', sans-serif; padding: 10px 0;
+  }
+  .a-search-input::placeholder { color: rgba(255,255,255,0.25); }
+  .a-search-btn {
+    padding: 10px 20px; border-radius: 10px; background: #10b981; border: none;
+    color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+
+  /* Stats strip */
+  .a-stats {
+    display: flex; justify-content: center; gap: 48px; margin: 52px auto 0;
+    padding: 32px; background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+    max-width: 680px;
+  }
+  .a-stat { text-align: center; }
+  .a-stat-num { font-size: 32px; font-weight: 800; color: #f0f6ff; letter-spacing: -0.04em; }
+  .a-stat-num em { color: #10b981; font-style: normal; }
+  .a-stat-label { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
+
+  /* Section */
+  .a-section { max-width: 1280px; margin: 0 auto; padding: 60px 32px; }
+  .a-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #10b981; margin-bottom: 12px; }
+  .a-section-title { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; color: #f0f6ff; margin-bottom: 6px; }
+  .a-section-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 36px; }
+
+  /* Sector cards */
+  .a-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .a-card {
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
+    transition: all 0.25s; cursor: pointer; text-decoration: none; display: block;
+  }
+  .a-card:hover {
+    background: rgba(255,255,255,0.04); border-color: rgba(16,185,129,0.2);
+    transform: translateY(-2px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .a-card-accent { position: absolute; top: 0; right: 0; width: 80px; height: 80px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(16,185,129,0.12), transparent 70%);
+    transform: translate(20px,-20px); }
+  .a-card-sector { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .a-card-name { font-size: 17px; font-weight: 700; color: #f0f6ff; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .a-card-score-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 12px; }
+  .a-card-score { font-size: 40px; font-weight: 800; letter-spacing: -0.06em; color: #10b981; line-height: 1; }
+  .a-card-score-max { font-size: 13px; color: rgba(255,255,255,0.25); margin-left: 2px; margin-bottom: 4px; }
+  .a-card-badge {
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2);
+  }
+  .a-card-badge.warn { background: rgba(234,179,8,0.12); color: #eab308; border-color: rgba(234,179,8,0.2); }
+  .a-card-badge.bad { background: rgba(239,68,68,0.12); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+  .a-progress { height: 3px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .a-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #6366f1); }
+  .a-card-companies { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 12px; }
+
+  /* Company score mockup */
+  .a-company-card {
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px; overflow: hidden; max-width: 800px; margin: 0 auto;
+  }
+  .a-company-header {
+    padding: 32px 32px 24px; background: linear-gradient(135deg, rgba(16,185,129,0.07), rgba(99,102,241,0.05));
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+  }
+  .a-company-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #10b981; margin-bottom: 8px; }
+  .a-company-name { font-size: 28px; font-weight: 800; letter-spacing: -0.04em; color: #f0f6ff; }
+  .a-company-sub { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+  .a-score-ring { text-align: center; }
+  .a-score-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: conic-gradient(#10b981 0% 72%, rgba(255,255,255,0.05) 72%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .a-score-circle::after {
+    content: ''; position: absolute; inset: 8px; border-radius: 50%;
+    background: #060a14;
+  }
+  .a-score-inner { position: relative; z-index: 1; text-align: center; }
+  .a-score-inner .num { font-size: 22px; font-weight: 800; color: #10b981; font-family: 'JetBrains Mono', monospace; }
+  .a-score-inner small { font-size: 10px; color: rgba(255,255,255,0.3); display: block; }
+
+  /* Category bars */
+  .a-categories { padding: 0 32px 32px; }
+  .a-cat-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .a-cat-item:last-child { border-bottom: none; }
+  .a-cat-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .a-cat-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); }
+  .a-cat-points { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.3); }
+  .a-cat-points em { color: #10b981; font-style: normal; font-weight: 600; }
+  .a-cat-bar { height: 4px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+  .a-cat-fill { height: 100%; border-radius: 4px; }
+  .fill-green { background: linear-gradient(90deg, #10b981, #34d399); }
+  .fill-yellow { background: linear-gradient(90deg, #eab308, #facc15); }
+  .fill-red { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+  /* ============================================================ */
+  /*  THEME B: MERIDIAN — amber/gold premium terminal aesthetic    */
+  /* ============================================================ */
+  #theme-b {
+    background: #080707;
+    min-height: 100vh;
+    padding-top: 52px;
+  }
+
+  .b-nav-inner {
+    position: sticky; top: 52px; z-index: 40;
+    background: rgba(8,7,7,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(200,160,60,0.1);
+  }
+  .b-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; padding: 0 32px; max-width: 1280px; margin: 0 auto;
+  }
+  .b-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .b-logo-mark {
+    font-size: 18px; font-weight: 900; font-family: 'JetBrains Mono', monospace;
+    color: #d4a017; letter-spacing: -0.05em;
+  }
+  .b-logo-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+  .b-logo-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
+  .b-nav-links { display: flex; gap: 0; }
+  .b-nav-link {
+    padding: 6px 14px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.35);
+    text-decoration: none; letter-spacing: 0.03em; transition: color 0.15s; font-family: 'JetBrains Mono', monospace;
+  }
+  .b-nav-link:hover { color: #d4a017; }
+  .b-nav-link.active { color: #d4a017; }
+
+  .b-hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 80px 32px 60px; position: relative;
+  }
+  .b-hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(212,160,23,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,160,23,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+    pointer-events: none;
+  }
+  .b-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #d4a017;
+    margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+  }
+  .b-eyebrow::before { content: ''; width: 24px; height: 1px; background: #d4a017; }
+  .b-h1 {
+    font-family: 'Fraunces', serif; font-size: clamp(40px, 5.5vw, 80px);
+    font-weight: 300; line-height: 1.08; letter-spacing: -0.02em; color: #faf0e0;
+    max-width: 800px; margin-bottom: 24px;
+  }
+  .b-h1 strong { font-weight: 700; color: #d4a017; }
+  .b-sub {
+    font-size: 16px; color: rgba(250,240,224,0.4); max-width: 520px;
+    line-height: 1.75; margin-bottom: 48px; font-weight: 400;
+  }
+  .b-search {
+    display: flex; align-items: center; gap: 0; max-width: 540px;
+    border: 1px solid rgba(212,160,23,0.2); border-radius: 4px;
+    background: rgba(212,160,23,0.03); overflow: hidden;
+  }
+  .b-search-prompt {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #d4a017;
+    padding: 0 12px; opacity: 0.7; user-select: none;
+  }
+  .b-search-input {
+    flex: 1; background: none; border: none; outline: none; padding: 14px 0;
+    color: #faf0e0; font-size: 14px; font-family: 'JetBrains Mono', monospace;
+  }
+  .b-search-input::placeholder { color: rgba(250,240,224,0.2); }
+  .b-search-kbd {
+    padding: 0 14px; font-size: 11px; color: rgba(255,255,255,0.2);
+    font-family: 'JetBrains Mono', monospace; border-left: 1px solid rgba(212,160,23,0.15);
+    height: 100%; display: flex; align-items: center;
+  }
+
+  /* Leaderboard table */
+  .b-section { max-width: 1280px; margin: 0 auto; padding: 48px 32px; }
+  .b-section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+  .b-section-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+  .b-section-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(212,160,23,0.5); }
+
+  .b-table { width: 100%; border-collapse: collapse; }
+  .b-table th {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.2);
+    padding: 8px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .b-table th:last-child { text-align: right; }
+  .b-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+  .b-table tr:hover td { background: rgba(212,160,23,0.03); }
+  .b-table tr:last-child td { border-bottom: none; }
+  .b-rank { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.15); width: 40px; }
+  .b-company-name { font-size: 14px; font-weight: 600; color: #faf0e0; }
+  .b-company-ticker { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 2px; }
+  .b-sector-pill { display: inline-block; font-size: 10px; font-family: 'JetBrains Mono', monospace; padding: 2px 8px; border-radius: 2px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); }
+  .b-score-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .b-score-bar { flex: 1; height: 2px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; min-width: 80px; }
+  .b-score-bar-fill { height: 100%; background: #d4a017; border-radius: 2px; }
+  .b-score-num { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: #d4a017; min-width: 44px; text-align: right; }
+  .b-classification { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.25); text-align: right; }
+  .b-classification.iv { color: #10b981; }
+  .b-classification.acc { color: #d4a017; }
+  .b-classification.wl { color: rgba(255,255,255,0.3); }
+
+  /* Score breakdown card for theme B */
+  .b-breakdown {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(212,160,23,0.12);
+    border-radius: 4px; overflow: hidden; max-width: 700px;
+  }
+  .b-breakdown-header {
+    background: rgba(212,160,23,0.05); border-bottom: 1px solid rgba(212,160,23,0.1);
+    padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .b-breakdown-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+  .b-breakdown-score { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 600; color: #d4a017; letter-spacing: -0.05em; }
+  .b-breakdown-score small { font-size: 13px; color: rgba(212,160,23,0.4); }
+  .b-cat-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .b-cat-row:last-child { border-bottom: none; }
+  .b-cat-name { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.35); width: 180px; }
+  .b-cat-bar-wrap { flex: 1; display: flex; align-items: center; gap: 12px; margin: 0 20px; }
+  .b-cat-bar2 { flex: 1; height: 1px; background: rgba(255,255,255,0.05); position: relative; }
+  .b-cat-bar2-fill { position: absolute; top: 0; left: 0; height: 1px; background: #d4a017; }
+  .b-cat-pts { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(212,160,23,0.7); width: 60px; text-align: right; }
+
+  /* ============================================================ */
+  /*  THEME C: OBSIDIAN — navy/cyan deep space, modern fintech     */
+  /* ============================================================ */
+  #theme-c {
+    background: #03060f;
+    min-height: 100vh;
+    padding-top: 52px;
+  }
+
+  .c-nav-inner {
+    position: sticky; top: 52px; z-index: 40;
+    background: rgba(3,6,15,0.8); backdrop-filter: blur(20px) saturate(200%);
+    border-bottom: 1px solid rgba(0,210,255,0.07);
+  }
+  .c-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; padding: 0 32px; max-width: 1400px; margin: 0 auto;
+  }
+  .c-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .c-logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(0,210,255,0.1); border: 1px solid rgba(0,210,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .c-logo-icon svg { width: 18px; height: 18px; stroke: #00d2ff; fill: none; stroke-width: 2; }
+  .c-logo-text { font-size: 15px; font-weight: 700; color: #e8f4ff; letter-spacing: -0.02em; }
+  .c-logo-text em { color: #00d2ff; font-style: normal; }
+  .c-nav-pills { display: flex; gap: 2px; }
+  .c-nav-pill {
+    padding: 6px 14px; border-radius: 6px; font-size: 13px; color: rgba(255,255,255,0.4);
+    text-decoration: none; font-weight: 500; transition: all 0.15s;
+  }
+  .c-nav-pill:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .c-nav-pill.active { color: #00d2ff; background: rgba(0,210,255,0.08); }
+  .c-nav-right { display: flex; align-items: center; gap: 10px; }
+  .c-btn-ghost { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); background: none; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; }
+  .c-btn-primary { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #03060f; background: #00d2ff; border: none; cursor: pointer; }
+
+  /* Hero split */
+  .c-hero {
+    max-width: 1400px; margin: 0 auto; padding: 80px 32px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .c-hero-left {}
+  .c-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+    border-radius: 4px; background: rgba(0,210,255,0.08); border: 1px solid rgba(0,210,255,0.15);
+    font-size: 11px; font-weight: 600; color: #00d2ff; margin-bottom: 28px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .c-h1 {
+    font-size: clamp(34px, 4vw, 60px); font-weight: 800; letter-spacing: -0.04em;
+    color: #e8f4ff; line-height: 1.08; margin-bottom: 20px;
+  }
+  .c-h1 .hl {
+    background: linear-gradient(90deg, #00d2ff, #7c3aed);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .c-sub { font-size: 16px; color: rgba(232,244,255,0.4); line-height: 1.7; margin-bottom: 36px; }
+  .c-actions { display: flex; align-items: center; gap: 12px; }
+  .c-cta {
+    padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    background: #00d2ff; color: #03060f; border: none; cursor: pointer; letter-spacing: -0.01em;
+    box-shadow: 0 8px 32px rgba(0,210,255,0.25);
+  }
+  .c-cta-sec {
+    padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.08); cursor: pointer;
+  }
+  .c-trust { margin-top: 28px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.2); }
+  .c-trust-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+
+  /* Right panel — score display */
+  .c-hero-right { position: relative; }
+  .c-panel {
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .c-panel-topbar {
+    padding: 14px 20px; background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .c-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .c-panel-title { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.25); margin-left: 6px; font-family: 'JetBrains Mono', monospace; }
+  .c-panel-body { padding: 24px 24px 20px; }
+  .c-company-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+  .c-company-meta { }
+  .c-company-sector { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #00d2ff; opacity: 0.7; margin-bottom: 6px; }
+  .c-company-nm { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; color: #e8f4ff; }
+  .c-company-desc { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 3px; }
+  .c-gauge { text-align: right; }
+  .c-gauge-num { font-family: 'JetBrains Mono', monospace; font-size: 44px; font-weight: 700; color: #00d2ff; letter-spacing: -0.06em; line-height: 1; }
+  .c-gauge-label { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+  .c-gauge-badge { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: rgba(16,185,129,0.15); color: #10b981; }
+
+  /* Sparkline */
+  .c-chart-area { height: 60px; margin-bottom: 20px; position: relative; }
+  .c-chart-area svg { width: 100%; height: 60px; }
+
+  /* Mini category bars */
+  .c-cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+  .c-cat-mini { }
+  .c-cat-mini-name { font-size: 10px; color: rgba(255,255,255,0.25); margin-bottom: 4px; font-weight: 500; }
+  .c-cat-mini-bar { height: 3px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+  .c-cat-mini-fill { height: 100%; border-radius: 3px; }
+  .c-fill-cyan { background: #00d2ff; }
+  .c-fill-violet { background: #7c3aed; }
+  .c-fill-green { background: #10b981; }
+  .c-fill-orange { background: #f59e0b; }
+
+  /* Bottom feature row */
+  .c-features {
+    max-width: 1400px; margin: 0 auto; padding: 48px 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .c-feat {
+    padding: 24px; background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05); border-radius: 14px;
+  }
+  .c-feat-icon {
+    width: 36px; height: 36px; border-radius: 8px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,210,255,0.08); font-size: 16px;
+  }
+  .c-feat-title { font-size: 14px; font-weight: 700; color: #e8f4ff; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .c-feat-body { font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.6; }
+
+  /* ============ SHARED UTILS ============ */
+  .section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.04); margin: 0 32px; }
+  .mt-label { margin-top: 52px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 6px; }
+
+</style>
+</head>
+<body>
+
+<!-- ====== THEME SWITCHER ====== -->
+<div class="theme-selector">
+  <span>Design Options</span>
+  <button class="theme-btn active" onclick="switchTheme('a')">A · Aurora</button>
+  <button class="theme-btn" onclick="switchTheme('b')">B · Meridian</button>
+  <button class="theme-btn" onclick="switchTheme('c')">C · Obsidian</button>
+</div>
+
+<!-- ====================================================== -->
+<!--  THEME A: AURORA                                        -->
+<!-- ====================================================== -->
+<div id="theme-a" class="theme-section visible">
+
+  <div class="a-nav-inner">
+    <div class="a-nav" style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 32px;">
+      <a href="#" class="a-logo">
+        <div class="a-logo-icon">S</div>
+        <span class="a-logo-text">Stock<em>score</em></span>
+      </a>
+      <nav class="a-nav-links">
+        <a href="#" class="a-nav-link active">Sectors</a>
+        <a href="#" class="a-nav-link">Methodology</a>
+        <a href="#" class="a-nav-link">Asset Allocation</a>
+        <a href="#" class="a-nav-link">Blog</a>
+        <a href="#" class="a-nav-link">About</a>
+      </nav>
+      <button class="a-nav-cta">Get Started</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="a-hero">
+    <div class="a-hero-orb1"></div>
+    <div class="a-hero-orb2"></div>
+    <div class="a-badge"><div class="a-badge-dot"></div> Updated weekly · 32 sectors covered</div>
+    <h1 class="a-h1">Fundamental analysis,<br><span class="grad">made transparent.</span></h1>
+    <p class="a-sub">Score every Indian equity against its sector peers — across 10 categories, 1000 points — and see exactly where each point was earned or lost.</p>
+    <div class="a-search">
+      <input class="a-search-input" placeholder="Search sector or company…" />
+      <button class="a-search-btn">Search →</button>
+    </div>
+
+    <div class="a-stats">
+      <div class="a-stat">
+        <div class="a-stat-num"><em>32</em></div>
+        <div class="a-stat-label">Sectors</div>
+      </div>
+      <div class="a-stat">
+        <div class="a-stat-num"><em>480</em>+</div>
+        <div class="a-stat-label">Companies</div>
+      </div>
+      <div class="a-stat">
+        <div class="a-stat-num"><em>10</em></div>
+        <div class="a-stat-label">Score Categories</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Sector cards -->
+  <div class="a-section">
+    <div class="a-section-label">Top Sectors</div>
+    <div class="a-section-title">Sector Leaderboard</div>
+    <div class="a-section-sub">Ranked by top-company score · Click to explore</div>
+
+    <div class="a-grid">
+
+      <!-- Card 1 -->
+      <a href="#" class="a-card">
+        <div class="a-card-accent"></div>
+        <div class="a-card-sector">Banking & Finance</div>
+        <div class="a-card-name">Private Banks</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score">81.4</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge">Invest-grade</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:81.4%"></div></div>
+        <div class="a-card-companies">12 companies · Best: HDFC Bank</div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="#" class="a-card">
+        <div class="a-card-accent" style="background:radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)"></div>
+        <div class="a-card-sector">Information Technology</div>
+        <div class="a-card-name">IT Services</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score" style="color:#6366f1">74.2</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge" style="background:rgba(99,102,241,0.12);color:#818cf8;border-color:rgba(99,102,241,0.2)">Accumulate</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:74.2%;background:linear-gradient(90deg,#6366f1,#818cf8)"></div></div>
+        <div class="a-card-companies">8 companies · Best: TCS</div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="#" class="a-card">
+        <div class="a-card-accent" style="background:radial-gradient(circle, rgba(234,179,8,0.1), transparent 70%)"></div>
+        <div class="a-card-sector">Fast Moving Goods</div>
+        <div class="a-card-name">FMCG</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score" style="color:#eab308">67.8</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge warn">Accumulate</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:67.8%;background:linear-gradient(90deg,#eab308,#facc15)"></div></div>
+        <div class="a-card-companies">15 companies · Best: HUL</div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="#" class="a-card">
+        <div class="a-card-sector">Pharmaceuticals</div>
+        <div class="a-card-name">Pharma & Healthcare</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score">79.1</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge">Invest-grade</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:79.1%"></div></div>
+        <div class="a-card-companies">18 companies · Best: Sun Pharma</div>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="#" class="a-card">
+        <div class="a-card-sector">Infrastructure</div>
+        <div class="a-card-name">Capital Goods</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score" style="color:#f97316">52.3</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge" style="background:rgba(249,115,22,0.1);color:#fb923c;border-color:rgba(249,115,22,0.2)">Watchlist</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:52.3%;background:linear-gradient(90deg,#f97316,#fb923c)"></div></div>
+        <div class="a-card-companies">10 companies · Best: L&T</div>
+      </a>
+
+      <!-- Card 6 -->
+      <a href="#" class="a-card">
+        <div class="a-card-sector">Energy</div>
+        <div class="a-card-name">Oil & Gas</div>
+        <div class="a-card-score-row">
+          <div><span class="a-card-score">61.5</span><span class="a-card-score-max">/100</span></div>
+          <span class="a-card-badge" style="background:rgba(16,185,129,0.08);color:#6ee7b7;border-color:rgba(16,185,129,0.15)">Accumulate</span>
+        </div>
+        <div class="a-progress"><div class="a-progress-fill" style="width:61.5%;background:linear-gradient(90deg,#059669,#10b981)"></div></div>
+        <div class="a-card-companies">6 companies · Best: Reliance</div>
+      </a>
+
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Company breakdown mockup -->
+  <div class="a-section" style="padding-top:52px;">
+    <div class="a-section-label">Company Detail</div>
+    <div class="a-section-title">Score Breakdown</div>
+    <div class="a-section-sub">Every point traceable to a specific rule</div>
+
+    <div class="a-company-card">
+      <div class="a-company-header">
+        <div>
+          <div class="a-company-tag">Private Banks · NSE: HDFCBANK</div>
+          <div class="a-company-name">HDFC Bank</div>
+          <div class="a-company-sub">₹14,920 Cr revenue · Large Cap · 22.4% ROE</div>
+        </div>
+        <div class="a-score-ring">
+          <div class="a-score-circle">
+            <div class="a-score-inner">
+              <div class="num">81.4</div>
+              <small>/100</small>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#10b981;font-weight:600;text-align:center;">Invest-grade</div>
+        </div>
+      </div>
+
+      <div class="a-categories">
+        <div style="padding:16px 0 8px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.25);letter-spacing:0.08em;text-transform:uppercase;">Category Breakdown</div>
+
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Profitability</span><span class="a-cat-points"><em>18.2</em> / 20</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:91%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Balance Sheet</span><span class="a-cat-points"><em>13.5</em> / 15</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:90%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Growth</span><span class="a-cat-points"><em>11.2</em> / 15</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:75%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Valuation</span><span class="a-cat-points"><em>6.8</em> / 10</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-yellow" style="width:68%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Cash Flow</span><span class="a-cat-points"><em>8.4</em> / 10</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:84%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Quarterly Momentum</span><span class="a-cat-points"><em>7.2</em> / 10</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:72%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Shareholding</span><span class="a-cat-points"><em>5.8</em> / 8</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-yellow" style="width:72%"></div></div>
+        </div>
+        <div class="a-cat-item">
+          <div class="a-cat-row"><span class="a-cat-name">Operational Efficiency</span><span class="a-cat-points"><em>4.2</em> / 5</span></div>
+          <div class="a-cat-bar"><div class="a-cat-fill fill-green" style="width:84%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:80px"></div>
+</div><!-- /theme-a -->
+
+
+<!-- ====================================================== -->
+<!--  THEME B: MERIDIAN                                       -->
+<!-- ====================================================== -->
+<div id="theme-b" class="theme-section">
+
+  <div class="b-nav-inner">
+    <div class="b-nav">
+      <a href="#" class="b-logo">
+        <div class="b-logo-mark">SS</div>
+        <div class="b-logo-divider"></div>
+        <div class="b-logo-name">Stockscore</div>
+      </a>
+      <nav class="b-nav-links">
+        <a href="#" class="b-nav-link active">sectors</a>
+        <a href="#" class="b-nav-link">methodology</a>
+        <a href="#" class="b-nav-link">allocation</a>
+        <a href="#" class="b-nav-link">blog</a>
+        <a href="#" class="b-nav-link">about</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="b-hero">
+    <div class="b-hero-grid"></div>
+    <div class="b-eyebrow">Indian equity analysis</div>
+    <h1 class="b-h1">Know every rupee<br>of your <strong>thesis.</strong></h1>
+    <p class="b-sub">A 10-category, 1000-point scoring system for every Indian sector — where every plus and minus is traceable to a specific financial rule.</p>
+    <div class="b-search">
+      <div class="b-search-prompt">&gt;_</div>
+      <input class="b-search-input" placeholder="search sector or ticker…" />
+      <div class="b-search-kbd">⌘K</div>
+    </div>
+  </div>
+
+  <div class="b-section">
+    <div class="b-section-header">
+      <div class="b-section-title">// sector_leaderboard</div>
+      <div class="b-section-meta">ranked by top score · as of 27 May 2026</div>
+    </div>
+
+    <table class="b-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Company</th>
+          <th>Sector</th>
+          <th style="min-width:160px;">Score</th>
+          <th>Classification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="b-rank">01</td>
+          <td><div class="b-company-name">HDFC Bank</div><div class="b-company-ticker">NSE: HDFCBANK</div></td>
+          <td><span class="b-sector-pill">Private Banks</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:81.4%"></div></div>
+              <div class="b-score-num">81.4</div>
+            </div>
+          </td>
+          <td class="b-classification iv">INVEST-GRADE</td>
+        </tr>
+        <tr>
+          <td class="b-rank">02</td>
+          <td><div class="b-company-name">Sun Pharma</div><div class="b-company-ticker">NSE: SUNPHARMA</div></td>
+          <td><span class="b-sector-pill">Pharma</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:79.1%"></div></div>
+              <div class="b-score-num">79.1</div>
+            </div>
+          </td>
+          <td class="b-classification iv">INVEST-GRADE</td>
+        </tr>
+        <tr>
+          <td class="b-rank">03</td>
+          <td><div class="b-company-name">TCS</div><div class="b-company-ticker">NSE: TCS</div></td>
+          <td><span class="b-sector-pill">IT Services</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:74.2%"></div></div>
+              <div class="b-score-num">74.2</div>
+            </div>
+          </td>
+          <td class="b-classification acc">ACCUMULATE</td>
+        </tr>
+        <tr>
+          <td class="b-rank">04</td>
+          <td><div class="b-company-name">HUL</div><div class="b-company-ticker">NSE: HINDUNILVR</div></td>
+          <td><span class="b-sector-pill">FMCG</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:67.8%"></div></div>
+              <div class="b-score-num">67.8</div>
+            </div>
+          </td>
+          <td class="b-classification acc">ACCUMULATE</td>
+        </tr>
+        <tr>
+          <td class="b-rank">05</td>
+          <td><div class="b-company-name">Reliance Industries</div><div class="b-company-ticker">NSE: RELIANCE</div></td>
+          <td><span class="b-sector-pill">Oil & Gas</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:61.5%"></div></div>
+              <div class="b-score-num">61.5</div>
+            </div>
+          </td>
+          <td class="b-classification wl">ACCUMULATE</td>
+        </tr>
+        <tr>
+          <td class="b-rank">06</td>
+          <td><div class="b-company-name">L&T</div><div class="b-company-ticker">NSE: LT</div></td>
+          <td><span class="b-sector-pill">Capital Goods</span></td>
+          <td>
+            <div class="b-score-bar-wrap">
+              <div class="b-score-bar"><div class="b-score-bar-fill" style="width:52.3%"></div></div>
+              <div class="b-score-num">52.3</div>
+            </div>
+          </td>
+          <td class="b-classification wl">WATCHLIST</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="b-section" style="padding-top:0">
+    <div class="b-section-header">
+      <div class="b-section-title">// score_breakdown · HDFCBANK</div>
+      <div class="b-section-meta">10 categories · 100 points</div>
+    </div>
+
+    <div class="b-breakdown">
+      <div class="b-breakdown-header">
+        <div>
+          <div class="b-breakdown-title">// total_score</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:2px;font-family:'JetBrains Mono',monospace;">HDFC Bank · Private Banks · INVEST-GRADE</div>
+        </div>
+        <div class="b-breakdown-score">81.4<small>/100</small></div>
+      </div>
+      <div class="b-cat-row"><div class="b-cat-name">profitability</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:91%"></div></div></div><div class="b-cat-pts">+18.2/20</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">balance_sheet</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:90%"></div></div></div><div class="b-cat-pts">+13.5/15</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">growth</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:75%"></div></div></div><div class="b-cat-pts">+11.2/15</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">cash_flow</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:84%"></div></div></div><div class="b-cat-pts">+8.4/10</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">quarterly_momentum</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:72%"></div></div></div><div class="b-cat-pts">+7.2/10</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">valuation</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:68%"></div></div></div><div class="b-cat-pts">+6.8/10</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">shareholding</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:72%"></div></div></div><div class="b-cat-pts">+5.8/8</div></div>
+      <div class="b-cat-row"><div class="b-cat-name">operational_efficiency</div><div class="b-cat-bar-wrap"><div class="b-cat-bar2"><div class="b-cat-bar2-fill" style="width:84%"></div></div></div><div class="b-cat-pts">+4.2/5</div></div>
+    </div>
+  </div>
+
+  <div style="height:80px"></div>
+</div><!-- /theme-b -->
+
+
+<!-- ====================================================== -->
+<!--  THEME C: OBSIDIAN                                       -->
+<!-- ====================================================== -->
+<div id="theme-c" class="theme-section">
+
+  <div class="c-nav-inner">
+    <div class="c-nav">
+      <a href="#" class="c-logo">
+        <div class="c-logo-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span class="c-logo-text">Stock<em>score</em></span>
+      </a>
+      <nav class="c-nav-pills">
+        <a href="#" class="c-nav-pill active">Sectors</a>
+        <a href="#" class="c-nav-pill">Methodology</a>
+        <a href="#" class="c-nav-pill">Allocator</a>
+        <a href="#" class="c-nav-pill">Blog</a>
+        <a href="#" class="c-nav-pill">About</a>
+      </nav>
+      <div class="c-nav-right">
+        <button class="c-btn-ghost">Sign in</button>
+        <button class="c-btn-primary">Try Free</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split hero -->
+  <div class="c-hero">
+    <div class="c-hero-left">
+      <div class="c-badge">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="#00d2ff"><circle cx="4" cy="4" r="4"/></svg>
+        Live · 32 sectors
+      </div>
+      <h1 class="c-h1">See <span class="hl">exactly why</span><br>a stock scores high.</h1>
+      <p class="c-sub">Transparent, rule-based fundamental analysis of every Indian sector. 10 categories, 1000 points. No black boxes.</p>
+      <div class="c-actions">
+        <button class="c-cta">Explore Sectors →</button>
+        <button class="c-cta-sec">Read Methodology</button>
+      </div>
+      <div class="c-trust">
+        <div class="c-trust-dot"></div>
+        Updated weekly from screener.in · 480+ companies tracked
+      </div>
+    </div>
+
+    <div class="c-hero-right">
+      <div class="c-panel">
+        <div class="c-panel-topbar">
+          <div class="c-dot" style="background:#ff5f57"></div>
+          <div class="c-dot" style="background:#febc2e"></div>
+          <div class="c-dot" style="background:#28c840"></div>
+          <div class="c-panel-title">company_detail.tsx · HDFCBANK</div>
+        </div>
+        <div class="c-panel-body">
+          <div class="c-company-header">
+            <div class="c-company-meta">
+              <div class="c-company-sector">Private Banks</div>
+              <div class="c-company-nm">HDFC Bank</div>
+              <div class="c-company-desc">NSE: HDFCBANK · Large Cap</div>
+            </div>
+            <div class="c-gauge">
+              <div class="c-gauge-num">81.4</div>
+              <div class="c-gauge-label">/ 100 pts</div>
+              <div class="c-gauge-badge">Invest-grade</div>
+            </div>
+          </div>
+
+          <!-- Mini sparkline SVG -->
+          <div class="c-chart-area">
+            <svg viewBox="0 0 400 60" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#00d2ff" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,45 L40,42 L80,38 L120,35 L160,30 L200,22 L240,25 L280,18 L320,14 L360,10 L400,8 L400,60 L0,60 Z" fill="url(#spark-grad)"/>
+              <path d="M0,45 L40,42 L80,38 L120,35 L160,30 L200,22 L240,25 L280,18 L320,14 L360,10 L400,8" fill="none" stroke="#00d2ff" stroke-width="1.5"/>
+            </svg>
+          </div>
+
+          <!-- Mini category grid -->
+          <div class="c-cat-grid">
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Profitability · 18.2/20</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-cyan" style="width:91%"></div></div>
+            </div>
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Balance Sheet · 13.5/15</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-green" style="width:90%"></div></div>
+            </div>
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Growth · 11.2/15</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-cyan" style="width:75%"></div></div>
+            </div>
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Cash Flow · 8.4/10</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-green" style="width:84%"></div></div>
+            </div>
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Valuation · 6.8/10</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-orange" style="width:68%"></div></div>
+            </div>
+            <div class="c-cat-mini">
+              <div class="c-cat-mini-name">Shareholding · 5.8/8</div>
+              <div class="c-cat-mini-bar"><div class="c-cat-mini-fill c-fill-violet" style="width:72%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature strip -->
+  <div class="c-features">
+    <div class="c-feat">
+      <div class="c-feat-icon">📊</div>
+      <div class="c-feat-title">10-Category Scoring</div>
+      <div class="c-feat-body">Every point is traceable to a specific financial rule — no black boxes.</div>
+    </div>
+    <div class="c-feat">
+      <div class="c-feat-icon">🔍</div>
+      <div class="c-feat-title">Peer-Relative Analysis</div>
+      <div class="c-feat-body">Score against sector peers using quartile rankings and absolute thresholds.</div>
+    </div>
+    <div class="c-feat">
+      <div class="c-feat-icon">📈</div>
+      <div class="c-feat-title">Live Financial Data</div>
+      <div class="c-feat-body">5 years of financials, 12 quarters, shareholding patterns — updated weekly.</div>
+    </div>
+    <div class="c-feat">
+      <div class="c-feat-icon">⚡</div>
+      <div class="c-feat-title">Radar Overlays</div>
+      <div class="c-feat-body">Visual sector leaderboards, company radar charts, and trend comparisons.</div>
+    </div>
+  </div>
+
+  <div style="height:80px"></div>
+</div><!-- /theme-c -->
+
+<script>
+  function switchTheme(t) {
+    document.querySelectorAll('.theme-section').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.theme-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('theme-' + t).classList.add('visible');
+    event.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

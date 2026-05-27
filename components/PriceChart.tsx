@@ -34,10 +34,10 @@ function sma(candles: Candle[], period: number): IndicatorPoint[] {
   return out;
 }
 
-const PRICE_COLOR = "#3b82f6";
-const SMA50_COLOR = "#60a5fa";
-const SMA100_COLOR = "#34d399";
-const SMA200_COLOR = "#f59e0b";
+const PRICE_COLOR = "#00D2FF";
+const SMA50_COLOR = "#38E8FF";
+const SMA100_COLOR = "#7C3AED";
+const SMA200_COLOR = "#F59E0B";
 
 function fmt(n: number | undefined): string {
   if (n === undefined || !Number.isFinite(n)) return "—";
@@ -104,7 +104,7 @@ export function PriceChart({ symbol }: { symbol: string }) {
       priceChart = createChart(priceRef.current!, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
-          textColor: "#a1a1aa",
+          textColor: "#7090B0",
           fontFamily: "ui-sans-serif, system-ui",
           attributionLogo: false,
         },
@@ -116,8 +116,8 @@ export function PriceChart({ symbol }: { symbol: string }) {
         timeScale: { borderColor: "rgba(255,255,255,0.08)", timeVisible: false },
         crosshair: {
           mode: CrosshairMode.Magnet,
-          vertLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#1f2937", style: LineStyle.Dashed },
-          horzLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#1f2937", style: LineStyle.Dashed },
+          vertLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#0C1426", style: LineStyle.Dashed },
+          horzLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#0C1426", style: LineStyle.Dashed },
         },
         height: 380,
         width: priceRef.current!.clientWidth,

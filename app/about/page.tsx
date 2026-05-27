@@ -43,7 +43,7 @@ const PHILOSOPHY = [
   },
   {
     title: "Accessibility matters",
-    body: "Good advice shouldn't be reserved for ₹1 cr+ clients. The seven friends I've guided through their first SIPs are the proof.",
+    body: "Good advice shouldn't be reserved for ₹1 cr+ clients. I offer pro-bono consulting to first-time investors who want to learn how to think about their money — that's the proof.",
   },
 ];
 
@@ -68,7 +68,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-3 flex items-center gap-3 text-xs text-chalk-300/80">
             <span className="inline-flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" /> Bengaluru, India
+              <MapPin className="h-3.5 w-3.5" /> Bengaluru, KA, India
             </span>
           </div>
         </div>
@@ -94,10 +94,11 @@ export default function AboutPage() {
           temperament.
         </p>
         <p>
-          Along the way, seven friends and family members asked for help with
-          their own investing. Goal setting, SIP planning, fund selection,
-          basic risk profiling — explained in plain language. That experience
-          convinced me I want to do this for a living.
+          Along the way, I started offering <strong className="text-chalk-50 not-italic font-medium">pro-bono consulting</strong> to people
+          taking their first steps with money — goal setting, SIP planning,
+          fund selection, and basic risk profiling, all explained in plain
+          language. That experience convinced me I want to do this for a
+          living.
         </p>
         <p>
           This website is the proof of work for that pivot. The scoring engine
