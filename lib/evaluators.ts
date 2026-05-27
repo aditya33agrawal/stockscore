@@ -268,6 +268,18 @@ export function evaluateCashConversion(
   return { ratio, sentence: `CFO covers only ${(ratio * 100).toFixed(0)}% of net profit — watch for accrual-heavy earnings.`, tone: "warn" };
 }
 
+export function evaluateCurrentRatio(raw: CompanyRaw): Evaluation {
+  const cr = raw.current_ratio;
+  if (!cr) return { sentence: "Current ratio data not available.", tone: "neutral" };
+  if (cr >= 2)
+    return { sentence: `Current ratio of ${cr.toFixed(2)} — strong short-term liquidity; ample buffer to cover current liabilities.`, tone: "good" };
+  if (cr >= 1.5)
+    return { sentence: `Current ratio of ${cr.toFixed(2)} — adequate liquidity; business can comfortably meet near-term obligations.`, tone: "neutral" };
+  if (cr >= 1)
+    return { sentence: `Current ratio of ${cr.toFixed(2)} — thin liquidity buffer; worth watching working capital management.`, tone: "warn" };
+  return { sentence: `Current ratio of ${cr.toFixed(2)} is below 1 — current liabilities exceed current assets. Monitor cash position closely.`, tone: "warn" };
+}
+
 export function evaluateSalesProfit(raw: CompanyRaw): Evaluation {
   const sales = raw.sales_5y_cagr;
   const profit = raw.profit_5y_cagr;

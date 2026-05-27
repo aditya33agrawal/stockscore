@@ -53,6 +53,7 @@ interface SectorConfig {
   name: string;
   description: string;
   analyst_note?: string;
+  cyclical?: boolean;
   companies: string[];
 }
 
@@ -268,7 +269,10 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
         const { rawData } = result;
         rawDataMap.set(rawData.symbol, rawData);
 
-        const scoreResult = scoreCompany(rawData);
+        const scoreResult = scoreCompany(rawData, {
+          cyclical: sector.cyclical ?? false,
+          sectorSlug: sector.slug,
+        });
         const company: Company = { ...scoreResult, rank: 0 };
         scored.push(company);
         log(`  [company] ${companyName} — score: ${scoreResult.final_score}/100 (${scoreResult.classification})`);

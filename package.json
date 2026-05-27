@@ -13,7 +13,9 @@
     "refresh:market": "npx tsx scripts/refresh-market.ts",
     "refresh:market:force": "npx tsx scripts/refresh-market.ts --force",
     "refresh:charts": "npx tsx scripts/refresh-charts.ts",
-    "refresh:charts:force": "npx tsx scripts/refresh-charts.ts --force"
+    "refresh:charts:force": "npx tsx scripts/refresh-charts.ts --force",
+    "sync:config": "npx tsx scripts/sync-config.ts",
+    "sync:config:force": "npx tsx scripts/sync-config.ts --force"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

@@ -57,10 +57,44 @@ export interface SectorConfigEntry {
   name: string;
   description: string;
   analyst_note?: string;
+  cyclical?: boolean;
   companies: string[];
 }
 
 export async function loadSectorsConfig(): Promise<SectorConfigEntry[]> {
+  // Try DB first — populated by `npm run sync:config`
+  try {
+    const rows = await withTimeout(
+      sql<
+        {
+          slug: string;
+          name: string;
+          description: string | null;
+          analyst_note: string | null;
+          cyclical: boolean;
+          companies: unknown;
+        }[]
+      >`
+        SELECT slug, name, description, analyst_note, cyclical, companies
+        FROM sector_config
+        ORDER BY name
+      `
+    );
+    if (rows.length > 0) {
+      return rows.map((r) => ({
+        slug: r.slug,
+        name: r.name,
+        description: r.description ?? "",
+        analyst_note: r.analyst_note ?? undefined,
+        cyclical: r.cyclical,
+        companies: r.companies as string[],
+      }));
+    }
+  } catch (err) {
+    console.error("[data] loadSectorsConfig from DB failed, falling back to JSON:", err);
+  }
+
+  // Fallback: read directly from sectors_config.json
   const raw = await fs.readFile(
     path.join(process.cwd(), "sectors_config.json"),
     "utf8"

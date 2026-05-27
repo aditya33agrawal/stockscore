@@ -77,4 +77,16 @@ export async function ensureTables() {
       payload           JSONB NOT NULL
     )
   `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS sector_config (
+      slug         TEXT PRIMARY KEY,
+      name         TEXT NOT NULL,
+      description  TEXT,
+      analyst_note TEXT,
+      cyclical     BOOLEAN NOT NULL DEFAULT false,
+      companies    JSONB NOT NULL,
+      synced_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
 }

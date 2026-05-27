@@ -24,7 +24,7 @@ export default async function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-x-hidden">
+      <section className="relative">
         <div className="absolute inset-0 hero-grid" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-14 sm:pt-24 pb-12 sm:pb-20 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">

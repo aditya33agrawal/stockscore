@@ -2,38 +2,73 @@
 
 import { useState } from "react";
 import clsx from "clsx";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import type { CategoryScore } from "@/lib/types";
 import { pointsColor } from "@/lib/format";
 
 const CATEGORY_RATIONALE: Record<string, string> = {
+  "Quality of Business":
+    "ROCE, ROE, operating margins and capital efficiency — are the economics structurally good?",
   Valuation:
-    "How cheap or expensive the stock is versus its earnings, book value, intrinsic estimate, and growth.",
-  Profitability:
-    "Quality of earnings — margins, returns on equity and capital, and whether they're trending up.",
+    "How cheap or expensive the stock is on multiple lenses: P/E, P/B, PEG, intrinsic value gap and dividend yield.",
   Growth:
-    "Top-line and bottom-line growth over 5 years, plus whether TTM is accelerating or stalling.",
+    "Revenue and profit CAGR over 10/5/3 years plus whether recent momentum is accelerating.",
   "Quarterly Momentum":
-    "Most recent quarter strength versus prior quarter and year-ago period.",
+    "Most recent quarter versus year-ago and prior quarter — is the trend fresh and strengthening?",
   "Balance Sheet":
-    "Leverage, debt trend, liquidity, and reserves growth — the safety net of the business.",
+    "Leverage, debt trajectory over 5–10 years, pledge risk and short-term liquidity.",
   "Cash Flow":
-    "How much reported profit converts to cash, free-cash-flow consistency, and CFO trajectory.",
+    "How much reported profit converts to cash; FCF consistency and working capital discipline.",
   Shareholding:
-    "Promoter, FII, and DII confidence over the last 4 quarters; pledged-share risk.",
+    "Promoter, FII and DII confidence over 8 quarters; pledge risk and institutional conviction.",
   Dividend:
-    "Yield, payout consistency over 5 years, and payout ratio sustainability.",
+    "Yield, payout consistency and payout ratio sustainability.",
   "Operational Efficiency":
-    "Working capital discipline — debtor days, inventory, cash conversion cycle.",
+    "Working capital discipline — debtor days, inventory turnover, cash conversion cycle.",
   "Price & Technical":
-    "Price action context — drawdown from highs, distance from lows, price vs. fundamentals.",
+    "Two-signal price regime: DMA stack (CMP vs 50/200 DMA) + 52-week position.",
+  "Peer Composite":
+    "Company's percentile rank among sector peers across P/E, ROCE, OPM, growth and leverage.",
+  "Size & Liquidity":
+    "Market-cap tier investability adjustment — large caps get a small premium for liquidity.",
 };
+
+function Tooltip({ text }: { text: string }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <span className="relative inline-flex items-center ml-1 align-middle">
+      <button
+        type="button"
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
+        aria-label="Factor methodology"
+        className="text-chalk-300/40 hover:text-chalk-300 transition-colors focus:outline-none"
+      >
+        <Info className="h-3 w-3" />
+      </button>
+      {visible && (
+        <span
+          role="tooltip"
+          className="
+            absolute left-5 top-0 z-50 w-64 rounded-lg
+            border border-ink-600/80 bg-ink-900 shadow-xl
+            px-3 py-2 text-xs text-chalk-200 leading-relaxed
+            pointer-events-none
+          "
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
 
 export function CategoryCard({ category }: { category: CategoryScore }) {
   const [open, setOpen] = useState(false);
   const pct = (category.earned / category.max) * 100;
-  const tone =
-    pct >= 70 ? "accent" : pct >= 40 ? "warn" : "bad";
+  const tone = pct >= 70 ? "accent" : pct >= 40 ? "warn" : "bad";
 
   return (
     <div className="rounded-xl border border-ink-700/60 bg-ink-900/60 overflow-hidden">
@@ -43,21 +78,15 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-semibold text-chalk-50 truncate">
-              {category.name}
-            </h3>
+            <h3 className="font-semibold text-chalk-50 truncate">{category.name}</h3>
             <span className="num text-sm text-chalk-300 shrink-0">
               <span
                 className={clsx(
                   "font-semibold",
-                  tone === "accent"
-                    ? "text-accent"
-                    : tone === "warn"
-                      ? "text-warn"
-                      : "text-bad",
+                  tone === "accent" ? "text-accent" : tone === "warn" ? "text-warn" : "text-bad",
                 )}
               >
-                {category.earned}
+                {category.earned.toFixed !== undefined ? category.earned.toFixed(1) : category.earned}
               </span>{" "}
               / {category.max}
             </span>
@@ -69,11 +98,7 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
             <div
               className={clsx(
                 "h-full rounded-full transition-all",
-                tone === "accent"
-                  ? "bg-accent"
-                  : tone === "warn"
-                    ? "bg-warn"
-                    : "bg-bad",
+                tone === "accent" ? "bg-accent" : tone === "warn" ? "bg-warn" : "bg-bad",
               )}
               style={{ width: `${Math.max(0, Math.min(100, pct))}%` }}
             />
@@ -91,24 +116,19 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
         <div className="border-t border-ink-700/60 bg-ink-950/40 px-5 py-3">
           <ul className="divide-y divide-ink-700/40">
             {category.items.map((item, i) => (
-              <li
-                key={i}
-                className="flex items-center justify-between gap-4 py-2.5 text-sm"
-              >
+              <li key={i} className="flex items-center justify-between gap-4 py-2.5 text-sm">
                 <div className="flex-1 min-w-0">
-                  <p className="text-chalk-100">{item.label}</p>
-                  <p className="text-xs text-chalk-300/70 num mt-0.5">
-                    {item.detail}
-                  </p>
+                  <div className="flex items-center">
+                    <p className="text-chalk-100">{item.label}</p>
+                    {item.tooltip && <Tooltip text={item.tooltip} />}
+                  </div>
+                  <p className="text-xs text-chalk-300/70 num mt-0.5">{item.detail}</p>
                 </div>
                 <span
-                  className={clsx(
-                    "num font-semibold shrink-0",
-                    pointsColor(item.points),
-                  )}
+                  className={clsx("num font-semibold shrink-0", pointsColor(item.points))}
                 >
                   {item.points > 0 ? "+" : ""}
-                  {item.points}
+                  {typeof item.points === "number" ? item.points.toFixed(1) : item.points}
                 </span>
               </li>
             ))}

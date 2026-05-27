@@ -6,6 +6,10 @@ import {
   ThumbsDown,
   ExternalLink,
   ChevronDown,
+  Star,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import clsx from "clsx";
 import { loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
@@ -27,6 +31,7 @@ import {
   evaluateSalesProfit,
   evaluateTrend,
   evaluateCashConversion,
+  evaluateCurrentRatio,
 } from "@/lib/evaluators";
 import type { MetricCardProps } from "@/components/MetricCard";
 import { PeerComparisonTable } from "@/components/PeerComparisonTable";
@@ -231,6 +236,20 @@ export default async function CompanyPage({
         : undefined,
     });
 
+    const evCR = evaluateCurrentRatio(co.raw);
+    metricCards.push({
+      title: "Current Ratio",
+      headline: co.raw.current_ratio != null ? co.raw.current_ratio.toFixed(2) : "N/A",
+      badge: co.raw.current_ratio != null
+        ? {
+            label: co.raw.current_ratio >= 2 ? "Strong liquidity" : co.raw.current_ratio >= 1.5 ? "Adequate" : co.raw.current_ratio >= 1 ? "Thin buffer" : "Below 1",
+            tone: co.raw.current_ratio >= 2 ? "good" : co.raw.current_ratio >= 1.5 ? "neutral" : "warn",
+          }
+        : undefined,
+      sentence: evCR.sentence,
+      sentenceTone: evCR.tone,
+    });
+
     const evSP = evaluateSalesProfit(co.raw);
     metricCards.push({
       title: "Revenue & Profit Growth",
@@ -390,6 +409,32 @@ export default async function CompanyPage({
               >
                 {trendInfo.label}
               </span>
+              {/* Regime badge (from scorer v2) */}
+              {co.regime && (
+                <span
+                  title="Price regime from scoring algorithm (2-signal: DMA stack + 52w position)"
+                  className={clsx(
+                    "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium tracking-wide cursor-help",
+                    co.regime === "uptrend"   && "border-accent/30 bg-accent/10 text-accent/80",
+                    co.regime === "downtrend" && "border-bad/30 bg-bad/10 text-bad/80",
+                    co.regime === "sideways"  && "border-ink-600 bg-ink-800/60 text-chalk-300",
+                  )}
+                >
+                  {co.regime === "uptrend"   && <TrendingUp   className="h-3 w-3" />}
+                  {co.regime === "downtrend" && <TrendingDown className="h-3 w-3" />}
+                  {co.regime === "sideways"  && <Minus        className="h-3 w-3" />}
+                  {co.regime.charAt(0).toUpperCase() + co.regime.slice(1)}
+                </span>
+              )}
+              {/* Peer percentile */}
+              {co.peer_percentile != null && (
+                <span
+                  title={`Scores at the ${Math.round(co.peer_percentile * 100)}th percentile among sector peers across P/E, ROCE, OPM, growth and leverage`}
+                  className="inline-flex items-center gap-1 rounded-md border border-ink-600/60 bg-ink-800/60 px-2 py-0.5 text-xs text-chalk-300 cursor-help"
+                >
+                  Peer rank {Math.round(co.peer_percentile * 100)}th %ile
+                </span>
+              )}
             </div>
           </div>
           <ScoreBadge score={co.final_score} raw={co.raw_total} size="lg" />
@@ -407,19 +452,6 @@ export default async function CompanyPage({
         </div>
       </header>
 
-      {/* PRICE RULER — 52w range + DMA positions */}
-      {(co.raw.dma50 || co.raw.dma200 || high52w || low52w) && (
-        <section className="mb-8">
-          <PriceRuler
-            cmp={co.cmp}
-            dma50={co.raw.dma50}
-            dma200={co.raw.dma200}
-            high52w={high52w}
-            low52w={low52w}
-          />
-        </section>
-      )}
-
       {/* CATEGORY BREAKDOWN */}
       <section className="mb-10">
         <div className="flex items-baseline justify-between mb-4">
@@ -434,19 +466,42 @@ export default async function CompanyPage({
           </Link>
         </div>
         {/* Radar chart — visual fingerprint of the company's score profile */}
-        <div className="mb-5">
-          <RadarCompare companies={[co]} />
-        </div>
         <div className="grid gap-3">
           {co.categories.map((cat) => (
             <CategoryCard key={cat.name} category={cat} />
           ))}
+        </div>
+        <div className="mb-5">
+          <RadarCompare companies={[co]} />
         </div>
         <p className="mt-3 text-xs text-chalk-300/70">
           Click any category to expand the per-rule breakdown. Green rows added
           points; red rows deducted.
         </p>
       </section>
+
+      {/* BONUSES */}
+      {co.bonuses && co.bonuses.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">
+            Bonus points
+          </h2>
+          <ul className="rounded-xl border border-accent/30 bg-accent/5 divide-y divide-accent/10">
+            {co.bonuses.map((b, i) => (
+              <li key={i} className="flex items-center justify-between px-5 py-3">
+                <div className="flex items-center gap-2">
+                  <Star className="h-3.5 w-3.5 text-accent shrink-0" />
+                  <div>
+                    <p className="text-sm text-chalk-50">{b.label}</p>
+                    <p className="text-xs text-chalk-300/80">{b.detail}</p>
+                  </div>
+                </div>
+                <span className="num font-semibold text-accent">+{b.points}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* PENALTIES */}
       {co.penalties.length > 0 && (
@@ -641,11 +696,100 @@ export default async function CompanyPage({
         <PriceChart symbol={co.ticker} />
       </section>
 
+      {/* PRICE RULER — 52w range + DMA positions */}
+      {(co.raw.dma50 || co.raw.dma200 || high52w || low52w) && (
+        <section className="mb-8">
+          <PriceRuler
+            cmp={co.cmp}
+            dma50={co.raw.dma50}
+            dma200={co.raw.dma200}
+            high52w={high52w}
+            low52w={low52w}
+          />
+        </section>
+      )}
+
       {/* FINANCIAL CHARTS */}
       {chartData && (
         <section className="mb-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Financial Charts</h2>
           <FinancialCharts primaryData={chartData} primaryName={co.name} peers={peers} />
+        </section>
+      )}
+
+      {/* FACTOR BREAKDOWN — v2 detail tab */}
+      {co.factor_breakdown && co.factor_breakdown.length > 0 && (
+        <section className="mb-10">
+          <details className="group rounded-xl border border-ink-700/60 bg-ink-900/40">
+            <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
+              <div>
+                <span className="text-sm font-semibold text-chalk-100">Factor Breakdown (v2)</span>
+                <span className="ml-2 text-xs text-chalk-300/60">{co.factor_breakdown.length} factors · raw score {co.raw_total.toFixed(1)}/100</span>
+              </div>
+              <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="border-t border-ink-700/40 overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="text-chalk-300/50 uppercase tracking-wider">
+                  <tr className="border-b border-ink-700/40">
+                    <th className="text-left px-4 py-2">Factor</th>
+                    <th className="text-left px-4 py-2 hidden sm:table-cell">Category</th>
+                    <th className="text-right px-4 py-2">Score 0–1</th>
+                    <th className="text-right px-4 py-2">Wt</th>
+                    <th className="text-right px-4 py-2">Pts</th>
+                    <th className="text-left px-4 py-2 hidden md:table-cell">Source</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-ink-700/30">
+                  {co.factor_breakdown.map((row, i) => (
+                    <tr key={i} className="hover:bg-ink-800/20">
+                      <td className="px-4 py-2">
+                        <p className="text-chalk-100">{row.factor}</p>
+                        {row.notes && (
+                          <p className="text-chalk-300/50 mt-0.5 leading-tight max-w-xs hidden lg:block">{row.notes}</p>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 text-chalk-300/70 hidden sm:table-cell">{row.category}</td>
+                      <td className="px-4 py-2 text-right num">
+                        <span className={clsx(
+                          row.score_01 >= 0.7 ? "text-accent" : row.score_01 >= 0.4 ? "text-warn" : "text-bad"
+                        )}>
+                          {row.score_01.toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-right num text-chalk-300">{row.weight}</td>
+                      <td className={clsx(
+                        "px-4 py-2 text-right num font-semibold",
+                        row.points > row.weight * 0.7 ? "text-accent" : row.points > row.weight * 0.35 ? "text-warn" : "text-bad"
+                      )}>
+                        {row.points.toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 hidden md:table-cell">
+                        <span className={clsx(
+                          "rounded px-1.5 py-0.5 text-xs",
+                          row.source === "absolute" && "bg-ink-800 text-chalk-300/70",
+                          row.source === "relative" && "bg-accent/10 text-accent/70",
+                          row.source === "trend"    && "bg-warn/10 text-warn/70",
+                        )}>
+                          {row.source}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {co.assumptions && co.assumptions.length > 0 && (
+              <div className="border-t border-ink-700/40 px-5 py-3">
+                <p className="text-xs font-semibold text-chalk-300/50 mb-2 uppercase tracking-wider">Assumptions &amp; fallbacks</p>
+                <ul className="space-y-1">
+                  {co.assumptions.map((a, i) => (
+                    <li key={i} className="text-xs text-chalk-300/60">· {a}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </details>
         </section>
       )}
 
