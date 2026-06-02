@@ -1,6 +1,7 @@
-import { Copy, Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Copy, Github, Linkedin, Mail, MapPin, Phone, Briefcase } from "lucide-react";
+import { FeedbackForm } from "@/components/FeedbackForm";
 
-export const metadata = { title: "Contact" };
+export const metadata = { title: "Contact & Feedback" };
 
 export default function ContactPage() {
   return (
@@ -13,9 +14,27 @@ export default function ContactPage() {
       </h1>
       <p className="mt-3 text-chalk-300 serif text-lg leading-relaxed">
         The best way to reach me is email — I read every message and respond
-        within 24 hours. If you're hiring in wealth management, investment
-        advisory, or fintech, I'd particularly love to hear from you.
+        within 24 hours.
       </p>
+
+      {/* Open to work callout */}
+      <div className="mt-8 flex gap-4 rounded-2xl border border-accent/20 bg-accent/5 p-5 ring-1 ring-accent/10">
+        <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-accent ring-1 ring-accent/30">
+          <Briefcase className="h-5 w-5" />
+        </span>
+        <div>
+          <p className="font-semibold text-chalk-50">
+            Open to opportunities
+          </p>
+          <p className="mt-1 text-sm text-chalk-300/70 leading-relaxed">
+            I am actively seeking roles in{" "}
+            <span className="text-chalk-200 font-medium">investment advisory</span> and{" "}
+            <span className="text-chalk-200 font-medium">equity analysis</span>.
+            If you are hiring — or know someone who is — I would be glad to connect.
+            Use the form below or reach out directly on LinkedIn.
+          </p>
+        </div>
+      </div>
 
       <div className="mt-10 space-y-3">
         <a
@@ -71,7 +90,7 @@ export default function ContactPage() {
         </a>
 
         <a
-          href="https://github.com/"
+          href="https://github.com/aditya33agrawal/stockscore"
           target="_blank"
           rel="noreferrer noopener"
           className="group flex items-center gap-4 rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 hover:border-accent/40 hover:bg-ink-900 transition-colors"
@@ -99,6 +118,22 @@ export default function ContactPage() {
             </p>
             <p className="text-chalk-50 font-medium">Bengaluru, KA, India</p>
           </div>
+        </div>
+      </div>
+
+      {/* Contact / feedback form */}
+      <div className="mt-16">
+        <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-accent">
+          Get in touch
+        </div>
+        <h2 className="text-2xl font-bold tracking-tight text-chalk-50">
+          Send a message
+        </h2>
+        <p className="mt-2 mb-8 text-sm text-chalk-300/60">
+          Whether you have a role to discuss, product feedback, or a general enquiry — the form takes under a minute.
+        </p>
+        <div className="rounded-2xl border border-ink-700/60 bg-ink-900/30 p-6">
+          <FeedbackForm />
         </div>
       </div>
     </div>

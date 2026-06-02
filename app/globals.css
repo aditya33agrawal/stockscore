@@ -15,11 +15,55 @@
   --panel-border:  rgba(255, 255, 255, 0.06);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
 html, body {
   background: #03060F;
   color: #E8F4FF;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Global focus-visible ring ── */
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid rgba(0, 210, 255, 0.65);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+:where(input, textarea, select):focus-visible {
+  outline-offset: 0;
+}
+
+/* Hide default outline only when focus-visible support exists */
+:focus:not(:focus-visible) { outline: none; }
+
+/* Skip-to-content link */
+.skip-link {
+  position: absolute;
+  top: -64px;
+  left: 16px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #00D2FF;
+  color: #03060F;
+  font-weight: 600;
+  font-size: 13px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 12px; }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 ::selection {
@@ -129,3 +173,112 @@ html, body {
   animation: progress-bar 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   box-shadow: 0 0 12px rgba(0, 210, 255, 0.6);
 }
+
+/* ── Route nav top bar (driven by NavProgress component) ── */
+@keyframes nav-progress-grow {
+  0%   { width: 0%; }
+  50%  { width: 70%; }
+  90%  { width: 90%; }
+  100% { width: 92%; }
+}
+@keyframes nav-progress-finish {
+  to { width: 100%; opacity: 0; }
+}
+.nav-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, #00D2FF, #7C3AED);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.55);
+  z-index: 9999;
+  pointer-events: none;
+}
+.nav-progress[data-state="loading"] {
+  animation: nav-progress-grow 8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 1;
+}
+.nav-progress[data-state="finishing"] {
+  animation: nav-progress-finish 0.3s ease-out forwards;
+}
+
+/* ── Bookmark icon pop ── */
+@keyframes bookmark-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.bookmark-pop { animation: bookmark-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* ── Scroll-to-top button ── */
+.scroll-top-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 44px;
+  width: 44px;
+  border-radius: 9999px;
+  background: rgba(0, 210, 255, 0.12);
+  border: 1px solid rgba(0, 210, 255, 0.35);
+  color: #00D2FF;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 210, 255, 0.18);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  pointer-events: none;
+}
+.scroll-top-btn[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.scroll-top-btn:hover { background: rgba(0, 210, 255, 0.2); }
+
+/* ── Sonner toast theme overrides ── */
+[data-sonner-toaster][data-theme="dark"] {
+  --normal-bg: rgba(7, 12, 26, 0.92);
+  --normal-border: rgba(0, 210, 255, 0.18);
+  --normal-text: #E8F4FF;
+  --success-bg: rgba(7, 12, 26, 0.92);
+  --success-border: rgba(0, 210, 255, 0.4);
+  --success-text: #E8F4FF;
+  --error-bg: rgba(28, 10, 12, 0.92);
+  --error-border: rgba(248, 113, 113, 0.4);
+  --error-text: #FFE8E8;
+}
+[data-sonner-toast] {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ── Mobile drawer animation ── */
+@keyframes drawer-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.drawer-down { animation: drawer-down 0.18s ease-out; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fade-in 0.16s ease-out; }
+
+@keyframes sheet-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.sheet-up { animation: sheet-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* ── Count-up shim — animates opacity for stats strip ── */
+@keyframes count-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.count-rise { animation: count-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }

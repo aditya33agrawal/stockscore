@@ -1,0 +1,125 @@
+name: Weekly Data Refresh
+
+# Tuesday 09:00 IST = 03:30 UTC.
+# GitHub Actions cron is UTC and can be delayed 5–15 min during peak load —
+# acceptable for a weekly batch job.
+
+on:
+  schedule:
+    - cron: '30 3 * * 2'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Bypass 7-day cache'
+        type: boolean
+        default: false
+
+concurrency:
+  group: weekly-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    env:
+      DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+      SCREENER_EMAIL:       ${{ secrets.SCREENER_EMAIL }}
+      SCREENER_PASSWORD:    ${{ secrets.SCREENER_PASSWORD }}
+      TZ: Asia/Kolkata
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run refresh
+        id: refresh
+        run: |
+          mkdir -p logs
+          if [ "${{ inputs.force }}" = "true" ]; then
+            npm run refresh:all:force 2>&1 | tee logs/refresh.log
+          else
+            npm run refresh:all 2>&1 | tee logs/refresh.log
+          fi
+
+      - name: Extract summary
+        id: summary
+        if: always()
+        run: |
+          if [ -f logs/refresh.log ]; then
+            SUMMARY_LINE=$(grep '^::summary:: ' logs/refresh.log | tail -1 | sed 's/^::summary:: //')
+            if [ -n "$SUMMARY_LINE" ]; then
+              echo "summary=$SUMMARY_LINE" >> "$GITHUB_OUTPUT"
+              {
+                echo "## Refresh summary"
+                echo '```json'
+                echo "$SUMMARY_LINE"
+                echo '```'
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "summary={}" >> "$GITHUB_OUTPUT"
+              echo "## No summary line found in logs" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-logs-${{ github.run_id }}
+          path: logs/
+          retention-days: 30
+
+      - name: Notify Slack on failure
+        if: failure() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":x: Weekly refresh FAILED",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Weekly refresh failed*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run> · `${{ github.sha }}`"
+                  }
+                }
+              ]
+            }
+
+      - name: Notify Slack on success
+        if: success() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":white_check_mark: Weekly refresh succeeded",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Weekly refresh succeeded*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>\n```${{ steps.summary.outputs.summary }}```"
+                  }
+                }
+              ]
+            }

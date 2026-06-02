@@ -1,5 +1,9 @@
-import { runPipeline } from "@/lib/pipeline";
 import { type NextRequest } from "next/server";
+import { runPipeline } from "@/lib/pipeline";
+import { compose } from "@/lib/api/compose";
+import { withErrorHandler } from "@/lib/api/with-error-handler";
+import { withMethods } from "@/lib/api/with-methods";
+import { withRefreshPassword } from "@/lib/api/with-refresh-password";
 
 export const dynamic = "force-dynamic";
 
@@ -10,28 +14,21 @@ const SSE_HEADERS = {
   "X-Accel-Buffering": "no",
 };
 
-function errorStream(msg: string): Response {
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    start(controller) {
-      controller.enqueue(encoder.encode(`data: ERROR: ${msg}\n\n`));
-      controller.close();
-    },
-  });
-  return new Response(stream, { headers: SSE_HEADERS });
-}
-
-export async function POST(req: NextRequest) {
+/**
+ * POST /api/refresh?sector=<slug>
+ *
+ * Protected by withRefreshPassword (x-refresh-password header).
+ * Streams pipeline progress as Server-Sent Events.
+ * withErrorHandler is applied so unexpected pre-stream errors return JSON,
+ * while in-stream pipeline errors are sent as SSE `ERROR:` messages.
+ */
+export const POST = compose(
+  withErrorHandler,
+  withMethods(["POST"]),
+  withRefreshPassword,
+)(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const sectorSlug = searchParams.get("sector") ?? undefined;
-
-  const body = await req.json().catch(() => ({}));
-  const providedPassword: string = body?.password ?? "";
-  const expectedPassword = process.env.REFRESH_PASSWORD;
-
-  if (expectedPassword && providedPassword !== expectedPassword) {
-    return errorStream("Incorrect password");
-  }
 
   const encoder = new TextEncoder();
 
@@ -57,4 +54,4 @@ export async function POST(req: NextRequest) {
   });
 
   return new Response(stream, { headers: SSE_HEADERS });
-}
+});

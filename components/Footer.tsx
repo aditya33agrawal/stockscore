@@ -7,6 +7,7 @@ const FOOTER_LINKS = [
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
   { href: "/about",            label: "About" },
+  { href: "/contact",          label: "Feedback" },
   { href: "/terms",            label: "Terms" },
 ];
 

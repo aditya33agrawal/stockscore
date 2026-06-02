@@ -91,3 +91,41 @@ Bonuses (+3 to +4) and penalties (−4 to −6) adjust the raw total. Industry c
 - `lib/company-data.ts` → `CompanyDetail` (full DB record including raw financials and score)
 
 `lib/evaluators.ts` contains standalone functions that turn `CompanyRaw` metrics into human-readable sentences with tone (good/neutral/warn) — used on the company detail page.
+
+## Middleware
+
+### Edge middleware (`middleware.ts`)
+
+Runs on every request before route handlers. Handles:
+- **Maintenance mode** — set `MAINTENANCE_MODE=1` to return 503 on all routes
+- **Rate limiting** — in-memory IP token bucket: 60 req/min for `/api/*`, 10 req/min for `/api/auth/*` and `/api/refresh`
+- **Request ID** — attaches `x-request-id` to every request/response
+- **Security headers** — CSP (report-only), HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
+- **CORS** — same-origin only by default; add origins in `lib/middleware/cors.ts`
+- **Access log** — one JSON line per request to stdout
+
+### Per-route wrappers (`lib/api/`)
+
+All new route handlers use `compose(...)` from `lib/api/compose.ts`. Convention — outermost first:
+
+```ts
+export const POST = compose(
+  withErrorHandler,      // always outermost — catches everything → JSON { error: { code, message } }
+  withMethods(["POST"]), // 405 on wrong method
+  withAuth,              // 401 if no session; injects ctx.user: SessionUser
+  withSchema(MySchema),  // 400 + details on invalid body; injects ctx.body: T
+)(async (req, { user, body }) => { ... });
+```
+
+| Wrapper | File | Purpose |
+|---|---|---|
+| `withErrorHandler` | `lib/api/with-error-handler.ts` | Catches `ApiError` → JSON; unknown → 500 |
+| `withMethods` | `lib/api/with-methods.ts` | 405 + `Allow` header |
+| `withAuth` | `lib/api/with-auth.ts` | Session check; injects `user` |
+| `withRefreshPassword` | `lib/api/with-refresh-password.ts` | `x-refresh-password` header check |
+| `withSchema` | `lib/api/with-schema.ts` | Body validation; injects `body` |
+| `compose` | `lib/api/compose.ts` | Right-to-left wrapper composition |
+
+Errors: throw `UnauthorizedError`, `ForbiddenError`, `ValidationError`, `NotFoundError`, `RateLimitError`, or `ApiError(status, msg)` from `lib/api/errors.ts`.
+
+Admin routes (`/api/refresh`, `/api/migrate`) are gated with `withRefreshPassword`. Clients must send the password in the `x-refresh-password` request header (not the body).

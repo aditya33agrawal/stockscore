@@ -238,14 +238,23 @@ export default async function CompanyPage({
         : undefined,
     });
 
-    const evCR = evaluateCurrentRatio(co.raw);
+    // Fall back to raw ratios table when the scored snapshot is missing current_ratio
+    const currentRatioVal: number | null = co.raw.current_ratio != null
+      ? co.raw.current_ratio
+      : (() => {
+          const raw = detail?.ratios["Current Ratio"];
+          if (!raw) return null;
+          const n = parseFloat(raw.replace(/[^0-9.]/g, ""));
+          return isNaN(n) ? null : n;
+        })();
+    const evCR = evaluateCurrentRatio({ ...co.raw, current_ratio: currentRatioVal ?? undefined });
     metricCards.push({
       title: "Current Ratio",
-      headline: co.raw.current_ratio != null ? co.raw.current_ratio.toFixed(2) : "N/A",
-      badge: co.raw.current_ratio != null
+      headline: currentRatioVal != null ? currentRatioVal.toFixed(2) : "N/A",
+      badge: currentRatioVal != null
         ? {
-            label: co.raw.current_ratio >= 2 ? "Strong liquidity" : co.raw.current_ratio >= 1.5 ? "Adequate" : co.raw.current_ratio >= 1 ? "Thin buffer" : "Below 1",
-            tone: co.raw.current_ratio >= 2 ? "good" : co.raw.current_ratio >= 1.5 ? "neutral" : "warn",
+            label: currentRatioVal >= 2 ? "Strong liquidity" : currentRatioVal >= 1.5 ? "Adequate" : currentRatioVal >= 1 ? "Thin buffer" : "Below 1",
+            tone: currentRatioVal >= 2 ? "good" : currentRatioVal >= 1.5 ? "neutral" : ("warn" as const),
           }
         : undefined,
       sentence: evCR.sentence,
@@ -313,10 +322,10 @@ export default async function CompanyPage({
       });
     }
 
-    // Promoter Holding
-    const shLen = chartData.shPromoter.length;
-    const latestPromoter = shLen > 0 ? chartData.shPromoter[shLen - 1] : null;
-    const prevPromoter = shLen > 4 ? chartData.shPromoter[shLen - 5] : shLen > 0 ? chartData.shPromoter[0] : null;
+    // Promoter Holding — use last non-null value so a missing most-recent quarter doesn't show N/A
+    const nonNullPromoter = chartData.shPromoter.filter((v): v is number => v != null);
+    const latestPromoter = nonNullPromoter.length > 0 ? nonNullPromoter[nonNullPromoter.length - 1] : null;
+    const prevPromoter = nonNullPromoter.length > 4 ? nonNullPromoter[nonNullPromoter.length - 5] : nonNullPromoter.length > 0 ? nonNullPromoter[0] : null;
     const promoterDelta = latestPromoter != null && prevPromoter != null ? latestPromoter - prevPromoter : null;
     const isPledgedHigh = co.raw.pledged_pct != null && co.raw.pledged_pct > 10;
     metricCards.push({

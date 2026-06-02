@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Bookmark, LogIn, LogOut, User } from "lucide-react";
+import { toast } from "sonner";
 
 interface SessionUser {
   id: number;
@@ -54,7 +55,12 @@ export function UserMenu() {
   }, [open]);
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      toast.success("Signed out");
+    } catch {
+      toast.error("Couldn't sign out — try again");
+    }
     setUser(null);
     setOpen(false);
     router.push("/");

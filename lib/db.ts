@@ -124,4 +124,19 @@ export async function ensureTables() {
       PRIMARY KEY (user_id, sector_slug, company_slug)
     )
   `;
+  // Score snapshot columns (added in bookmark-score-tracking feature)
+  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS score_snapshot    JSONB`;
+  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS snapshot_taken_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS is_backfilled     BOOLEAN NOT NULL DEFAULT false`;
+
+  // Feedback / contact form submissions
+  await sql`
+    CREATE TABLE IF NOT EXISTS feedback (
+      id          BIGSERIAL PRIMARY KEY,
+      type        TEXT NOT NULL,
+      message     TEXT NOT NULL,
+      email       TEXT,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
 }

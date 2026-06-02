@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Bookmark } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bookmark, Loader2 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "sonner";
 
 interface Props {
   sectorSlug: string;
@@ -14,9 +15,12 @@ interface Props {
 
 export function BookmarkButton({ sectorSlug, companySlug, companyTicker, companyName }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [bookmarked, setBookmarked] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [pop, setPop] = useState(false);
+  const iconRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,9 +50,15 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
     return () => { cancelled = true; };
   }, [sectorSlug, companySlug]);
 
+  function pulse() {
+    setPop(true);
+    window.setTimeout(() => setPop(false), 340);
+  }
+
   async function toggle() {
     if (signedIn === false) {
-      router.push("/login");
+      const next = encodeURIComponent(pathname || "/");
+      router.push(`/login?next=${next}`);
       return;
     }
     if (busy) return;
@@ -57,7 +67,12 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
       if (bookmarked) {
         const url = `/api/bookmarks?sector_slug=${encodeURIComponent(sectorSlug)}&company_slug=${encodeURIComponent(companySlug)}`;
         const res = await fetch(url, { method: "DELETE" });
-        if (res.ok) setBookmarked(false);
+        if (res.ok) {
+          setBookmarked(false);
+          toast.success("Removed from bookmarks");
+        } else {
+          toast.error("Couldn't remove — try again");
+        }
       } else {
         const res = await fetch("/api/bookmarks", {
           method: "POST",
@@ -70,29 +85,50 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
           }),
         });
         if (res.status === 401) {
-          router.push("/login");
+          const next = encodeURIComponent(pathname || "/");
+          router.push(`/login?next=${next}`);
           return;
         }
-        if (res.ok) setBookmarked(true);
+        if (res.ok) {
+          setBookmarked(true);
+          pulse();
+          toast.success(`Saved ${companyTicker ?? companyName ?? "company"}`);
+        } else {
+          toast.error("Couldn't save — try again");
+        }
       }
+    } catch {
+      toast.error("Network error — check your connection");
     } finally {
       setBusy(false);
     }
   }
 
+  const loading = signedIn === null;
+
   return (
     <button
       onClick={toggle}
-      disabled={busy || signedIn === null}
+      disabled={busy || loading}
+      aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
+      aria-pressed={bookmarked}
       title={bookmarked ? "Remove bookmark" : signedIn === false ? "Sign in to bookmark" : "Bookmark this company"}
       className={clsx(
-        "inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all",
+        "inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all active:scale-[0.97]",
         bookmarked
-          ? "border-accent/40 bg-accent/10 text-accent"
-          : "border-[rgba(255,255,255,0.08)] text-chalk-300/70 hover:border-[rgba(255,255,255,0.15)] hover:text-chalk-50",
+          ? "border-accent/40 bg-accent/10 text-accent hover:bg-accent/15"
+          : "border-[rgba(255,255,255,0.08)] text-chalk-300/70 hover:border-[rgba(255,255,255,0.18)] hover:text-chalk-50",
+        (busy || loading) && "opacity-70 cursor-wait",
       )}
     >
-      <Bookmark className={clsx("h-3.5 w-3.5", bookmarked && "fill-current")} />
+      {busy ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <Bookmark
+          ref={iconRef}
+          className={clsx("h-3.5 w-3.5 transition-transform", bookmarked && "fill-current", pop && "bookmark-pop")}
+        />
+      )}
       {bookmarked ? "Bookmarked" : "Bookmark"}
     </button>
   );

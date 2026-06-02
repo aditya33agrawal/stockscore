@@ -2,42 +2,46 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import sql from "@/lib/db";
 import { ensureTables } from "@/lib/db";
-import { getCurrentUser, hashPassword, verifyPassword, createSession } from "@/lib/auth";
+import { hashPassword, verifyPassword, createSession, type SessionUser } from "@/lib/auth";
+import { compose } from "@/lib/api/compose";
+import { withErrorHandler } from "@/lib/api/with-error-handler";
+import { withMethods } from "@/lib/api/with-methods";
+import { withAuth } from "@/lib/api/with-auth";
+import { withSchema } from "@/lib/api/with-schema";
+import { ApiError, UnauthorizedError, ValidationError } from "@/lib/api/errors";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: NextRequest) {
+interface ChangePasswordBody { currentPassword: string; newPassword: string }
+
+function validateChangePassword(raw: unknown): ChangePasswordBody {
+  if (typeof raw !== "object" || raw === null) throw new ValidationError("body required");
+  const obj = raw as Record<string, unknown>;
+  const cur = typeof obj.currentPassword === "string" ? obj.currentPassword : "";
+  const next = typeof obj.newPassword === "string" ? obj.newPassword : "";
+  if (!cur) throw new ValidationError({ currentPassword: "required" });
+  if (next.length < 8) throw new ValidationError({ newPassword: "must be at least 8 characters" });
+  if (cur === next) throw new ValidationError({ newPassword: "must differ from current password" });
+  return { currentPassword: cur, newPassword: next };
+}
+
+export const POST = compose(
+  withErrorHandler,
+  withMethods(["POST"]),
+  withAuth,
+  withSchema(validateChangePassword),
+)(async (_req: NextRequest, { user, body }: { user: SessionUser; body: ChangePasswordBody }) => {
   await ensureTables();
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const body = await req.json().catch(() => null);
-  const currentPassword = (body?.currentPassword ?? "").toString();
-  const newPassword = (body?.newPassword ?? "").toString();
-
-  if (!currentPassword || !newPassword) {
-    return NextResponse.json({ error: "Current and new password required" }, { status: 400 });
-  }
-  if (newPassword.length < 8) {
-    return NextResponse.json({ error: "New password must be at least 8 characters" }, { status: 400 });
-  }
-  if (currentPassword === newPassword) {
-    return NextResponse.json({ error: "New password must be different" }, { status: 400 });
-  }
 
   const rows = await sql<{ password_hash: string }[]>`
     SELECT password_hash FROM users WHERE id = ${user.id} LIMIT 1
   `;
-  if (rows.length === 0) {
-    return NextResponse.json({ error: "Account not found" }, { status: 404 });
-  }
-  const ok = await verifyPassword(currentPassword, rows[0].password_hash);
-  if (!ok) {
-    return NextResponse.json({ error: "Current password is incorrect" }, { status: 401 });
-  }
+  if (rows.length === 0) throw new ApiError(404, "Account not found", "not_found");
 
-  const hash = await hashPassword(newPassword);
-  // Invalidate all other sessions, then create a fresh one for this browser.
+  const ok = await verifyPassword(body.currentPassword, rows[0].password_hash);
+  if (!ok) throw new UnauthorizedError("Current password is incorrect");
+
+  const hash = await hashPassword(body.newPassword);
   const currentToken = cookies().get("ss_session")?.value;
   await sql`UPDATE users SET password_hash = ${hash} WHERE id = ${user.id}`;
   if (currentToken) {
@@ -48,4 +52,4 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({ ok: true });
-}
+});

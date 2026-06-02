@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { UserMenu } from "@/components/UserMenu";
 
@@ -35,10 +35,37 @@ function WaveformIcon() {
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  // Close mobile menu on route change
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [open]);
+
+  // Add subtle border lift on scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-[rgba(0,210,255,0.07)] bg-ink-950/80 backdrop-blur-xl">
+    <header
+      className={clsx(
+        "sticky top-0 z-40 transition-all duration-200",
+        scrolled
+          ? "border-b border-[rgba(0,210,255,0.12)] bg-ink-950/90 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+          : "border-b border-[rgba(0,210,255,0.07)] bg-ink-950/80 backdrop-blur-xl",
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 
         {/* Logo */}
@@ -91,15 +118,25 @@ export function Navbar() {
         <button
           className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-chalk-300 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
           onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
+      {/* Mobile backdrop */}
+      {open && (
+        <div
+          className="md:hidden fixed inset-0 top-16 z-30 bg-ink-950/70 backdrop-blur-sm fade-in"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile dropdown */}
       {open && (
-        <nav className="md:hidden border-t border-[rgba(0,210,255,0.07)] bg-ink-950 px-4 py-3">
+        <nav className="md:hidden relative z-40 border-t border-[rgba(0,210,255,0.07)] bg-ink-950 px-4 py-3 drawer-down">
           <ul className="space-y-0.5">
             {[...NAV_LINKS, { href: "/contact", label: "Contact" }, { href: "/profile", label: "Profile" }, { href: "/bookmarks", label: "My Bookmarks" }].map((l) => {
               const active = pathname === l.href || pathname.startsWith(l.href + "/");

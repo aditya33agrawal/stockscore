@@ -190,8 +190,12 @@ export function SectorRefreshButton({ sectorSlug }: { sectorSlug: string }) {
         `/api/refresh?sector=${encodeURIComponent(sectorSlug)}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password }),
+          headers: {
+            "Content-Type": "application/json",
+            // Password sent as a header so withRefreshPassword middleware can inspect it
+            // without consuming the request body.
+            "x-refresh-password": password,
+          },
         }
       );
       if (!res.body) throw new Error("No response body");

@@ -3,6 +3,7 @@ config({ path: ".env.local" });
 
 import * as fs from "fs/promises";
 import * as path from "path";
+import { log } from "../lib/logger";
 
 const args = process.argv.slice(2);
 const force = args.includes("--force");
@@ -28,6 +29,8 @@ function sleep(ms: number) {
 }
 
 async function main() {
+  const t0 = Date.now();
+  log.info("script.start", { script: "refresh-charts", force });
   const { refreshSymbol } = await import("../lib/charts/pipeline");
   const { ensureTables } = await import("../lib/db");
   await ensureTables();
@@ -84,11 +87,24 @@ async function main() {
       console.log(`  • ${ticker.padEnd(20)} ${reason}`);
     }
   }
+
+  log.info("script.end", {
+    script: "refresh-charts",
+    duration_ms: Date.now() - t0,
+    saved,
+    skipped,
+    errored,
+    total: symbols.length,
+  });
 }
 
 main()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error(err);
+    log.error("script.failed", {
+      script: "refresh-charts",
+      error: err instanceof Error ? err.message : String(err),
+    });
+    if (err instanceof Error && err.stack) console.error(err.stack);
     process.exit(1);
   });
