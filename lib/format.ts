@@ -19,11 +19,11 @@ export function pointsColor(points: number): string {
   return "text-chalk-300";
 }
 
-// Score → progress bar CSS gradient (inline style value)
+// Score → flat progress bar fill (kept name for backwards compat; gradients removed).
 export function scoreGradient(score: number): string {
-  if (score >= 70) return "linear-gradient(90deg, #00D2FF, #7C3AED)";
-  if (score >= 50) return "linear-gradient(90deg, #F59E0B, #FBBF24)";
-  return "#F87171";
+  if (score >= 70) return "#5B8DEF";
+  if (score >= 50) return "#C9962B";
+  return "#D96A6A";
 }
 
 // Classification label → display text

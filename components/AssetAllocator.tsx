@@ -165,7 +165,7 @@ export function AssetAllocator() {
           </div>
           <div className="mt-4 h-2 rounded-full bg-ink-800 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-400 via-emerald-400 to-rose-400"
+              className="h-full rounded-full bg-accent"
               style={{ width: `${result.riskScore}%` }}
             />
           </div>

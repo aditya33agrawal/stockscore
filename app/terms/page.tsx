@@ -253,7 +253,7 @@ export default function TermsPage() {
           </a>{" "}
           or find me on{" "}
           <a
-            href="https://www.linkedin.com/in/aditya33agrawal/"
+            href="https://www.linkedin.com/in/adi33/"
             target="_blank"
             rel="noreferrer noopener"
             className="text-accent hover:underline"

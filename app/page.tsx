@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
 import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
-import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 import { scoreGradient, scoreColor, classificationLabel, classificationStyle } from "@/lib/format";
 import clsx from "clsx";
 
@@ -28,9 +27,6 @@ export default async function Home() {
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 hero-grid" />
-        {/* Cyan orb */}
-        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%)" }} />
 
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-24 text-center">
           {/* Live badge */}
@@ -40,8 +36,7 @@ export default async function Home() {
           </div>
 
           <h1 className="text-[clamp(36px,5vw,72px)] font-bold tracking-tight text-chalk-50 leading-[1.05] mb-5">
-            See{" "}
-            <span className="gradient-text">exactly why</span>
+            See exactly why
             <br />
             a stock scores high.
           </h1>
@@ -61,8 +56,8 @@ export default async function Home() {
               { num: "10",                            label: "Score Categories" },
             ].map((s) => (
               <div key={s.label} className="text-center">
-                <div className="num text-[28px] font-bold text-chalk-50 leading-none tracking-tight">
-                  <span className="gradient-text">{s.num}</span>
+                <div className="num text-[28px] font-bold text-accent leading-none tracking-tight">
+                  {s.num}
                 </div>
                 <div className="text-[10px] font-semibold uppercase tracking-widest text-chalk-300/60 mt-1.5">
                   {s.label}
@@ -78,25 +73,25 @@ export default async function Home() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-3">How it works</p>
         <h2 className="text-2xl font-bold tracking-tight text-chalk-50 mb-4">From raw filings to a score you can trust.</h2>
         <p className="max-w-2xl text-[15px] text-chalk-300/60 leading-relaxed mb-10">
-          Our pipeline does the work in three steps. You see every input, every rule, and every adjustment that produces the final number — nothing is hidden behind a black-box model.
+          Three purpose-built engines — each transparent by design. Every input, rule, and adjustment is traceable; nothing is hidden behind a black box.
         </p>
 
         <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
           {[
             {
               icon: Database,
-              title: "Scrape",
-              body: "Our pipeline pulls 5 years of annual financials, 12 quarters of results, shareholding patterns and key ratios for every company in a sector — sourced directly from screener.in.",
+              title: "Scraping Engine",
+              body: "Pulls 5 years of annual financials, 12 quarters of results, shareholding patterns, and key ratios for every company — sourced directly from screener.in.",
             },
             {
               icon: BarChart3,
-              title: "Score",
-              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — is traceable to a specific, documented rule.",
+              title: "Scoring Engine",
+              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — maps to a specific, documented rule.",
             },
             {
               icon: Sparkles,
-              title: "Visualise",
-              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score, so you can see why a company ranks where it does.",
+              title: "Intelligence Layer",
+              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score — so you know exactly why a company ranks where it does.",
             },
           ].map((s, i) => (
             <div
@@ -112,6 +107,22 @@ export default async function Home() {
               <p className="text-sm text-chalk-200/70 leading-relaxed">{s.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── LEARN NUDGE ──────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-6">
+        <div className="glass border-subtle rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <p className="text-sm text-chalk-300/60">
+            <span className="text-chalk-200 font-medium">New to these metrics?</span>
+            {" "}The Learn page explains every ratio — P/E, ROCE, D/E, promoter holding and more — from first principles.
+          </p>
+          <Link
+            href="/learn"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-accent/25 bg-accent/8 px-3.5 py-1.5 text-xs font-semibold text-accent hover:bg-accent/15 transition-colors"
+          >
+            Explore the Glossary <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
       </section>
 
@@ -209,25 +220,20 @@ export default async function Home() {
                   </div>
                 ) : (
                   <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.04)]">
-                    <span className="text-[11px] text-chalk-300/40">No data yet — refresh to fetch</span>
+                    <span className="text-[11px] text-chalk-300/40">No data yet</span>
                   </div>
                 )}
 
-                <div className="mt-3 flex items-center justify-between gap-2">
-                  {scraped ? (
+                {scraped && (
+                  <div className="mt-3">
                     <Link
                       href={`/sector/${s.slug}`}
                       className="inline-flex items-center text-xs font-medium text-chalk-300/40 hover:text-accent transition-colors"
                     >
                       View sector <ArrowRight className="h-3 w-3 ml-1" />
                     </Link>
-                  ) : (
-                    <span />
-                  )}
-                  {process.env.NEXT_PUBLIC_ENABLE_REFRESH && (
-                    <SectorRefreshButton sectorSlug={s.slug} />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}

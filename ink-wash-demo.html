@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ink Wash — Theme Demo</title>
+<style>
+  :root {
+    --ink:    #4A4A4A; /* charcoal — primary text / dark surfaces */
+    --mist:   #CBCBCB; /* soft gray — borders / muted text */
+    --paper:  #FFFFE3; /* warm cream — page background */
+    --slate:  #6D8196; /* slate blue — accent / interactive */
+
+    --slate-soft: rgba(109, 129, 150, 0.12);
+    --ink-soft:   rgba(74, 74, 74, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 48px 24px;
+  }
+
+  .wrap { max-width: 960px; margin: 0 auto; }
+
+  /* ---- Header ---- */
+  header { margin-bottom: 48px; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: var(--slate);
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 8px 0 12px;
+  }
+  .lede { color: var(--slate); max-width: 56ch; font-size: 18px; }
+
+  section { margin-bottom: 56px; }
+  h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--slate);
+    border-bottom: 1px solid var(--mist);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  /* ---- Swatches ---- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+  .swatch {
+    border: 1px solid var(--mist);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .swatch .chip { height: 110px; }
+  .swatch .meta { padding: 14px 16px; }
+  .swatch .name { font-weight: 700; font-size: 15px; }
+  .swatch .hex {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--slate);
+    margin-top: 2px;
+  }
+  .swatch .role { font-size: 12px; color: #8a8a8a; margin-top: 4px; }
+
+  /* ---- Cards ---- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--mist);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .card.ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .card.ink .label { color: var(--mist); }
+  .card .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate); }
+  .card .value { font-size: 34px; font-weight: 800; margin: 6px 0 4px; font-family: "JetBrains Mono", monospace; }
+  .card .delta { font-size: 14px; font-weight: 600; }
+  .delta.up { color: var(--slate); }
+  .delta.down { color: #b06a6a; }
+
+  /* ---- Buttons ---- */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    font: inherit; font-weight: 600; font-size: 15px;
+    padding: 11px 22px; border-radius: 9px; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s ease;
+  }
+  .btn.primary { background: var(--slate); color: var(--paper); }
+  .btn.primary:hover { background: #5a6e82; }
+  .btn.ghost { background: transparent; border-color: var(--mist); color: var(--ink); }
+  .btn.ghost:hover { background: var(--slate-soft); border-color: var(--slate); }
+  .btn.solid { background: var(--ink); color: var(--paper); }
+  .btn.solid:hover { background: #3a3a3a; }
+
+  /* ---- Badges ---- */
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  .badge {
+    font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 999px;
+    background: var(--slate-soft); color: var(--slate);
+  }
+  .badge.ink { background: var(--ink-soft); color: var(--ink); }
+  .badge.outline { background: transparent; border: 1px solid var(--mist); color: var(--ink); }
+
+  /* ---- Table ---- */
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid var(--mist); }
+  th, td { text-align: left; padding: 13px 18px; font-size: 14px; }
+  thead th { background: var(--ink-soft); color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+  tbody tr { border-top: 1px solid var(--mist); }
+  td.num { font-family: "JetBrains Mono", monospace; text-align: right; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--slate-soft); color: var(--slate); }
+
+  footer { color: #9a9a9a; font-size: 13px; text-align: center; margin-top: 32px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Theme Demo</div>
+      <h1>Ink Wash</h1>
+      <p class="lede">A quiet, paper-and-charcoal palette built around warm cream, soft slate, and ink — calm enough for dense data, warm enough to feel handmade.</p>
+    </header>
+
+    <section>
+      <h2>Palette</h2>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="chip" style="background:#4A4A4A"></div>
+          <div class="meta"><div class="name">Ink</div><div class="hex">#4A4A4A</div><div class="role">Text · dark surfaces</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#CBCBCB"></div>
+          <div class="meta"><div class="name">Mist</div><div class="hex">#CBCBCB</div><div class="role">Borders · muted</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#FFFFE3; border-bottom:1px solid #CBCBCB"></div>
+          <div class="meta"><div class="name">Paper</div><div class="hex">#FFFFE3</div><div class="role">Background</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#6D8196"></div>
+          <div class="meta"><div class="name">Slate</div><div class="hex">#6D8196</div><div class="role">Accent · interactive</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Stat Cards</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="label">Composite Score</div>
+          <div class="value">87.4</div>
+          <div class="delta up">▲ 3.2 this quarter</div>
+        </div>
+        <div class="card ink">
+          <div class="label">Market Cap</div>
+          <div class="value">₹4.2T</div>
+          <div class="delta up">▲ 1.8%</div>
+        </div>
+        <div class="card">
+          <div class="label">P/E Ratio</div>
+          <div class="value">22.1</div>
+          <div class="delta down">▼ 0.6 vs peers</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Buttons</h2>
+      <div class="btn-row">
+        <button class="btn primary">Primary action</button>
+        <button class="btn solid">Solid</button>
+        <button class="btn ghost">Ghost</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Badges</h2>
+      <div class="badges">
+        <span class="badge">Invest-grade</span>
+        <span class="badge ink">Accumulate</span>
+        <span class="badge outline">Watchlist</span>
+        <span class="badge">Exceptional</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Data Table</h2>
+      <table>
+        <thead>
+          <tr><th>Company</th><th>Sector</th><th style="text-align:right">Score</th><th>Rating</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Aurora Industries</td><td>Manufacturing</td><td class="num">91.2</td><td><span class="pill">Exceptional</span></td></tr>
+          <tr><td>Meridian Foods</td><td>FMCG</td><td class="num">78.6</td><td><span class="pill">Invest-grade</span></td></tr>
+          <tr><td>Crestline Power</td><td>Energy</td><td class="num">64.0</td><td><span class="pill">Accumulate</span></td></tr>
+          <tr><td>Halcyon Tech</td><td>IT</td><td class="num">52.3</td><td><span class="pill">Watchlist</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>Ink Wash palette · #4A4A4A · #CBCBCB · #FFFFE3 · #6D8196</footer>
+  </div>
+</body>
+</html>

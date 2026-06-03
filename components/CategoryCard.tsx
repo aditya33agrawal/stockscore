@@ -1,10 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import clsx from "clsx";
-import { Info, Plus, Minus } from "lucide-react";
+import { Plus, Minus } from "lucide-react";
 import type { CategoryScore } from "@/lib/types";
 import { pointsColor } from "@/lib/format";
+import { Tooltip as InfoTooltip } from "@/components/Tooltip";
+import { TOOLTIPS } from "@/lib/tooltips";
+
+const CATEGORY_TOOLTIP_KEY: Record<string, keyof typeof TOOLTIPS> = {
+  "Quality of Business": "category_profitability",
+  Valuation: "category_valuation",
+  Growth: "category_growth",
+  "Quarterly Momentum": "category_quarterly",
+  "Balance Sheet": "category_balance_sheet",
+  "Cash Flow": "category_cash_flow",
+  Shareholding: "category_shareholding",
+  Dividend: "category_dividend",
+  "Operational Efficiency": "category_operational",
+  "Price & Technical": "category_technical",
+};
 
 // Category bars use classic green / amber / red — easier to read at a glance
 function categoryBarColor(pct: number): string {
@@ -18,6 +34,16 @@ function categoryTextColor(pct: number): string {
   if (pct >= 40) return "text-warn";
   return "text-bad";
 }
+
+const CATEGORY_LEARN_MAP: Record<string, string> = {
+  "Quality of Business": "/learn?category=profitability",
+  "Valuation":           "/learn?category=valuation",
+  "Growth":              "/learn?category=growth",
+  "Balance Sheet":       "/learn?category=balance-sheet",
+  "Cash Flow":           "/learn?category=cash-flow",
+  "Shareholding":        "/learn?category=shareholding",
+  "Quarterly Momentum":  "/learn?category=quarterly",
+};
 
 const CATEGORY_RATIONALE: Record<string, string> = {
   "Quality of Business":
@@ -46,41 +72,10 @@ const CATEGORY_RATIONALE: Record<string, string> = {
     "Market-cap tier investability adjustment — large caps get a small premium for liquidity.",
 };
 
-function Tooltip({ text }: { text: string }) {
-  const [visible, setVisible] = useState(false);
+function Tooltip({ text, title }: { text: string; title?: string }) {
   return (
-    <span
-      className="relative inline-flex items-center ml-1.5 align-middle"
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onClick={(e) => {
-        e.stopPropagation();
-        setVisible((v) => !v);
-      }}
-    >
-      <span
-        role="img"
-        aria-label="Factor methodology"
-        tabIndex={0}
-        onFocus={() => setVisible(true)}
-        onBlur={() => setVisible(false)}
-        className="text-chalk-300/25 hover:text-accent/60 transition-colors focus:outline-none cursor-help"
-      >
-        <Info className="h-3 w-3" />
-      </span>
-      {visible && (
-        <span
-          role="tooltip"
-          className="
-            absolute left-5 top-0 z-50 w-64 rounded-xl
-            glass border-subtle shadow-[0_20px_60px_rgba(0,0,0,0.5)]
-            px-3.5 py-2.5 text-xs text-chalk-200 leading-relaxed
-            pointer-events-none
-          "
-        >
-          {text}
-        </span>
-      )}
+    <span onClick={(e) => e.stopPropagation()} className="inline-flex">
+      <InfoTooltip content={{ title, body: text }} triggerLabel="More info" />
     </span>
   );
 }
@@ -94,23 +89,38 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
   return (
     <div
       className={clsx(
-        "glass border-subtle rounded-2xl overflow-hidden transition-all duration-200",
+        "glass border-subtle rounded-2xl transition-all duration-200",
         open && "border-[rgba(0,210,255,0.15)]",
       )}
     >
       {/* ── Collapsed header ─────────────────────────── */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-6 py-4 hover:bg-[rgba(0,210,255,0.03)] transition-colors text-left"
+        className="w-full flex items-center justify-between gap-4 px-6 py-4 hover:bg-[rgba(0,210,255,0.03)] transition-colors text-left rounded-2xl"
       >
         <div className="flex-1 min-w-0">
           {/* Name + score */}
           <div className="flex items-baseline justify-between gap-4 mb-1.5">
             <h3 className="font-semibold text-[15px] text-chalk-50 truncate flex items-center gap-1.5">
-              <span className="truncate">{category.name}</span>
-              {CATEGORY_RATIONALE[category.name] && (
-                <Tooltip text={CATEGORY_RATIONALE[category.name]} />
+              {CATEGORY_LEARN_MAP[category.name] ? (
+                <Link
+                  href={CATEGORY_LEARN_MAP[category.name]}
+                  className="truncate hover:text-accent transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {category.name}
+                </Link>
+              ) : (
+                <span className="truncate">{category.name}</span>
               )}
+              {(() => {
+                const key = CATEGORY_TOOLTIP_KEY[category.name];
+                const tip = key ? TOOLTIPS[key] : null;
+                if (tip) return <Tooltip text={String(tip.body)} title={tip.title} />;
+                if (CATEGORY_RATIONALE[category.name])
+                  return <Tooltip text={CATEGORY_RATIONALE[category.name]} />;
+                return null;
+              })()}
             </h3>
             <span className="num text-sm text-chalk-300/40 shrink-0">
               <span className={clsx("font-bold", earnedColor)}>
@@ -142,7 +152,7 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
 
       {/* ── Expanded items ────────────────────────────── */}
       {open && (
-        <div className="border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.02)] px-6 py-2">
+        <div className="border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.02)] px-6 py-2 rounded-b-2xl">
           <ul>
             {category.items.map((item, i) => (
               <li

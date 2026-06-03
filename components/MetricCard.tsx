@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   ResponsiveContainer,
   LineChart,
@@ -22,6 +23,7 @@ export interface SparkRow {
 export interface MetricCardProps {
   title: string;
   headline: string;
+  learnHref?: string;
   badge?: { label: string; tone: Tone };
   sentence: string;
   sentenceTone: Tone;
@@ -57,15 +59,19 @@ function fmt(v: number, f?: string): string {
 }
 
 const toneClass: Record<Tone, string> = {
-  good:    "text-accent",
-  neutral: "text-chalk-300/70",
-  warn:    "text-warn",
+  excellent: "text-emerald-400",
+  good:      "text-accent",
+  neutral:   "text-chalk-300/70",
+  warn:      "text-warn",
+  bad:       "text-bad",
 };
 
 const badgeBg: Record<Tone, string> = {
-  good:    "border-accent/20 bg-accent/10 text-accent",
-  neutral: "border-ink-700/60 bg-ink-800/40 text-chalk-300",
-  warn:    "border-warn/20 bg-warn/10 text-warn",
+  excellent: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+  good:      "border-accent/20 bg-accent/10 text-accent",
+  neutral:   "border-ink-700/60 bg-ink-800/40 text-chalk-300",
+  warn:      "border-warn/20 bg-warn/10 text-warn",
+  bad:       "border-bad/30 bg-bad/10 text-bad",
 };
 
 const shortLabel = (l: string) => {
@@ -73,14 +79,24 @@ const shortLabel = (l: string) => {
   return m ? `'${m[0].slice(2)}` : l.slice(0, 5);
 };
 
-export function MetricCard({ title, headline, badge, sentence, sentenceTone, spark }: MetricCardProps) {
+export function MetricCard({ title, headline, learnHref, badge, sentence, sentenceTone, spark }: MetricCardProps) {
   const hasData = spark && spark.rows.some((r) => r.value !== null);
 
   return (
     <div className="glass border-subtle rounded-2xl p-5 flex flex-col gap-3 transition-all hover:border-[rgba(0,210,255,0.15)]">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-chalk-300/40">{title}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-chalk-300/40">{title}</p>
+            {learnHref && (
+              <Link
+                href={learnHref}
+                className="text-[10px] text-chalk-300/30 hover:text-accent transition-colors shrink-0"
+              >
+                What is this?
+              </Link>
+            )}
+          </div>
           <p className="num mt-1.5 text-2xl font-bold text-chalk-50 leading-none">{headline}</p>
         </div>
         {badge && (
@@ -144,7 +160,7 @@ export function MetricCard({ title, headline, badge, sentence, sentenceTone, spa
                   tickFormatter={(v) => fmt(v, spark.formatter)} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={(v: number) => fmt(v, spark.formatter)} />
                 <Bar dataKey="v1" name={spark.label ?? "Sales"}      fill="#00D2FF" radius={[2, 2, 0, 0]} maxBarSize={14} />
-                <Bar dataKey="v2" name={spark.label2 ?? "Net Profit"} fill="#7C3AED" radius={[2, 2, 0, 0]} maxBarSize={14} />
+                <Bar dataKey="v2" name={spark.label2 ?? "Net Profit"} fill="rgba(255,255,255,0.25)" radius={[2, 2, 0, 0]} maxBarSize={14} />
               </BarChart>
             </ResponsiveContainer>
           )}

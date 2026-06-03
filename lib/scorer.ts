@@ -309,7 +309,10 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   const fiiNums = rowPercents(fiiRow);
   const diiNums = rowPercents(diiRow);
   const publicNums = rowPercents(publicRow);
-  const promoterHolding = (last(promoterNums) as number) || 0;
+  let promoterHolding = (last(promoterNums) as number) || 0;
+  if (!promoterHolding) {
+    promoterHolding = parsePercent(r["Promoter holding"] ?? "") || 0;
+  }
   const fiiHolding = (last(fiiNums) as number) || 0;
   const diiHolding = (last(diiNums) as number) || 0;
   const publicHolding = (last(publicNums) as number) || 0;

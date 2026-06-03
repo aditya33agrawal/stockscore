@@ -81,7 +81,7 @@ export function SectorSearch({
 
       {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin glass border-subtle rounded-2xl shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
+        <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin bg-ink-900 border border-ink-700/80 rounded-2xl shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
           {results.length === 0 ? (
             <div className="px-5 py-6 text-sm text-chalk-300/50">
               No match for <span className="text-chalk-50">&ldquo;{q}&rdquo;</span>

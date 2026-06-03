@@ -36,16 +36,23 @@ export async function loadSectorIndex(): Promise<SectorIndexEntry[]> {
         ORDER BY name
       `
     );
-    return rows.map((r) => ({
-      slug: r.slug,
-      name: r.name,
-      companies_count: r.companies_count,
-      refreshed_at: r.refreshed_at,
-      description: r.description,
-      top_company: r.top_company ?? undefined,
-      top_ticker: r.top_ticker ?? undefined,
-      top_score: r.top_score != null ? Number(r.top_score) : undefined,
-    }));
+    const seen = new Set<string>();
+    return rows
+      .filter((r) => {
+        if (seen.has(r.slug)) return false;
+        seen.add(r.slug);
+        return true;
+      })
+      .map((r) => ({
+        slug: r.slug,
+        name: r.name,
+        companies_count: r.companies_count,
+        refreshed_at: r.refreshed_at,
+        description: r.description,
+        top_company: r.top_company ?? undefined,
+        top_ticker: r.top_ticker ?? undefined,
+        top_score: r.top_score != null ? Number(r.top_score) : undefined,
+      }));
   } catch (err) {
     console.error("[data] loadSectorIndex failed:", err);
     return [];
@@ -125,15 +132,23 @@ export async function loadSector(slug: string): Promise<SectorData | null> {
   );
   if (rows.length === 0) return null;
   const r = rows[0];
+  const rawCompanies = (r.companies as SectorData["companies"]) ?? [];
+  const seenCo = new Set<string>();
+  const companies = rawCompanies.filter((c: any) => {
+    const key = (c.ticker ?? c.slug ?? c.name ?? "").toString().toLowerCase();
+    if (!key || seenCo.has(key)) return false;
+    seenCo.add(key);
+    return true;
+  });
   return {
     slug: r.slug,
     name: r.name,
     refreshed_at: r.refreshed_at,
-    companies_count: r.companies_count,
+    companies_count: companies.length || r.companies_count,
     description: r.description,
     analyst_note: r.analyst_note ?? undefined,
     sector_stats: r.sector_stats as SectorData["sector_stats"],
-    companies: r.companies as SectorData["companies"],
+    companies,
   };
 }
 
@@ -154,9 +169,13 @@ export async function loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
       `
     );
     const out: CompanyIndexEntry[] = [];
+    const seen = new Set<string>();
     for (const r of rows) {
       const cos = (r.companies as { slug: string; name: string; ticker: string; final_score: number }[]) ?? [];
       for (const c of cos) {
+        const key = `${r.slug}:${(c.ticker ?? c.slug ?? c.name).toLowerCase()}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
         out.push({
           name: c.name,
           ticker: c.ticker,

@@ -42,6 +42,40 @@ function firstTableInSection(
   return rows.length ? rowsToCsv(rows) : null;
 }
 
+function lastNumericCell(cells: string[]): string | null {
+  for (let i = cells.length - 1; i >= 1; i--) {
+    const v = cells[i]?.trim();
+    if (!v || v === "-") continue;
+    const cleaned = v.replace(/[,%₹\s]/g, "");
+    if (Number.isFinite(parseFloat(cleaned))) return v;
+  }
+  return null;
+}
+
+function extractRowLatestValue(
+  $: CheerioAPI,
+  sectionId: string,
+  rowLabel: string
+): string | null {
+  const section = $(`#${sectionId}`);
+  if (!section.length) return null;
+  let found: string | null = null;
+  const needle = rowLabel.toLowerCase();
+  section.find("table tr").each((_, tr) => {
+    if (found) return;
+    const cells: string[] = [];
+    $(tr).find("th, td").each((_, c) => {
+      cells.push($(c).text().replace(/\s+/g, " ").trim());
+    });
+    if (!cells.length) return;
+    const label = cells[0]?.toLowerCase() ?? "";
+    if (label.includes(needle)) {
+      found = lastNumericCell(cells);
+    }
+  });
+  return found;
+}
+
 export function parseCompanyPage(
   html: string,
   symbol: string
@@ -114,6 +148,24 @@ export function parseCompanyPage(
       const rows = tableToRows($, table);
       if (rows.length) peers = rowsToCsv(rows);
     }
+  }
+
+  // Backfill ratios that aren't always in the #top-ratios strip
+  if (!ratios["Current Ratio"]) {
+    // Screener.in's strip sometimes labels it "Current ratio" (lowercase r) — alias it
+    const aliasKey = Object.keys(ratios).find(
+      (k) => k.toLowerCase() === "current ratio" && k !== "Current Ratio"
+    );
+    if (aliasKey) {
+      ratios["Current Ratio"] = ratios[aliasKey];
+    } else {
+      const cr = extractRowLatestValue($, "ratios", "current ratio");
+      if (cr) ratios["Current Ratio"] = cr;
+    }
+  }
+  if (!ratios["Promoter holding"]) {
+    const ph = extractRowLatestValue($, "shareholding", "promoters");
+    if (ph) ratios["Promoter holding"] = ph;
   }
 
   return {

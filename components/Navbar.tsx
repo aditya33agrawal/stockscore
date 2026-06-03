@@ -6,9 +6,11 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { UserMenu } from "@/components/UserMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/sectors",          label: "Sectors" },
+  { href: "/learn",            label: "Learn" },
   { href: "/methodology",      label: "Methodology" },
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
@@ -74,7 +76,7 @@ export function Navbar() {
           className="flex items-center gap-2.5 group"
           onClick={() => setOpen(false)}
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-accent/20 bg-accent/10 text-accent transition-all group-hover:border-accent/40 group-hover:bg-accent/15 group-hover:shadow-glow-sm">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-accent/20 bg-accent/10 text-accent transition-all group-hover:border-accent/40 group-hover:bg-accent/15">
             <WaveformIcon />
           </span>
           <span className="text-[15px] font-bold tracking-tight text-chalk-50">
@@ -111,6 +113,7 @@ export function Navbar() {
           >
             Contact
           </Link>
+          <ThemeToggle />
           <UserMenu />
         </div>
 

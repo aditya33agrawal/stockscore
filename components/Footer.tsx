@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Linkedin, Mail } from "lucide-react";
 
 const FOOTER_LINKS = [
   { href: "/sectors",          label: "Sectors" },
+  { href: "/learn",            label: "Learn" },
   { href: "/methodology",      label: "Methodology" },
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
@@ -68,15 +69,6 @@ export function Footer() {
               >
                 <Linkedin className="h-4 w-4" />
               </a>
-              <a
-                href="https://github.com/"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/50 hover:border-accent/30 hover:text-accent transition-all"
-                aria-label="GitHub"
-              >
-                <Github className="h-4 w-4" />
-              </a>
             </div>
           </div>
 
@@ -99,7 +91,7 @@ export function Footer() {
       <div className="border-t border-[rgba(255,255,255,0.04)]">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-6 py-4 md:flex-row md:items-center">
           <p className="text-xs text-chalk-300/30">
-            © {new Date().getFullYear()} Aditya Agrawal · Built with Next.js
+            © {new Date().getFullYear()} Stockscore · Built with Next.js
           </p>
           <p className="text-xs text-chalk-300/30">
             Data from{" "}

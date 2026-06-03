@@ -58,8 +58,79 @@ export default async function SectorsComparePage() {
           </code>
         </div>
       ) : (
-        <SectorsCompareTable rows={rows} refreshedAt={refreshedAt} />
+        <>
+          <SectorAnalytics rows={rows} />
+          <SectorsCompareTable rows={rows} refreshedAt={refreshedAt} />
+        </>
       )}
+    </div>
+  );
+}
+
+function SectorAnalytics({ rows }: { rows: SectorRow[] }) {
+  const safe = rows.filter((r) => r.medianPE != null);
+
+  const topRoce = [...safe]
+    .sort((a, b) => (b.wtdAvgROCE ?? 0) - (a.wtdAvgROCE ?? 0))
+    .slice(0, 5);
+  const cheapest = [...safe]
+    .filter((r) => (r.medianPE ?? 0) > 0)
+    .sort((a, b) => (a.medianPE ?? 0) - (b.medianPE ?? 0))
+    .slice(0, 5);
+  const topOpm = [...safe]
+    .sort((a, b) => (b.wtdAvgOPM ?? 0) - (a.wtdAvgOPM ?? 0))
+    .slice(0, 5);
+
+  return (
+    <section className="mb-10 grid gap-4 md:grid-cols-3">
+      <LeaderboardCard
+        title="Highest capital efficiency"
+        subtitle="By weighted-average sector ROCE"
+        rows={topRoce.map((r) => [r.name, r.slug, `${(r.wtdAvgROCE ?? 0).toFixed(1)}%`])}
+      />
+      <LeaderboardCard
+        title="Cheapest by P/E"
+        subtitle="Lower median P/E means the market is less optimistic"
+        rows={cheapest.map((r) => [r.name, r.slug, `${(r.medianPE ?? 0).toFixed(1)}×`])}
+      />
+      <LeaderboardCard
+        title="Best operating margins"
+        subtitle="Per-rupee profit after running the business"
+        rows={topOpm.map((r) => [r.name, r.slug, `${(r.wtdAvgOPM ?? 0).toFixed(1)}%`])}
+      />
+    </section>
+  );
+}
+
+function LeaderboardCard({
+  title,
+  subtitle,
+  rows,
+}: {
+  title: string;
+  subtitle: string;
+  rows: [string, string, string][];
+}) {
+  return (
+    <div className="glass border-subtle rounded-2xl p-5">
+      <h3 className="text-sm font-semibold text-chalk-50">{title}</h3>
+      <p className="text-xs text-chalk-300/60 mt-0.5 mb-3">{subtitle}</p>
+      <ol className="space-y-1.5">
+        {rows.map(([name, slug, value], i) => (
+          <li key={slug} className="flex items-baseline justify-between text-sm">
+            <span className="flex items-baseline gap-2 min-w-0">
+              <span className="num text-xs text-chalk-300/40 w-4">{i + 1}.</span>
+              <Link
+                href={`/sector/${slug}`}
+                className="text-chalk-100 hover:text-accent truncate"
+              >
+                {name}
+              </Link>
+            </span>
+            <span className="num text-chalk-300 shrink-0">{value}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }

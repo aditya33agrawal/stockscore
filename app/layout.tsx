@@ -49,11 +49,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#03060F",
-  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
+
+const THEME_INIT_SCRIPT = `
+(function() {
+  try {
+    var t = localStorage.getItem('ss_theme');
+    if (!t) {
+      t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    var r = document.documentElement;
+    if (t === 'light') { r.classList.add('light'); r.classList.remove('dark'); }
+    else { r.classList.add('dark'); r.classList.remove('light'); }
+    r.style.colorScheme = t;
+  } catch (e) {}
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -61,7 +74,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+      </head>
       <body className="min-h-screen bg-ink-950 text-chalk-100 font-sans antialiased">
         <a href="#main" className="skip-link">Skip to content</a>
         <Suspense fallback={null}>
@@ -72,7 +90,7 @@ export default function RootLayout({
         <Footer />
         <ScrollToTop />
         <Toaster
-          theme="dark"
+          theme="system"
           richColors
           position="top-center"
           closeButton

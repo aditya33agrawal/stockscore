@@ -136,7 +136,21 @@ export async function ensureTables() {
       type        TEXT NOT NULL,
       message     TEXT NOT NULL,
       email       TEXT,
+      -- request context
+      ip          TEXT,
+      user_agent  TEXT,
+      referer     TEXT,
+      request_id  TEXT,
+      country     TEXT,
+      -- session context (null for anonymous submitters)
+      user_id     BIGINT REFERENCES users(id) ON DELETE SET NULL,
       created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS ip          TEXT`;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS user_agent  TEXT`;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS referer     TEXT`;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS request_id  TEXT`;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS country     TEXT`;
+  await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS user_id     BIGINT REFERENCES users(id) ON DELETE SET NULL`;
 }

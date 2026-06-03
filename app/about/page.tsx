@@ -1,5 +1,7 @@
-import Link from "next/link";
-import { Mail, Linkedin, Github, BookOpen, MapPin } from "lucide-react";
+import { ArrowRight, BookOpen, FileText } from "lucide-react";
+
+const RESUME_URL =
+  process.env.NEXT_PUBLIC_RESUME_URL ?? "https://aditya33agrawal.github.io/resume.pdf";
 
 const BOOKS = [
   {
@@ -18,7 +20,7 @@ const BOOKS = [
     title: "Just Keep Buying",
     author: "Nick Maggiulli",
     takeaway:
-      "Saving rate matters more than returns in the early years. Lump sum > DCA mathematically, but DCA wins behaviourally.",
+      "Saving rate matters more than returns in the early years. Lump sum beats DCA mathematically, but DCA wins behaviourally.",
   },
   {
     title: "Psychology of Money",
@@ -31,85 +33,43 @@ const BOOKS = [
 const PHILOSOPHY = [
   {
     title: "Fundamentals first",
-    body: "Price is a vote. Earnings are the weighing machine. I anchor every position on five-year financials before I look at a chart.",
+    body: "Price is a vote. Earnings are the weighing machine. Every position is anchored on five-year financials before the chart is opened.",
   },
   {
     title: "Sector context, always",
     body: "A 15% ROE is brilliant in cement and average in private banks. Comparison is the analyst's first job.",
   },
   {
-    title: "Behaviour > prediction",
-    body: "I don't know what the market does next week. I do know I won't sell in a panic if I understood why I bought.",
+    title: "Behaviour over prediction",
+    body: "Nobody knows what the market does next week. The edge is in not selling when conviction is clear.",
   },
   {
     title: "Accessibility matters",
-    body: "Good advice shouldn't be reserved for ₹1 cr+ clients. I offer pro-bono consulting to first-time investors who want to learn how to think about their money — that's the proof.",
+    body: "Good analysis should not be reserved for large portfolios. The methodology here is fully documented so any reader can audit it.",
   },
 ];
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
-      {/* Header */}
-      <header className="flex items-start gap-6 mb-10">
-        <div
-          className="h-20 w-20 shrink-0 rounded-full bg-gradient-to-br from-accent/80 to-accent/30 ring-2 ring-accent/40 flex items-center justify-center text-2xl font-bold text-ink-950"
-          aria-label="Avatar"
-        >
-          AA
-        </div>
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-chalk-50">
-            Hi, I'm Aditya.
-          </h1>
-          <p className="mt-2 text-chalk-300 serif text-lg leading-relaxed">
-            Full-stack developer by training, self-taught investor since 2021,
-            transitioning into wealth management and investment advisory.
-          </p>
-          <div className="mt-3 flex items-center gap-3 text-xs text-chalk-300/80">
-            <span className="inline-flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" /> Bengaluru, KA, India
-            </span>
-          </div>
-        </div>
+      <header className="mb-10">
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+          About this project
+        </p>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-chalk-50">
+          A transparent, rule-based view of Indian equities.
+        </h1>
+        <p className="mt-4 text-chalk-300 text-lg leading-relaxed">
+          Stockscore breaks down every company across ten fundamental
+          categories, with every plus and minus traceable to a documented
+          rule. No black boxes, no proprietary scores — just published
+          financials, scored consistently.
+        </p>
       </header>
 
-      {/* Story */}
-      <section className="mb-12 space-y-4 text-chalk-200 serif text-lg leading-relaxed">
-        <h2 className="font-sans text-xl font-semibold text-chalk-50 not-italic">
-          The story
-        </h2>
-        <p>
-          I invested my first ₹ in 2021 — my final-year B.Tech internship
-          stipend, parked into direct equities because I wanted to learn by
-          having skin in the game. The first year, I read nothing but P&L
-          statements, balance sheets, and cash flow reports.
-        </p>
-        <p>
-          Over time, the equity-only approach grew into multi-asset portfolio
-          management: equity mutual funds, debt funds, gold and silver ETFs,
-          all stitched together with asset-allocation principles. Books like{" "}
-          <em>The Warren Buffett Way</em>, <em>Coffee Can Investing</em>, and{" "}
-          <em>Just Keep Buying</em> shaped how I think about risk, time, and
-          temperament.
-        </p>
-        <p>
-          Along the way, I started offering <strong className="text-chalk-50 not-italic font-medium">pro-bono consulting</strong> to people
-          taking their first steps with money — goal setting, SIP planning,
-          fund selection, and basic risk profiling, all explained in plain
-          language. That experience convinced me I want to do this for a
-          living.
-        </p>
-        <p>
-          This website is the proof of work for that pivot. The scoring engine
-          underneath is Python; the analytical opinions are mine.
-        </p>
-      </section>
-
-      {/* Philosophy */}
       <section className="mb-12">
         <h2 className="text-xl font-semibold text-chalk-50 mb-4">
-          My investing philosophy
+          Investing philosophy
         </h2>
         <div className="grid gap-4 md:grid-cols-2">
           {PHILOSOPHY.map((p) => (
@@ -118,7 +78,7 @@ export default function AboutPage() {
               className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5"
             >
               <h3 className="font-semibold text-chalk-50">{p.title}</h3>
-              <p className="mt-2 text-sm text-chalk-300 serif leading-relaxed">
+              <p className="mt-2 text-sm text-chalk-300 leading-relaxed">
                 {p.body}
               </p>
             </div>
@@ -126,12 +86,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Books */}
       <section className="mb-12">
         <div className="flex items-center gap-2 mb-4">
           <BookOpen className="h-4 w-4 text-accent" />
           <h2 className="text-xl font-semibold text-chalk-50">
-            Books that shaped me
+            Books that shaped the approach
           </h2>
         </div>
         <ul className="divide-y divide-ink-700/40 rounded-xl border border-ink-700/60 bg-ink-900/40">
@@ -139,7 +98,7 @@ export default function AboutPage() {
             <li key={b.title} className="px-5 py-4">
               <p className="font-semibold text-chalk-50">{b.title}</p>
               <p className="text-xs text-chalk-300/70 mt-0.5">{b.author}</p>
-              <p className="text-sm text-chalk-300 serif mt-2 leading-relaxed">
+              <p className="text-sm text-chalk-300 mt-2 leading-relaxed">
                 {b.takeaway}
               </p>
             </li>
@@ -147,58 +106,19 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      {/* What now */}
-      <section className="mb-12 space-y-3 text-chalk-200 serif text-lg leading-relaxed">
-        <h2 className="font-sans text-xl font-semibold text-chalk-50 not-italic">
-          What I'm doing now
-        </h2>
-        <p>
-          I cleared the CAT in November 2025 at the 95.83 percentile and I'm
-          actively looking for wealth-management and investment-advisory roles
-          at fintechs and AMCs. I keep building this project on the side — new
-          sectors, deeper rubric, better visualisations.
-        </p>
-      </section>
-
-      {/* CTA */}
       <section className="rounded-xl border border-accent/30 bg-accent/5 p-6">
-        <h2 className="text-xl font-semibold text-chalk-50">
-          Let's talk
-        </h2>
+        <h2 className="text-xl font-semibold text-chalk-50">Resume</h2>
         <p className="mt-2 text-chalk-300 text-sm">
-          If you're hiring, building something in this space, or just want to
-          chat about investing — I'd love to hear from you.
+          For background on the person behind this project.
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <a
-            href="mailto:aditya33agrawal@gmail.com"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 px-4 py-2 text-sm font-semibold hover:bg-accent/90"
-          >
-            <Mail className="h-4 w-4" /> Email me
-          </a>
-          <a
-            href="https://www.linkedin.com/in/aditya33agrawal/"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-2 rounded-lg border border-ink-700/60 px-4 py-2 text-sm hover:bg-ink-800/60"
-          >
-            <Linkedin className="h-4 w-4" /> LinkedIn
-          </a>
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-2 rounded-lg border border-ink-700/60 px-4 py-2 text-sm hover:bg-ink-800/60"
-          >
-            <Github className="h-4 w-4" /> GitHub
-          </a>
-          <Link
-            href="/resume"
-            className="inline-flex items-center gap-2 rounded-lg border border-ink-700/60 px-4 py-2 text-sm hover:bg-ink-800/60"
-          >
-            View resume
-          </Link>
-        </div>
+        <a
+          href={RESUME_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 px-4 py-2 text-sm font-semibold hover:bg-accent/90"
+        >
+          <FileText className="h-4 w-4" /> View resume <ArrowRight className="h-3.5 w-3.5" />
+        </a>
       </section>
     </div>
   );

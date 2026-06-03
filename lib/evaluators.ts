@@ -1,6 +1,6 @@
 import type { CompanyRaw } from "./types";
 
-export type Tone = "good" | "neutral" | "warn";
+export type Tone = "excellent" | "good" | "neutral" | "warn" | "bad";
 
 export interface Evaluation {
   sentence: string;
@@ -23,34 +23,41 @@ export function evaluatePE(raw: CompanyRaw): Evaluation {
 export function evaluateROE(raw: CompanyRaw): Evaluation {
   const roe = raw.roe;
   if (!roe) return { sentence: "ROE data not available.", tone: "neutral" };
-  if (roe >= 20) return { sentence: `ROE of ${roe.toFixed(1)}% — strong return on shareholders' capital.`, tone: "good" };
+  if (roe >= 25) return { sentence: `ROE of ${roe.toFixed(1)}% — exceptional returns on shareholders' capital.`, tone: "excellent" };
+  if (roe >= 18) return { sentence: `ROE of ${roe.toFixed(1)}% — strong return on shareholders' capital.`, tone: "good" };
   if (roe >= 12) return { sentence: `ROE of ${roe.toFixed(1)}% is decent; capital is being used reasonably well.`, tone: "neutral" };
-  return { sentence: `ROE of ${roe.toFixed(1)}% is below par. Returns on equity could be stronger.`, tone: "warn" };
+  if (roe >= 8)  return { sentence: `ROE of ${roe.toFixed(1)}% is below par. Returns on equity could be stronger.`, tone: "warn" };
+  return { sentence: `ROE of ${roe.toFixed(1)}% — very weak; capital is barely earning a return.`, tone: "bad" };
 }
 
 export function evaluateROCE(raw: CompanyRaw): Evaluation {
   const roce = raw.roce;
   if (!roce) return { sentence: "ROCE data not available.", tone: "neutral" };
-  if (roce >= 20) return { sentence: `ROCE of ${roce.toFixed(1)}% — excellent capital efficiency across the business.`, tone: "good" };
+  if (roce >= 25) return { sentence: `ROCE of ${roce.toFixed(1)}% — exceptional capital efficiency.`, tone: "excellent" };
+  if (roce >= 18) return { sentence: `ROCE of ${roce.toFixed(1)}% — strong capital efficiency across the business.`, tone: "good" };
   if (roce >= 12) return { sentence: `ROCE of ${roce.toFixed(1)}% — business earns a fair return on deployed capital.`, tone: "neutral" };
-  return { sentence: `ROCE of ${roce.toFixed(1)}% is approaching cost-of-capital territory. Watch closely.`, tone: "warn" };
+  if (roce >= 8)  return { sentence: `ROCE of ${roce.toFixed(1)}% is approaching cost-of-capital territory. Watch closely.`, tone: "warn" };
+  return { sentence: `ROCE of ${roce.toFixed(1)}% — below cost-of-capital; value destruction risk.`, tone: "bad" };
 }
 
 export function evaluateOPM(raw: CompanyRaw): Evaluation {
   const opm = raw.opm;
   if (!opm) return { sentence: "OPM data not available.", tone: "neutral" };
+  if (opm >= 30) return { sentence: `Operating margin of ${opm.toFixed(1)}% — exceptional; pricing power and scale.`, tone: "excellent" };
   if (opm >= 20) return { sentence: `Operating margin of ${opm.toFixed(1)}% is strong — wide competitive moat.`, tone: "good" };
   if (opm >= 10) return { sentence: `Operating margin of ${opm.toFixed(1)}% is healthy; room to improve further.`, tone: "neutral" };
-  return { sentence: `Operating margin of ${opm.toFixed(1)}% is thin — vulnerable to input cost swings.`, tone: "warn" };
+  if (opm >= 5)  return { sentence: `Operating margin of ${opm.toFixed(1)}% is thin — vulnerable to input cost swings.`, tone: "warn" };
+  return { sentence: `Operating margin of ${opm.toFixed(1)}% — very thin or negative; serious profitability concern.`, tone: "bad" };
 }
 
 export function evaluateDE(raw: CompanyRaw): Evaluation {
   const de = raw.debt_to_equity;
   if (de == null) return { sentence: "D/E data not available.", tone: "neutral" };
-  if (de < 0.3) return { sentence: `D/E of ${de.toFixed(2)} — virtually debt-free. Very strong balance sheet.`, tone: "good" };
-  if (de < 1) return { sentence: `D/E of ${de.toFixed(2)} — manageable leverage; not a concern at this level.`, tone: "neutral" };
-  if (de < 2) return { sentence: `D/E of ${de.toFixed(2)} — moderate leverage. Monitor debt servicing capacity.`, tone: "warn" };
-  return { sentence: `D/E of ${de.toFixed(2)} — high leverage. Interest coverage and free cash flow are critical here.`, tone: "warn" };
+  if (de < 0.1) return { sentence: `D/E of ${de.toFixed(2)} — virtually debt-free. Pristine balance sheet.`, tone: "excellent" };
+  if (de < 0.5) return { sentence: `D/E of ${de.toFixed(2)} — low leverage. Strong balance sheet.`, tone: "good" };
+  if (de < 1)   return { sentence: `D/E of ${de.toFixed(2)} — manageable leverage; not a concern at this level.`, tone: "neutral" };
+  if (de < 2)   return { sentence: `D/E of ${de.toFixed(2)} — high leverage. Monitor debt servicing capacity.`, tone: "warn" };
+  return { sentence: `D/E of ${de.toFixed(2)} — very high leverage. Interest coverage and free cash flow are critical here.`, tone: "bad" };
 }
 
 export function evaluateDividend(raw: CompanyRaw): Evaluation {
@@ -272,12 +279,12 @@ export function evaluateCurrentRatio(raw: CompanyRaw): Evaluation {
   const cr = raw.current_ratio;
   if (!cr) return { sentence: "Current ratio data not available.", tone: "neutral" };
   if (cr >= 2)
-    return { sentence: `Current ratio of ${cr.toFixed(2)} — strong short-term liquidity; ample buffer to cover current liabilities.`, tone: "good" };
+    return { sentence: `Current ratio of ${cr.toFixed(2)} — strong short-term liquidity; ample buffer to cover current liabilities.`, tone: cr >= 3 ? "excellent" : "good" };
   if (cr >= 1.5)
     return { sentence: `Current ratio of ${cr.toFixed(2)} — adequate liquidity; business can comfortably meet near-term obligations.`, tone: "neutral" };
   if (cr >= 1)
     return { sentence: `Current ratio of ${cr.toFixed(2)} — thin liquidity buffer; worth watching working capital management.`, tone: "warn" };
-  return { sentence: `Current ratio of ${cr.toFixed(2)} is below 1 — current liabilities exceed current assets. Monitor cash position closely.`, tone: "warn" };
+  return { sentence: `Current ratio of ${cr.toFixed(2)} is below 1 — current liabilities exceed current assets. Liquidity risk.`, tone: "bad" };
 }
 
 export function evaluateSalesProfit(raw: CompanyRaw): Evaluation {

@@ -5,12 +5,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev              # start dev server at http://localhost:3000
-npm run build            # production build
-npm run lint             # ESLint via next lint
-npm run refresh          # scrape + score all sectors, write to DB
-npm run refresh:market   # scrape market-overview page, write sector-level metrics to DB
+npm run dev                   # start dev server at http://localhost:3000
+npm run build                 # production build
+npm run lint                  # ESLint via next lint
+
+# Data refresh (run individually or combined)
+npm run refresh               # scrape + score all sectors + market overview + charts
+npm run refresh:force         # same but bypasses 7-day freshness check for all
+npm run refresh:sector        # scrape + score companies only (no market/charts)
+npm run refresh:market        # scrape market-overview page → market_sectors table
 npm run refresh:market:force  # same but bypass 7-day freshness check
+npm run refresh:charts        # fetch OHLCV candles + indicators (Yahoo/NSE) → chart_data table
+npm run refresh:charts:force  # same, force re-fetch
+npm run refresh:all           # full pipeline: sector + market + charts
+npm run refresh:all:force     # full pipeline, force
+
+# Config sync
+npm run sync:config           # sync sectors_config.json → sector_config DB table
+npm run sync:config:force     # force re-sync
 ```
 
 Scripts run with `npx tsx` — no separate compile step needed.
@@ -26,34 +38,43 @@ Required in `.env.local`:
 | `SCREENER_PASSWORD` | screener.in login for the scraper |
 | `REFRESH_PASSWORD` | optional — gates the `/api/refresh` endpoint |
 | `NEXT_PUBLIC_ENABLE_REFRESH` | if set, shows refresh buttons in the UI |
+| `MAINTENANCE_MODE` | set to `1` to return 503 on all routes |
 
 ## Architecture overview
 
-This is a Next.js 14 App Router app backed by a PostgreSQL database. There is no static JSON — all data is live from the DB.
+Next.js 14 App Router app backed by a PostgreSQL database. **No static JSON for company data** — all data is live from the DB. The app is deployed on Vercel; site URL is `https://aditya-finance.vercel.app`.
 
-### Data flow
+### Data pipelines
 
+**Pipeline 1 — Company scores** (`lib/pipeline.ts`):
 ```
-screener.in
-    │
-    ├── lib/scraper/          HTML scraper (auth, search, parser, api)
-    │       └── parses company pages into RawCompanyData
-    │
-    ├── lib/scorer.ts         scoring engine
-    │       └── turns RawCompanyData → Company (10 categories, 100-point rubric)
-    │
-    ├── lib/pipeline.ts       orchestration
-    │       └── scrapes + scores each company, upserts to DB
-    │
-    └── lib/db.ts             postgres client + schema (ensureTables)
-            └── tables: companies, sectors, market_sectors, market_sectors_meta
+screener.in HTML
+  → lib/scraper/         (auth → search → parser → api.ts)
+  → RawCompanyData
+  → lib/scorer.ts        scoring engine → Company (scores, breakdowns, bonuses/penalties)
+  → DB: companies + sectors tables
 ```
 
-A second pipeline (`lib/market-pipeline.ts` + `lib/sector-scraper/`) scrapes the screener.in market overview page for sector-level aggregate metrics and writes to `market_sectors`.
+**Pipeline 2 — Market/sector aggregates** (`lib/market-pipeline.ts` + `lib/sector-scraper/`):
+```
+screener.in market overview page
+  → sector-level aggregate metrics (MCap, P/E, OPM, ROCE, etc.)
+  → DB: market_sectors + market_sectors_meta tables
+```
+
+**Pipeline 3 — Price charts** (`lib/charts/`):
+```
+Yahoo Finance / NSE
+  → OHLCV candles + SMA-50, SMA-200, RSI-14
+  → DB: chart_data table (ChartPayload JSONB)
+  → lib/charts/store.ts reads it back for PriceChart component
+```
+
+Both company and market pipelines have a **7-day freshness check** — re-running a sector that was scraped < 7 days ago is a no-op unless `--force` is passed.
 
 ### Scoring model (`lib/scorer.ts`)
 
-Companies are scored across 10 categories (max 100 points raw):
+Companies are scored across 10 categories (max 100 points raw) using **continuous logistic/linear primitives** — no step rubrics:
 
 | Category | Max |
 |---|---|
@@ -68,40 +89,63 @@ Companies are scored across 10 categories (max 100 points raw):
 | Operational Efficiency | 5 |
 | Price & Technical | 3 |
 
-Bonuses (+3 to +4) and penalties (−4 to −6) adjust the raw total. Industry ceilings apply: tobacco → 75, financials → 80, others → 100. The `classification` field maps the final score to: Avoid / Watchlist / Accumulate / Invest-grade / Exceptional.
+Scoring primitives in `lib/scoring/primitives.ts`: `linUp`, `linDown`, `band`, `logistic`, `cv` (coefficient of variation), `olsSlope` (OLS regression for trend), `percentileRank`, `cagr`. The scorer uses logistic curves parameterised as `logistic(x, x0, half_width)` — see scorer.ts header for derivation.
 
-### DB caching
+Bonuses (+3 to +4) and penalties (−4 to −6) adjust the raw total. Industry ceilings: tobacco → 75, financials → 80, cyclical sectors → 90, others → 100. The `classification` field maps the final score to: Avoid / Watchlist / Accumulate / Invest-grade / Exceptional.
 
-`lib/pipeline.ts` checks if a company's DB row is < 7 days old before scraping — it reuses the cached score if fresh. This means re-running `refresh` for an already-scraped sector is fast.
+### DB schema
 
-### Sector config
+Tables created/migrated by `lib/db.ts → ensureTables()` (call via `POST /api/migrate`):
 
-`sectors_config.json` at the project root is the single source of truth for which sectors and companies exist. The pipeline reads this file; the UI's `loadSectorsConfig()` also reads it directly to show sectors that haven't been scraped yet (shown as "no data yet").
-
-### API routes
-
-- `POST /api/refresh?sector=<slug>` — triggers `runPipeline` via SSE stream; password-gated via `REFRESH_PASSWORD`
-- `GET /api/company/[symbol]` — returns full `CompanyDetail` from DB
-- `POST /api/migrate` — calls `ensureTables()`
+| Table | Purpose |
+|---|---|
+| `companies` | One row per ticker — `data` JSONB holds full `Company` object |
+| `sectors` | One row per sector slug — `companies` JSONB array, aggregate stats |
+| `market_sectors` | Sector-level aggregate metrics from screener.in market overview |
+| `market_sectors_meta` | Last full refresh timestamp |
+| `chart_data` | OHLCV candles + indicators per symbol (`ChartPayload` JSONB) |
+| `sector_config` | Mirror of `sectors_config.json` (synced via `sync:config`) |
+| `users` | Auth — bcrypt-hashed passwords |
+| `sessions` | Auth — opaque 32-byte token in httpOnly cookie `ss_session`, 30-day TTL |
+| `bookmarks` | Per-user saved companies |
+| `feedback` | User feedback submissions |
 
 ### Key type boundaries
 
 - `lib/scraper/types.ts` → `RawCompanyData` (raw scraped HTML data)
-- `lib/types.ts` → `Company`, `SectorData`, `SectorIndexEntry` (scored/UI types)
-- `lib/company-data.ts` → `CompanyDetail` (full DB record including raw financials and score)
+- `lib/types.ts` → `Company`, `SectorData`, `CompanyRaw`, `ScoreItem`, `CategoryScore`, `FactorRow` (scored/UI types)
+- `lib/company-data.ts` → `CompanyDetail` (full DB record), `ChartData` (extracted time-series for charts)
+- `lib/charts/types.ts` → `ChartPayload`, `Candle`, `IndicatorPoint` (price chart data)
 
-`lib/evaluators.ts` contains standalone functions that turn `CompanyRaw` metrics into human-readable sentences with tone (good/neutral/warn) — used on the company detail page.
+`lib/evaluators.ts` — standalone functions (`evaluatePE`, `evaluateROE`, `evaluateROCE`, `evaluateOPM`, `evaluateDE`, `evaluateTrend`, etc.) that take `CompanyRaw` and return `{ sentence, tone }` — used on the company detail page for human-readable metric summaries.
+
+### Sector config
+
+`sectors_config.json` at the project root is the **single source of truth** for which sectors and companies exist. The pipeline reads this file; the UI's `loadSectorsConfig()` also reads it directly to show sectors that haven't been scraped yet. To add a sector/company, edit this file and re-run `npm run refresh:sector`.
+
+### Auth system
+
+Cookie-based session auth (`lib/auth.ts`). Cookie name: `ss_session` (httpOnly, secure, sameSite=lax). Routes: `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout`, `/api/auth/me`, `/api/auth/change-password`, `/api/auth/forgot-password`.
+
+### API routes
+
+- `POST /api/refresh?sector=<slug>` — triggers `runPipeline` via SSE stream; password-gated
+- `GET /api/company/[symbol]` — returns full `CompanyDetail` from DB
+- `GET /api/charts/[symbol]` — returns `ChartPayload` from DB
+- `GET /api/bookmarks` / `POST /api/bookmarks` — user bookmark CRUD
+- `POST /api/migrate` — calls `ensureTables()`
+- `POST /api/feedback` — stores feedback submission
 
 ## Middleware
 
 ### Edge middleware (`middleware.ts`)
 
-Runs on every request before route handlers. Handles:
-- **Maintenance mode** — set `MAINTENANCE_MODE=1` to return 503 on all routes
+Runs on every request before route handlers:
+- **Maintenance mode** — `MAINTENANCE_MODE=1` → 503 on all routes
 - **Rate limiting** — in-memory IP token bucket: 60 req/min for `/api/*`, 10 req/min for `/api/auth/*` and `/api/refresh`
-- **Request ID** — attaches `x-request-id` to every request/response
+- **Request ID** — `x-request-id` on every request/response
 - **Security headers** — CSP (report-only), HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
-- **CORS** — same-origin only by default; add origins in `lib/middleware/cors.ts`
+- **CORS** — same-origin only; add origins in `lib/middleware/cors.ts`
 - **Access log** — one JSON line per request to stdout
 
 ### Per-route wrappers (`lib/api/`)
@@ -110,22 +154,41 @@ All new route handlers use `compose(...)` from `lib/api/compose.ts`. Convention 
 
 ```ts
 export const POST = compose(
-  withErrorHandler,      // always outermost — catches everything → JSON { error: { code, message } }
-  withMethods(["POST"]), // 405 on wrong method
-  withAuth,              // 401 if no session; injects ctx.user: SessionUser
-  withSchema(MySchema),  // 400 + details on invalid body; injects ctx.body: T
+  withErrorHandler,       // always outermost — catches everything → JSON { error: { code, message } }
+  withMethods(["POST"]),  // 405 on wrong method
+  withAuth,               // 401 if no session; injects ctx.user: SessionUser
+  withSchema(MySchema),   // 400 + details on invalid body; injects ctx.body: T
 )(async (req, { user, body }) => { ... });
 ```
 
-| Wrapper | File | Purpose |
-|---|---|---|
-| `withErrorHandler` | `lib/api/with-error-handler.ts` | Catches `ApiError` → JSON; unknown → 500 |
-| `withMethods` | `lib/api/with-methods.ts` | 405 + `Allow` header |
-| `withAuth` | `lib/api/with-auth.ts` | Session check; injects `user` |
-| `withRefreshPassword` | `lib/api/with-refresh-password.ts` | `x-refresh-password` header check |
-| `withSchema` | `lib/api/with-schema.ts` | Body validation; injects `body` |
-| `compose` | `lib/api/compose.ts` | Right-to-left wrapper composition |
+Admin routes (`/api/refresh`, `/api/migrate`) use `withRefreshPassword` — clients send the password in the `x-refresh-password` header. Throw `UnauthorizedError`, `ForbiddenError`, `ValidationError`, `NotFoundError`, `RateLimitError`, or `ApiError(status, msg)` from `lib/api/errors.ts`.
 
-Errors: throw `UnauthorizedError`, `ForbiddenError`, `ValidationError`, `NotFoundError`, `RateLimitError`, or `ApiError(status, msg)` from `lib/api/errors.ts`.
+## Design system
 
-Admin routes (`/api/refresh`, `/api/migrate`) are gated with `withRefreshPassword`. Clients must send the password in the `x-refresh-password` request header (not the body).
+Dark-only theme. Key Tailwind tokens:
+
+| Token | Usage |
+|---|---|
+| `ink-950/900/800/700/600` | Background / surface / border scale (darkest to medium) |
+| `chalk-50/100/200/300` | Text scale (brightest to muted) |
+| `accent` / `accent-soft` / `accent-deep` | Brand cyan (#00D2FF) — interactive, positive, headings |
+| `bad` | Red (#F87171) — negative values, penalties, downtrend |
+| `warn` | Amber (#F59E0B) — caution states |
+| `violet` | Purple (#7C3AED) — secondary accent |
+
+Custom CSS utility classes (defined in `globals.css`):
+- `.glass` — frosted-glass panel background
+- `.border-subtle` — standard subtle border
+- `.num` — applies `font-mono` + tabular-nums (use on all financial numbers)
+
+Typography: `font-sans` (Inter), `font-mono` / `.num` (JetBrains Mono for numbers). Layout max-widths: `max-w-5xl` (company page), `max-w-6xl` (sector/home), `max-w-7xl` (compare table).
+
+## Component patterns
+
+- **Server components** fetch directly from DB via `lib/data.ts`. Client islands are "use client" components receiving pre-fetched data as props.
+- **`HeaderHelp`** component provides column-header tooltips (used in `SectorsCompareTable`).
+- **`MetricCard`** — reusable metric display with headline, badge (tone: good/neutral/warn), sentence, and optional spark chart.
+- **`CategoryCard`** — score breakdown card for the 10 scoring categories on the company detail page.
+- **`ScoreBadge`** — circular score display with classification label.
+- **`PriceChart`** — lightweight-charts wrapper for OHLCV candlestick + SMA overlays.
+- Financial numbers must always use the `.num` class (monospace + tabular-nums).

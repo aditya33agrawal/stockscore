@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { MetricEntry, Category, CategoryMeta } from "@/lib/learn/types";
 import MetricCard from "./MetricCard";
 
@@ -13,6 +13,13 @@ export default function LearnControls({
 }) {
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<Category | "all">("all");
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

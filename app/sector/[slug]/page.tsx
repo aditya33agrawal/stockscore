@@ -5,7 +5,6 @@ import { formatDate, loadSector } from "@/lib/data";
 import { Leaderboard } from "@/components/Leaderboard";
 import { RadarCompare } from "@/components/RadarCompare";
 import { ScoreBarChart } from "@/components/ScoreBar";
-import { SectorRefreshButton } from "@/components/SectorRefreshButton";
 
 export const dynamic = "force-dynamic";
 
@@ -56,9 +55,14 @@ export default async function SectorPage({ params }: { params: { slug: string } 
             >
               <TrendingUp className="h-3.5 w-3.5" /> How scoring works
             </Link>
+            <Link
+              href="/learn"
+              className="inline-flex items-center gap-1.5 text-chalk-300/40 hover:text-accent transition-colors"
+            >
+              Learn the metrics →
+            </Link>
           </div>
         </div>
-        <SectorRefreshButton sectorSlug={sector.slug} />
       </header>
 
       {/* Sector medians */}
@@ -82,8 +86,7 @@ export default async function SectorPage({ params }: { params: { slug: string } 
           <div className="mt-4 glass border-subtle rounded-xl px-5 py-4 border-l-2 border-l-accent/40">
             <p className="text-sm text-chalk-300/60 italic">
               &ldquo;{sector.analyst_note}&rdquo;{" "}
-              <span className="not-italic font-medium text-chalk-300/35">— Aditya</span>
-            </p>
+              </p>
           </div>
         )}
       </section>
@@ -100,11 +103,24 @@ export default async function SectorPage({ params }: { params: { slug: string } 
         </p>
       </section>
 
-      {/* Charts row */}
-      <section className="mb-8 grid gap-5 lg:grid-cols-2">
-        <RadarCompare companies={sector.companies} />
+      {/* Radar — full width */}
+      <section className="mb-8">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-4">
+          Category profile
+        </p>
+        <div className="w-full">
+          <RadarCompare companies={sector.companies} />
+        </div>
+      </section>
+
+      {/* Score distribution */}
+      <section className="mb-8">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-4">
+          Score distribution
+        </p>
         <ScoreBarChart companies={sector.companies} />
       </section>
+
     </div>
   );
 }

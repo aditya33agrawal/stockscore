@@ -9,35 +9,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Surfaces are driven by CSS variables so a `.light` root flips the palette.
         ink: {
-          950: "#03060F",
-          900: "#070C1A",
-          800: "#0C1426",
-          700: "#132035",
-          600: "#1E3050",
-          500: "#2E4060",
+          950: "rgb(var(--ink-950) / <alpha-value>)",
+          900: "rgb(var(--ink-900) / <alpha-value>)",
+          800: "rgb(var(--ink-800) / <alpha-value>)",
+          700: "rgb(var(--ink-700) / <alpha-value>)",
+          600: "rgb(var(--ink-600) / <alpha-value>)",
+          500: "rgb(var(--ink-500) / <alpha-value>)",
         },
         chalk: {
-          50:  "#E8F4FF",
-          100: "#DAEAF8",
-          200: "#B8D0EC",
-          300: "#7090B0",
+          50:  "rgb(var(--chalk-50) / <alpha-value>)",
+          100: "rgb(var(--chalk-100) / <alpha-value>)",
+          200: "rgb(var(--chalk-200) / <alpha-value>)",
+          300: "rgb(var(--chalk-300) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "#00D2FF",
-          soft:    "#38E8FF",
-          deep:    "#0099CC",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          soft:    "rgb(var(--accent-soft) / <alpha-value>)",
+          deep:    "rgb(var(--accent-deep) / <alpha-value>)",
         },
         violet: {
-          DEFAULT: "#7C3AED",
-          soft:    "#9B6BF5",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          soft:    "rgb(var(--accent-soft) / <alpha-value>)",
         },
         warn: {
-          DEFAULT: "#F59E0B",
+          DEFAULT: "rgb(var(--warn) / <alpha-value>)",
         },
         bad: {
-          DEFAULT: "#F87171",
-          deep:    "#DC2626",
+          DEFAULT: "rgb(var(--bad) / <alpha-value>)",
+          deep:    "rgb(var(--bad-deep) / <alpha-value>)",
         },
       },
       fontFamily: {
@@ -47,16 +48,6 @@ const config: Config = {
       },
       fontVariantNumeric: {
         tnum: "tabular-nums",
-      },
-      boxShadow: {
-        "glow-cyan":   "0 0 40px rgba(0,210,255,0.15)",
-        "glow-violet": "0 0 40px rgba(124,58,237,0.15)",
-        "glow-sm":     "0 0 20px rgba(0,210,255,0.2)",
-      },
-      backgroundImage: {
-        "grad-cyan-violet": "linear-gradient(135deg, #00D2FF, #7C3AED)",
-        "grad-score-high":  "linear-gradient(90deg, #00D2FF, #7C3AED)",
-        "grad-score-mid":   "linear-gradient(90deg, #F59E0B, #FBBF24)",
       },
     },
   },

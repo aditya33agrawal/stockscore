@@ -209,7 +209,7 @@ export default function MethodologyPage() {
           thresholds. A marginal improvement in any metric produces a marginal improvement in score.
         </p>
         <a
-          href="https://github.com/"
+          href="https://github.com/aditya33agrawal/stockscore"
           target="_blank"
           rel="noreferrer noopener"
           className="mt-4 inline-flex items-center gap-2 rounded-md border border-ink-700/60 px-3 py-1.5 text-xs hover:bg-ink-800/60"

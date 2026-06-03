@@ -211,6 +211,97 @@ async function upsertSectorDb(sectorData: SectorData, topCompany: Company | unde
   `;
 }
 
+type Defaulter = {
+  sector: string;
+  company: string;
+  reason: "scrape_failed" | "not_found" | "error" | "missing_critical_fields";
+  detail?: string;
+  missing?: string[];
+};
+
+const CRITICAL_RATIO_KEYS: Array<[string, string[]]> = [
+  ["pe", ["Stock P/E", "P/E"]],
+  ["roe", ["ROE"]],
+  ["roce", ["ROCE"]],
+  ["currentRatio", ["Current Ratio"]],
+];
+
+function hasNumeric(v: string | undefined | null): boolean {
+  if (v == null) return false;
+  const s = String(v).replace(/[,%₹\s]/g, "");
+  if (!s || s === "-" || s.toLowerCase() === "nan") return false;
+  const n = parseFloat(s);
+  return Number.isFinite(n);
+}
+
+function checkMissingFields(raw: RawCompanyData): string[] {
+  const missing: string[] = [];
+  const ratios = (raw.ratios ?? {}) as Record<string, string>;
+  for (const [label, keys] of CRITICAL_RATIO_KEYS) {
+    const present = keys.some((k) => hasNumeric(ratios[k]));
+    if (!present) missing.push(label);
+  }
+  // Promoter holding lives in the shareholding CSV — flag if missing entirely
+  if (!raw.shareholding || raw.shareholding.length < 20) {
+    missing.push("promoterHolding");
+  }
+  return missing;
+}
+
+async function writeDefaultersLog(defaulters: Defaulter[], totalCompanies: number): Promise<string | null> {
+  if (defaulters.length === 0) return null;
+  try {
+    const dir = path.join(process.cwd(), "logs");
+    await fs.mkdir(dir, { recursive: true });
+    const ts = new Date().toISOString().replace(/[:.]/g, "-");
+    const file = path.join(dir, `refresh-defaulters-${ts}.json`);
+    await fs.writeFile(file, JSON.stringify({
+      generated_at: new Date().toISOString(),
+      total_companies: totalCompanies,
+      defaulter_count: defaulters.length,
+      defaulters,
+    }, null, 2));
+    return file;
+  } catch {
+    return null;
+  }
+}
+
+function printDefaultersReport(log: Log, defaulters: Defaulter[], totalCompanies: number, logFile: string | null): void {
+  log("");
+  log("────────────────────────────────────────────────────");
+  log("DEFAULTERS REPORT");
+  log("────────────────────────────────────────────────────");
+  if (defaulters.length === 0) {
+    log("✓ No defaulters — every company scraped and parsed cleanly.");
+    return;
+  }
+  const bySector = new Map<string, Defaulter[]>();
+  for (const d of defaulters) {
+    const arr = bySector.get(d.sector) ?? [];
+    arr.push(d);
+    bySector.set(d.sector, arr);
+  }
+  for (const [sectorName, arr] of bySector) {
+    log(`Sector: ${sectorName}`);
+    for (const d of arr) {
+      if (d.reason === "missing_critical_fields") {
+        log(`  ✗ ${d.company.padEnd(28)} missing: ${(d.missing ?? []).join(", ")}`);
+      } else if (d.reason === "not_found") {
+        log(`  ✗ ${d.company.padEnd(28)} not found on Screener`);
+      } else if (d.reason === "scrape_failed") {
+        log(`  ✗ ${d.company.padEnd(28)} scrape failed${d.detail ? ` (${d.detail})` : ""}`);
+      } else {
+        log(`  ✗ ${d.company.padEnd(28)} error${d.detail ? `: ${d.detail}` : ""}`);
+      }
+    }
+  }
+  const pct = totalCompanies > 0 ? ((defaulters.length / totalCompanies) * 100).toFixed(1) : "0.0";
+  log("────────────────────────────────────────────────────");
+  log(`Total defaulters: ${defaulters.length} of ${totalCompanies} (${pct}%)`);
+  if (logFile) log(`Log: ${logFile}`);
+}
+
 export async function runPipeline(log: Log, targetSectorSlug?: string, force = false): Promise<void> {
   log("[pipeline] Loading config …");
   const config = await loadConfig();
@@ -237,6 +328,9 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
   const session = await login(email, password);
   log("[pipeline] Authenticated ✓");
 
+  const defaulters: Defaulter[] = [];
+  let totalCompanies = 0;
+
   for (const sector of sectorsToRun) {
     const scored: Company[] = [];
     const rawDataMap: Map<string, RawCompanyData> = new Map();
@@ -245,6 +339,7 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
     log(`\n[sector] ${sector.name} (${sector.companies.length} companies)`);
 
     for (const companyName of sector.companies) {
+      totalCompanies += 1;
       if (!force) {
         const fresh = await findFreshCompany(companyName, sector.slug);
         if (fresh) {
@@ -264,10 +359,23 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
       log(`  [company] ${companyName} — searching …`);
       try {
         const result = await scrapeCompany(session, companyName, log);
-        if (!result) continue;
+        if (!result) {
+          defaulters.push({ sector: sector.name, company: companyName, reason: "not_found" });
+          continue;
+        }
 
         const { rawData } = result;
         rawDataMap.set(rawData.symbol, rawData);
+
+        const missing = checkMissingFields(rawData);
+        if (missing.length > 0) {
+          defaulters.push({
+            sector: sector.name,
+            company: companyName,
+            reason: "missing_critical_fields",
+            missing,
+          });
+        }
 
         const scoreResult = scoreCompany(rawData, {
           cyclical: sector.cyclical ?? false,
@@ -278,6 +386,12 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
         log(`  [company] ${companyName} — score: ${scoreResult.final_score}/100 (${scoreResult.classification})`);
       } catch (err) {
         log(`  [company] ${companyName} — ERROR: ${String(err)}`);
+        defaulters.push({
+          sector: sector.name,
+          company: companyName,
+          reason: "error",
+          detail: err instanceof Error ? err.message : String(err),
+        });
       }
       await sleep(2000);
     }
@@ -321,6 +435,9 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
       log(`[sector] ${sector.name} — DB write failed: ${String(err)}`);
     }
   }
+
+  const logFile = await writeDefaultersLog(defaulters, totalCompanies);
+  printDefaultersReport(log, defaulters, totalCompanies, logFile);
 
   log(`\n[pipeline] Done ✓`);
 }

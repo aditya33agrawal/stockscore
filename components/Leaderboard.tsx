@@ -133,10 +133,10 @@ export function Leaderboard({
             {sorted.map((co) => {
               const gradient =
                 co.final_score >= 70
-                  ? "linear-gradient(90deg, #00D2FF, #7C3AED)"
+                  ? "#5B8DEF"
                   : co.final_score >= 50
-                  ? "linear-gradient(90deg, #F59E0B, #FBBF24)"
-                  : "#F87171";
+                  ? "#C9962B"
+                  : "#D96A6A";
 
               return (
                 <tr key={co.slug} className="group hover:bg-[rgba(0,210,255,0.03)] transition-colors">

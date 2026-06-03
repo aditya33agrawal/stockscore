@@ -74,7 +74,7 @@ export function SectorsBrowser({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search by sector or stock — e.g., Banks, HDFC, TCS…"
-            className="w-full rounded-xl border border-ink-700/80 bg-ink-900/80 py-3 pl-11 pr-4 text-chalk-50 placeholder:text-chalk-300/60 outline-none focus:border-accent/50"
+            className="w-full rounded-xl border border-ink-700/80 bg-ink-900/80 py-3 pl-14 pr-4 text-chalk-50 placeholder:text-chalk-300/60 outline-none focus:border-accent/50"
           />
         </div>
         <div className="flex flex-wrap gap-2 text-xs">

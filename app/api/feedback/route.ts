@@ -4,6 +4,8 @@ import { withErrorHandler } from "@/lib/api/with-error-handler";
 import { withMethods } from "@/lib/api/with-methods";
 import { withSchema, requireFields, str, optStr } from "@/lib/api/with-schema";
 import { ValidationError } from "@/lib/api/errors";
+import { extractRequestMeta } from "@/lib/api/request-meta";
+import { getCurrentUser } from "@/lib/auth";
 import sql from "@/lib/db";
 
 const VALID_TYPES = ["opportunity", "feedback", "feature", "bug", "other"] as const;
@@ -32,10 +34,26 @@ export const POST = compose(
   withErrorHandler,
   withMethods(["POST"]),
   withSchema(FeedbackSchema),
-)(async (_req, { body }) => {
+)(async (req, { body }) => {
+  const meta = extractRequestMeta(req);
+  const user = await getCurrentUser().catch(() => null);
+
   await sql`
-    INSERT INTO feedback (type, message, email)
-    VALUES (${body.type}, ${body.message}, ${body.email || null})
+    INSERT INTO feedback (
+      type, message, email,
+      ip, user_agent, referer, request_id, country,
+      user_id
+    ) VALUES (
+      ${body.type},
+      ${body.message},
+      ${body.email || null},
+      ${meta.ip},
+      ${meta.userAgent},
+      ${meta.referer},
+      ${meta.requestId},
+      ${meta.country},
+      ${user?.id ?? null}
+    )
   `;
   return NextResponse.json({ ok: true }, { status: 201 });
 });

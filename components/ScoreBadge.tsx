@@ -59,10 +59,10 @@ export function ScoreBar({ score }: { score: number }) {
   const pct = Math.max(0, Math.min(100, score));
   const gradient =
     score >= 70
-      ? "linear-gradient(90deg, #00D2FF, #7C3AED)"
+      ? "#5B8DEF"
       : score >= 50
-      ? "linear-gradient(90deg, #F59E0B, #FBBF24)"
-      : "#F87171";
+      ? "#C9962B"
+      : "#D96A6A";
 
   return (
     <div className="relative h-1 w-full overflow-hidden rounded-full bg-ink-700/60">

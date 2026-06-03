@@ -7,13 +7,10 @@ import {
   ExternalLink,
   ChevronDown,
   Star,
-  TrendingUp,
-  TrendingDown,
-  Minus,
 } from "lucide-react";
 import clsx from "clsx";
 import { loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
-import { extractChartData } from "@/lib/company-data";
+import { extractChartData, parseFinancialCSV, toNum } from "@/lib/company-data";
 import { ScoreBadge } from "@/components/ScoreBadge";
 import { CategoryCard } from "@/components/CategoryCard";
 import { FinancialCharts } from "@/components/FinancialCharts";
@@ -55,6 +52,20 @@ export async function generateMetadata({
     description: `${co.name} fundamental score breakdown across 10 categories. Ranked ${co.rank} in ${sector?.name}.`,
   };
 }
+
+const ITEM_LEARN_MAP: Record<string, string> = {
+  "Current Ratio":          "/learn#current-ratio",
+  "Promoter Holding Level": "/learn#promoter-holding",
+  "Promoter Trend (8Q)":    "/learn#promoter-holding",
+  "P/E vs Industry":        "/learn#pe",
+  "Debt / Equity":          "/learn#de",
+  "Return on Equity":       "/learn#roe",
+  "ROCE Consistency":       "/learn#roce",
+  "OPM vs Sector":          "/learn#opm",
+  "Dividend Yield":         "/learn#dividend-yield",
+  "CFO / PAT":              "/learn#cfo-pat",
+  "Sales CAGR 5Y":          "/learn#sales-growth",
+};
 
 // Ordered groups for All Key Ratios
 const RATIO_GROUPS: { label: string; keys: string[] }[] = [
@@ -130,20 +141,17 @@ export default async function CompanyPage({
     const evPE = evaluatePE(co.raw);
     metricCards.push({
       title: "Valuation: P/E",
+      learnHref: "/learn#pe",
       headline: co.raw.pe ? `${co.raw.pe.toFixed(1)}x` : "N/A",
       badge: co.raw.pe && co.raw.industry_pe
-        ? {
-            label: co.raw.pe < co.raw.industry_pe * 0.8
-              ? "Cheap vs sector"
-              : co.raw.pe > co.raw.industry_pe * 1.2
-              ? "Pricier than sector"
-              : "In line with sector",
-            tone: co.raw.pe < co.raw.industry_pe * 0.8
-              ? "good"
-              : co.raw.pe > co.raw.industry_pe * 1.2
-              ? "warn"
-              : "neutral",
-          }
+        ? (() => {
+            const r = co.raw.pe / co.raw.industry_pe;
+            if (r < 0.6) return { label: "Deep discount", tone: "excellent" as const };
+            if (r < 0.8) return { label: "Cheap vs sector", tone: "good" as const };
+            if (r <= 1.2) return { label: "In line with sector", tone: "neutral" as const };
+            if (r <= 1.5) return { label: "Pricier than sector", tone: "warn" as const };
+            return { label: "Very expensive", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evPE.sentence,
       sentenceTone: evPE.tone,
@@ -162,9 +170,17 @@ export default async function CompanyPage({
     const evROE = evaluateROE(co.raw);
     metricCards.push({
       title: "Return on Equity",
+      learnHref: "/learn#roe",
       headline: co.raw.roe ? `${co.raw.roe.toFixed(1)}%` : "N/A",
       badge: co.raw.roe
-        ? { label: co.raw.roe >= 20 ? "Strong" : co.raw.roe >= 12 ? "Decent" : "Weak", tone: co.raw.roe >= 20 ? "good" : co.raw.roe >= 12 ? "neutral" : "warn" }
+        ? (() => {
+            const v = co.raw.roe;
+            if (v >= 25) return { label: "Excellent", tone: "excellent" as const };
+            if (v >= 18) return { label: "Strong", tone: "good" as const };
+            if (v >= 12) return { label: "Decent", tone: "neutral" as const };
+            if (v >= 8)  return { label: "Weak", tone: "warn" as const };
+            return { label: "Very weak", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evROE.sentence,
       sentenceTone: evROE.tone,
@@ -181,9 +197,17 @@ export default async function CompanyPage({
     const evROCE = evaluateROCE(co.raw);
     metricCards.push({
       title: "Return on Capital Employed",
+      learnHref: "/learn#roce",
       headline: co.raw.roce ? `${co.raw.roce.toFixed(1)}%` : "N/A",
       badge: co.raw.roce
-        ? { label: co.raw.roce >= 20 ? "Excellent" : co.raw.roce >= 12 ? "Decent" : "Below par", tone: co.raw.roce >= 20 ? "good" : co.raw.roce >= 12 ? "neutral" : "warn" }
+        ? (() => {
+            const v = co.raw.roce;
+            if (v >= 25) return { label: "Exceptional", tone: "excellent" as const };
+            if (v >= 18) return { label: "Strong", tone: "good" as const };
+            if (v >= 12) return { label: "Decent", tone: "neutral" as const };
+            if (v >= 8)  return { label: "Below par", tone: "warn" as const };
+            return { label: "Poor", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evROCE.sentence,
       sentenceTone: evROCE.tone,
@@ -200,9 +224,17 @@ export default async function CompanyPage({
     const evOPM = evaluateOPM(co.raw);
     metricCards.push({
       title: "Operating Margin (OPM)",
+      learnHref: "/learn#opm",
       headline: co.raw.opm ? `${co.raw.opm.toFixed(1)}%` : "N/A",
       badge: co.raw.opm
-        ? { label: co.raw.opm >= 20 ? "Wide margin" : co.raw.opm >= 10 ? "Healthy" : "Thin margin", tone: co.raw.opm >= 20 ? "good" : co.raw.opm >= 10 ? "neutral" : "warn" }
+        ? (() => {
+            const v = co.raw.opm;
+            if (v >= 30) return { label: "Exceptional margin", tone: "excellent" as const };
+            if (v >= 20) return { label: "Wide margin", tone: "good" as const };
+            if (v >= 10) return { label: "Healthy", tone: "neutral" as const };
+            if (v >= 5)  return { label: "Thin margin", tone: "warn" as const };
+            return { label: "Very thin / loss", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evOPM.sentence,
       sentenceTone: evOPM.tone,
@@ -222,9 +254,17 @@ export default async function CompanyPage({
     const evDE = evaluateDE(co.raw);
     metricCards.push({
       title: "Debt to Equity",
+      learnHref: "/learn#de",
       headline: co.raw.debt_to_equity != null ? `${co.raw.debt_to_equity.toFixed(2)}` : "N/A",
       badge: co.raw.debt_to_equity != null
-        ? { label: co.raw.debt_to_equity < 0.3 ? "Debt-free" : co.raw.debt_to_equity < 1 ? "Low leverage" : "High leverage", tone: co.raw.debt_to_equity < 0.3 ? "good" : co.raw.debt_to_equity < 1 ? "neutral" : "warn" }
+        ? (() => {
+            const v = co.raw.debt_to_equity;
+            if (v < 0.1) return { label: "Debt-free", tone: "excellent" as const };
+            if (v < 0.5) return { label: "Low leverage", tone: "good" as const };
+            if (v < 1)   return { label: "Moderate", tone: "neutral" as const };
+            if (v < 2)   return { label: "High leverage", tone: "warn" as const };
+            return { label: "Very high leverage", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evDE.sentence,
       sentenceTone: evDE.tone,
@@ -242,20 +282,45 @@ export default async function CompanyPage({
     const currentRatioVal: number | null = co.raw.current_ratio != null
       ? co.raw.current_ratio
       : (() => {
-          const raw = detail?.ratios["Current Ratio"];
-          if (!raw) return null;
-          const n = parseFloat(raw.replace(/[^0-9.]/g, ""));
-          return isNaN(n) ? null : n;
+          // 1) Top-ratios strip — case-insensitive lookup ("Current Ratio" / "Current ratio")
+          if (detail?.ratios) {
+            const key = Object.keys(detail.ratios).find(
+              (k) => k.toLowerCase() === "current ratio"
+            );
+            const stripRaw = key ? detail.ratios[key] : undefined;
+            if (stripRaw) {
+              const n = parseFloat(stripRaw.replace(/[^0-9.]/g, ""));
+              if (!isNaN(n)) return n;
+            }
+          }
+          // 2) Ratios financial table — row "Current Ratio" (latest non-empty cell)
+          const ratTable = parseFinancialCSV(detail?.financial_tables.ratios ?? null);
+          const rowKey = Object.keys(ratTable.rowMap).find(
+            (k) => k.toLowerCase() === "current ratio"
+          );
+          if (rowKey) {
+            const vals = ratTable.rowMap[rowKey] ?? [];
+            for (let i = vals.length - 1; i >= 0; i--) {
+              const n = toNum(vals[i]);
+              if (n !== null) return n;
+            }
+          }
+          return null;
         })();
     const evCR = evaluateCurrentRatio({ ...co.raw, current_ratio: currentRatioVal ?? undefined });
     metricCards.push({
       title: "Current Ratio",
+      learnHref: "/learn#current-ratio",
       headline: currentRatioVal != null ? currentRatioVal.toFixed(2) : "N/A",
       badge: currentRatioVal != null
-        ? {
-            label: currentRatioVal >= 2 ? "Strong liquidity" : currentRatioVal >= 1.5 ? "Adequate" : currentRatioVal >= 1 ? "Thin buffer" : "Below 1",
-            tone: currentRatioVal >= 2 ? "good" : currentRatioVal >= 1.5 ? "neutral" : ("warn" as const),
-          }
+        ? (() => {
+            const v = currentRatioVal;
+            if (v >= 3)   return { label: "Excellent liquidity", tone: "excellent" as const };
+            if (v >= 2)   return { label: "Strong liquidity", tone: "good" as const };
+            if (v >= 1.5) return { label: "Adequate", tone: "neutral" as const };
+            if (v >= 1)   return { label: "Thin buffer", tone: "warn" as const };
+            return { label: "Below 1", tone: "bad" as const };
+          })()
         : undefined,
       sentence: evCR.sentence,
       sentenceTone: evCR.tone,
@@ -264,6 +329,7 @@ export default async function CompanyPage({
     const evSP = evaluateSalesProfit(co.raw);
     metricCards.push({
       title: "Revenue & Profit Growth",
+      learnHref: "/learn#sales-growth",
       headline: co.raw.sales_5y_cagr && co.raw.profit_5y_cagr
         ? `${co.raw.profit_5y_cagr.toFixed(0)}% profit CAGR`
         : co.raw.profit_5y_cagr
@@ -289,9 +355,16 @@ export default async function CompanyPage({
     const evDiv = evaluateDividend(co.raw);
     metricCards.push({
       title: "Dividend Yield",
+      learnHref: "/learn#dividend-yield",
       headline: co.raw.dividend_yield ? `${co.raw.dividend_yield.toFixed(2)}%` : "Nil",
       badge: co.raw.dividend_yield
-        ? { label: co.raw.dividend_yield >= 3 ? "Strong yield" : co.raw.dividend_yield >= 1 ? "Moderate" : "Low", tone: co.raw.dividend_yield >= 3 ? "good" : "neutral" }
+        ? (() => {
+            const v = co.raw.dividend_yield;
+            if (v >= 5) return { label: "Excellent yield", tone: "excellent" as const };
+            if (v >= 3) return { label: "Strong yield", tone: "good" as const };
+            if (v >= 1) return { label: "Moderate", tone: "neutral" as const };
+            return { label: "Low", tone: "neutral" as const };
+          })()
         : { label: "No dividend", tone: "neutral" },
       sentence: evDiv.sentence,
       sentenceTone: evDiv.tone,
@@ -302,8 +375,16 @@ export default async function CompanyPage({
     if (evCC.ratio !== null) {
       metricCards.push({
         title: "Earnings Quality (CFO / PAT)",
+        learnHref: "/learn#cfo-pat",
         headline: `${(evCC.ratio * 100).toFixed(0)}%`,
-        badge: { label: evCC.ratio >= 1.0 ? "Cash-backed" : evCC.ratio >= 0.7 ? "Reasonable" : "Watch earnings", tone: evCC.ratio >= 1.0 ? "good" : evCC.ratio >= 0.7 ? "neutral" : "warn" },
+        badge: (() => {
+          const v = evCC.ratio!;
+          if (v >= 1.2) return { label: "Pristine earnings", tone: "excellent" as const };
+          if (v >= 1.0) return { label: "Cash-backed", tone: "good" as const };
+          if (v >= 0.7) return { label: "Reasonable", tone: "neutral" as const };
+          if (v >= 0.4) return { label: "Watch earnings", tone: "warn" as const };
+          return { label: "Earnings quality risk", tone: "bad" as const };
+        })(),
         sentence: evCC.sentence,
         sentenceTone: evCC.tone,
         spark: chartData.cfCfo.some((v) => v !== null)
@@ -324,27 +405,50 @@ export default async function CompanyPage({
 
     // Promoter Holding — use last non-null value so a missing most-recent quarter doesn't show N/A
     const nonNullPromoter = chartData.shPromoter.filter((v): v is number => v != null);
-    const latestPromoter = nonNullPromoter.length > 0 ? nonNullPromoter[nonNullPromoter.length - 1] : null;
+    let latestPromoter: number | null = nonNullPromoter.length > 0 ? nonNullPromoter[nonNullPromoter.length - 1] : null;
+    // If no Promoter row exists but other shareholding rows do (FII/DII/Public), promoters = 0 (e.g. ITC, HDFC Bank widely-held)
+    if (latestPromoter == null) {
+      const hasOtherShareholders =
+        chartData.shFii.some((v) => v != null) ||
+        chartData.shDii.some((v) => v != null) ||
+        chartData.shPublic.some((v) => v != null);
+      if (hasOtherShareholders) latestPromoter = 0;
+    }
     const prevPromoter = nonNullPromoter.length > 4 ? nonNullPromoter[nonNullPromoter.length - 5] : nonNullPromoter.length > 0 ? nonNullPromoter[0] : null;
     const promoterDelta = latestPromoter != null && prevPromoter != null ? latestPromoter - prevPromoter : null;
     const isPledgedHigh = co.raw.pledged_pct != null && co.raw.pledged_pct > 10;
+    const isPledgedSevere = co.raw.pledged_pct != null && co.raw.pledged_pct > 25;
+    const hasNoPromoters = latestPromoter != null && latestPromoter < 0.05;
     metricCards.push({
       title: "Promoter Holding",
-      headline: latestPromoter != null ? `${latestPromoter.toFixed(1)}%` : "N/A",
-      badge: isPledgedHigh
+      learnHref: "/learn#promoter-holding",
+      headline: hasNoPromoters
+        ? "None"
+        : latestPromoter != null
+        ? `${latestPromoter.toFixed(1)}%`
+        : "N/A",
+      badge: hasNoPromoters
+        ? { label: "No promoters", tone: "neutral" }
+        : isPledgedSevere
+        ? { label: `${co.raw.pledged_pct!.toFixed(1)}% pledged ⚠`, tone: "bad" }
+        : isPledgedHigh
         ? { label: `${co.raw.pledged_pct!.toFixed(1)}% pledged ⚠`, tone: "warn" }
         : promoterDelta != null
         ? {
             label: promoterDelta > 0.5 ? `↑ ${promoterDelta.toFixed(1)}pp` : promoterDelta < -0.5 ? `↓ ${Math.abs(promoterDelta).toFixed(1)}pp` : "Stable",
-            tone: promoterDelta > 0.5 ? "good" : promoterDelta < -0.5 ? "warn" : "neutral",
+            tone: promoterDelta > 2 ? "excellent" : promoterDelta > 0.5 ? "good" : promoterDelta < -2 ? "bad" : promoterDelta < -0.5 ? "warn" : "neutral",
           }
         : undefined,
-      sentence: isPledgedHigh
+      sentence: hasNoPromoters
+        ? `No promoter holding — company is widely held (typical of PSUs or professionally-managed firms).`
+        : latestPromoter == null
+        ? `Promoter holding data not available.`
+        : isPledgedHigh
         ? `${co.raw.pledged_pct!.toFixed(1)}% of promoter shares are pledged — a key risk if the stock corrects sharply.`
         : promoterDelta != null && Math.abs(promoterDelta) > 0.5
         ? `Promoters ${promoterDelta > 0 ? "increased" : "reduced"} stake by ${Math.abs(promoterDelta).toFixed(1)}pp over the last year.`
-        : `Promoters hold ${latestPromoter?.toFixed(1) ?? "?"}% — stable ownership structure.`,
-      sentenceTone: isPledgedHigh ? "warn" : promoterDelta != null && promoterDelta > 0.5 ? "good" : promoterDelta != null && promoterDelta < -0.5 ? "warn" : "neutral",
+        : `Promoters hold ${latestPromoter.toFixed(1)}% — stable ownership structure.`,
+      sentenceTone: hasNoPromoters ? "neutral" : isPledgedHigh ? "warn" : promoterDelta != null && promoterDelta > 0.5 ? "good" : promoterDelta != null && promoterDelta < -0.5 ? "warn" : "neutral",
       spark: chartData.shPromoter.some((v) => v !== null)
         ? {
             type: "line",
@@ -421,23 +525,6 @@ export default async function CompanyPage({
               >
                 {trendInfo.label}
               </span>
-              {/* Regime badge (from scorer v2) */}
-              {co.regime && (
-                <span
-                  title="Price regime from scoring algorithm (2-signal: DMA stack + 52w position)"
-                  className={clsx(
-                    "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium tracking-wide cursor-help",
-                    co.regime === "uptrend"   && "border-accent/30 bg-accent/10 text-accent/80",
-                    co.regime === "downtrend" && "border-bad/30 bg-bad/10 text-bad/80",
-                    co.regime === "sideways"  && "border-ink-600 bg-ink-800/60 text-chalk-300",
-                  )}
-                >
-                  {co.regime === "uptrend"   && <TrendingUp   className="h-3 w-3" />}
-                  {co.regime === "downtrend" && <TrendingDown className="h-3 w-3" />}
-                  {co.regime === "sideways"  && <Minus        className="h-3 w-3" />}
-                  {co.regime.charAt(0).toUpperCase() + co.regime.slice(1)}
-                </span>
-              )}
               {/* Peer percentile */}
               {co.peer_percentile != null && (
                 <span
@@ -469,6 +556,14 @@ export default async function CompanyPage({
           />
         </div>
       </header>
+
+      {/* LEARN NUDGE — quiet one-liner above score breakdown */}
+      <p className="mb-5 text-xs text-chalk-300/35">
+        Not sure what Balance Sheet or Shareholding mean?{" "}
+        <Link href="/learn" className="hover:text-accent transition-colors underline underline-offset-2">
+          Learn the metrics →
+        </Link>
+      </p>
 
       {/* CATEGORY BREAKDOWN */}
       <section id="breakdown" className="mb-10 scroll-mt-24">
@@ -573,7 +668,14 @@ export default async function CompanyPage({
             {co.strengths.map((s, i) => (
               <li key={i} className="flex items-start justify-between gap-3 text-sm">
                 <div className="min-w-0">
-                  <p className="text-chalk-100">{s.label}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-chalk-100">{s.label}</p>
+                    {ITEM_LEARN_MAP[s.label] && (
+                      <Link href={ITEM_LEARN_MAP[s.label]} className="text-[10px] text-chalk-300/30 hover:text-accent transition-colors">
+                        Learn →
+                      </Link>
+                    )}
+                  </div>
                   <p className="text-xs text-chalk-300/70">{s.category}</p>
                 </div>
                 <span className={clsx("num font-semibold shrink-0", pointsColor(s.points))}>
@@ -592,7 +694,14 @@ export default async function CompanyPage({
             {co.weaknesses.map((w, i) => (
               <li key={i} className="flex items-start justify-between gap-3 text-sm">
                 <div className="min-w-0">
-                  <p className="text-chalk-100">{w.label}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-chalk-100">{w.label}</p>
+                    {ITEM_LEARN_MAP[w.label] && (
+                      <Link href={ITEM_LEARN_MAP[w.label]} className="text-[10px] text-chalk-300/30 hover:text-accent transition-colors">
+                        Learn →
+                      </Link>
+                    )}
+                  </div>
                   <p className="text-xs text-chalk-300/70">{w.category}</p>
                 </div>
                 <span className={clsx("num font-semibold shrink-0", pointsColor(w.points))}>
