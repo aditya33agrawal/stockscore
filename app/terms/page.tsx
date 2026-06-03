@@ -27,11 +27,11 @@ export default function TermsPage() {
       </header>
 
       {/* Disclaimer box */}
-      <section className="mb-12 rounded-xl border border-amber-500/40 bg-amber-500/5 p-6">
+      <section className="mb-12 rounded-xl border border-warn/40 bg-warn/5 p-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 text-warn shrink-0 mt-0.5" />
           <div>
-            <h2 className="font-semibold text-amber-300 text-lg">
+            <h2 className="font-semibold text-warn text-lg">
               Plain-language disclaimer
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-chalk-200 leading-relaxed">

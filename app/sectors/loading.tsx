@@ -13,7 +13,7 @@ export default function SectorsLoading() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 9 }).map((_, i) => (
-          <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6 space-y-4">
+          <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6 space-y-4">
             <div className="flex items-start justify-between">
               <div className="space-y-2 flex-1">
                 <div className="skeleton h-2.5 w-20 rounded" />
@@ -26,7 +26,7 @@ export default function SectorsLoading() {
               <div className="skeleton h-3 w-full rounded" />
               <div className="skeleton h-3 w-4/5 rounded" />
             </div>
-            <div className="pt-2 border-t border-[rgba(255,255,255,0.04)] flex justify-between">
+            <div className="pt-2 border-t border-[rgb(var(--chalk-100)_/_0.04)] flex justify-between">
               <div className="skeleton h-3 w-14 rounded" />
               <div className="skeleton h-3 w-20 rounded" />
             </div>

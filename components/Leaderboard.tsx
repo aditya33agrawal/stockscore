@@ -116,7 +116,7 @@ export function Leaderboard({
 
           {/* Header */}
           <thead>
-            <tr className="border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.03)]">
+            <tr className="border-b border-[rgb(var(--chalk-100)_/_0.05)] bg-[rgb(var(--accent)_/_0.03)]">
               <Th k="rank" title={COL_HINT.rank}>#</Th>
               <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35" title="Company name and ticker. Click a row to see the full +/− breakdown.">
                 Company
@@ -129,17 +129,17 @@ export function Leaderboard({
           </thead>
 
           {/* Body */}
-          <tbody className="divide-y divide-[rgba(255,255,255,0.03)]">
+          <tbody className="divide-y divide-[rgb(var(--chalk-100)_/_0.03)]">
             {sorted.map((co) => {
               const gradient =
                 co.final_score >= 70
-                  ? "#5B8DEF"
+                  ? "#6D8196"
                   : co.final_score >= 50
                   ? "#C9962B"
                   : "#D96A6A";
 
               return (
-                <tr key={co.slug} className="group hover:bg-[rgba(0,210,255,0.03)] transition-colors">
+                <tr key={co.slug} className="group hover:bg-[rgb(var(--accent)_/_0.03)] transition-colors">
                   {/* Rank */}
                   <td className="px-4 py-3.5 num text-[13px] font-medium text-chalk-300/25 w-10">
                     {co.rank}

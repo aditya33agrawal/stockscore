@@ -222,7 +222,7 @@ export default function MethodologyPage() {
       <section className="mb-12 space-y-4 text-chalk-200 serif text-lg leading-relaxed">
         <h2 className="text-2xl font-semibold text-chalk-50 not-italic font-sans">Design principles</h2>
         <p>
-          The v2 algorithm addresses three weaknesses in typical screener scoring systems:
+          The algorithm addresses three weaknesses in typical screener scoring systems:
         </p>
         <ol className="space-y-3 ml-5 list-decimal text-base">
           <li>

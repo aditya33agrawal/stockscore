@@ -29,18 +29,18 @@ interface Props {
   peers: PeerInfo[];
 }
 
-const COLORS = ["#00D2FF", "#7C3AED", "#F59E0B", "#A855F7"];
-const GRID = { strokeDasharray: "3 3", stroke: "rgba(255,255,255,0.04)" };
-const AXIS_STYLE = { fill: "#7090B0", fontSize: 11 };
+const COLORS = ["#6D8196", "#7C3AED", "#B8862B", "#9C6FD4"];
+const GRID = { strokeDasharray: "3 3", stroke: "rgba(120,120,120,0.18)" };
+const AXIS_STYLE = { fill: "#84909C", fontSize: 11 };
 const TOOLTIP_STYLE = {
   contentStyle: {
-    background: "rgba(7,12,26,0.95)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "rgba(74,74,74,0.96)",
+    border: "1px solid rgb(var(--chalk-100)/0.08)",
     borderRadius: 12,
     color: "#EEF2F7",
     fontSize: 12,
   },
-  labelStyle: { color: "#7090B0" },
+  labelStyle: { color: "#84909C" },
 };
 
 const fmtCr = (v: number) =>
@@ -237,7 +237,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 formatter={(value: number) => fmtCr(value)}
               />
               <Legend
-                wrapperStyle={{ fontSize: 11, color: "#7090B0" }}
+                wrapperStyle={{ fontSize: 11, color: "#84909C" }}
               />
               {!hasPeers ? (
                 <>
@@ -245,7 +245,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                     yAxisId="sales"
                     dataKey={`${primaryData.company}_sales`}
                     name="Sales"
-                    fill="#00D2FF"
+                    fill="#6D8196"
                     radius={[2, 2, 0, 0]}
                     maxBarSize={24}
                   />
@@ -309,7 +309,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 {...TOOLTIP_STYLE}
                 formatter={(value: number) => fmtPct(value)}
               />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#7090B0" }} />
+              <Legend wrapperStyle={{ fontSize: 11, color: "#84909C" }} />
               {allCompanies.map(({ key, name }, idx) => (
                 <>
                   <Line
@@ -371,12 +371,12 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                   name === "OPM %" ? fmtPct(value) : fmtCr(value)
                 }
               />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#7090B0" }} />
+              <Legend wrapperStyle={{ fontSize: 11, color: "#84909C" }} />
               <Bar
                 yAxisId="rev"
                 dataKey="sales"
                 name="Sales"
-                fill="#00D2FF"
+                fill="#6D8196"
                 radius={[2, 2, 0, 0]}
                 maxBarSize={20}
               />
@@ -393,9 +393,9 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 type="monotone"
                 dataKey="opm"
                 name="OPM %"
-                stroke="#F59E0B"
+                stroke="#B8862B"
                 strokeWidth={2}
-                dot={{ r: 3, fill: "#F59E0B" }}
+                dot={{ r: 3, fill: "#B8862B" }}
                 connectNulls
               />
             </ComposedChart>
@@ -423,7 +423,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 {...TOOLTIP_STYLE}
                 formatter={(value: number) => fmtCr(value)}
               />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#7090B0" }} />
+              <Legend wrapperStyle={{ fontSize: 11, color: "#84909C" }} />
               {allCompanies.map(({ key, name }, idx) => (
                 <>
                   <Bar
@@ -440,7 +440,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                     dataKey={`${key}_borrowings`}
                     name={`${name} Borrowings`}
                     stackId={key}
-                    fill="#F87171"
+                    fill="#B0524E"
                     radius={[2, 2, 0, 0]}
                     maxBarSize={20}
                   />
@@ -471,13 +471,13 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                 {...TOOLTIP_STYLE}
                 formatter={(value: number) => fmtCr(value)}
               />
-              <Legend wrapperStyle={{ fontSize: 11, color: "#7090B0" }} />
+              <Legend wrapperStyle={{ fontSize: 11, color: "#84909C" }} />
               {!hasPeers ? (
                 <>
                   <Bar
                     dataKey={`${primaryData.company}_cfo`}
                     name="CFO"
-                    fill="#00D2FF"
+                    fill="#6D8196"
                     radius={[2, 2, 0, 0]}
                     maxBarSize={20}
                   />

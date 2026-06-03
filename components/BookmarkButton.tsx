@@ -117,7 +117,7 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
         "inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all active:scale-[0.97]",
         bookmarked
           ? "border-accent/40 bg-accent/10 text-accent hover:bg-accent/15"
-          : "border-[rgba(255,255,255,0.08)] text-chalk-300/70 hover:border-[rgba(255,255,255,0.18)] hover:text-chalk-50",
+          : "border-[rgb(var(--chalk-100)_/_0.08)] text-chalk-300/70 hover:border-[rgb(var(--chalk-100)_/_0.18)] hover:text-chalk-50",
         (busy || loading) && "opacity-70 cursor-wait",
       )}
     >

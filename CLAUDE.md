@@ -165,16 +165,33 @@ Admin routes (`/api/refresh`, `/api/migrate`) use `withRefreshPassword` — clie
 
 ## Design system
 
-Dark-only theme. Key Tailwind tokens:
+**Ink Wash theme** — warm, paper-and-charcoal palette. Light by **default**, with a matched
+"Ink Wash Night" dark variant toggled via `ThemeToggle` (`ss_theme` in `localStorage`, `.dark`
+class on `<html>`). All colors are CSS variables in `globals.css` (`:root` = light, `.dark` =
+dark); Tailwind tokens map to them in `tailwind.config.ts`.
+
+Palette: **Ink** `#4A4A4A` · **Mist** `#CBCBCB` · **Paper** `#FFFFE3` · **Slate** `#6D8196`.
 
 | Token | Usage |
 |---|---|
-| `ink-950/900/800/700/600` | Background / surface / border scale (darkest to medium) |
-| `chalk-50/100/200/300` | Text scale (brightest to muted) |
-| `accent` / `accent-soft` / `accent-deep` | Brand cyan (#00D2FF) — interactive, positive, headings |
-| `bad` | Red (#F87171) — negative values, penalties, downtrend |
-| `warn` | Amber (#F59E0B) — caution states |
-| `violet` | Purple (#7C3AED) — secondary accent |
+| `ink-950/900/800/700/600` | Surface / border scale. Note: under Ink Wash `ink-950` is **Paper** (page bg), `ink-700` is **Mist** (borders) — the names no longer describe the hue. |
+| `chalk-50/100/200/300` | Text scale (`chalk-100` = Ink body text, brightest to muted) |
+| `accent` / `accent-soft` / `accent-deep` | **Slate `#6D8196`** — interactive chrome, links, headings, focus, selection. **Not** a verdict color. |
+| `good` / `good-deep` | **Green `#3F7A52`** — positive verdicts: gains, strong metrics, high scores, Invest-grade/Exceptional |
+| `bad` / `bad-deep` | **Red `#B0524E`** — negative: losses, penalties, downtrend, Avoid |
+| `warn` | **Amber `#B8862B`** — caution: Watchlist, mid scores |
+| `violet` | Purple `#7C3AED` — secondary accent (charts) |
+
+**Verdict color rule:** green/red/amber (`good`/`bad`/`warn`) express *value sentiment only*.
+Slate (`accent`) is for interactive chrome and neutral emphasis, so it never reads as a "good"
+verdict. Score→color mapping lives in `lib/format.ts`.
+
+**Charts** (recharts/lightweight-charts): `var()` does **not** resolve inside SVG `fill`/`stroke`
+attributes, so chart series use static Ink Wash hex chosen to read on both Paper and Ink-Night
+(slate `#6D8196`, violet `#7C3AED`, amber `#B8862B`, taupe `#9A8C7C`; green/red only for up/down
+sentiment). Chart grid/axis/crosshair read CSS vars at runtime via `getComputedStyle` (see
+`PriceChart.tsx`). Allocation segments use a muted slate/violet/taupe ramp (`lib/allocation.ts`),
+never green/red.
 
 Custom CSS utility classes (defined in `globals.css`):
 - `.glass` — frosted-glass panel background

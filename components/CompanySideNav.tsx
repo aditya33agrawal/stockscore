@@ -82,7 +82,7 @@ export function CompanySideNav() {
         <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-chalk-300/40 mb-3 pl-3">
           On this page
         </p>
-        <ul className="space-y-0.5 border-l border-[rgba(255,255,255,0.06)]">
+        <ul className="space-y-0.5 border-l border-[rgb(var(--chalk-100)_/_0.06)]">
           {ITEMS.map((item) => {
             const isActive = active === item.id;
             return (
@@ -126,7 +126,7 @@ export function CompanySideNav() {
           <div
             role="dialog"
             aria-label="Page sections"
-            className="relative w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl border border-[rgba(0,210,255,0.18)] bg-ink-950/95 backdrop-blur-xl p-5 sheet-up shadow-[0_-12px_40px_rgba(0,0,0,0.5)] max-h-[80vh] overflow-y-auto"
+            className="relative w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl border border-[rgb(var(--accent)_/_0.18)] bg-ink-950/95 backdrop-blur-xl p-5 sheet-up shadow-[0_-12px_40px_rgba(0,0,0,0.5)] max-h-[80vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-4">
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-chalk-300/60">On this page</p>

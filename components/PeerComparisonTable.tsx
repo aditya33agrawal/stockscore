@@ -27,7 +27,7 @@ function heatStyle(value: number | undefined | null, max: number, isGood = true)
   if (value == null || max === 0) return {};
   const pct = Math.min(Math.abs(value) / max, 1);
   if (!isGood) return { backgroundColor: `rgba(248, 113, 113, ${pct * 0.2})` };
-  return { backgroundColor: `rgba(0, 210, 255, ${pct * 0.14})` };
+  return { backgroundColor: `rgb(var(--accent) / ${pct * 0.14})` };
 }
 
 function Delta({ v }: { v: number | undefined | null }) {
@@ -61,8 +61,8 @@ export function PeerComparisonTable({ companies, currentSlug, sectorSlug }: Prop
       <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.03)]">
-              <th className="sticky left-0 z-10 bg-[#070C1A] px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35 whitespace-nowrap min-w-[160px] border-r border-[rgba(255,255,255,0.05)]">
+            <tr className="border-b border-[rgb(var(--chalk-100)_/_0.05)] bg-[rgb(var(--accent)_/_0.03)]">
+              <th className="sticky left-0 z-10 bg-[#070C1A] px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35 whitespace-nowrap min-w-[160px] border-r border-[rgb(var(--chalk-100)_/_0.05)]">
                 Company
               </th>
               <TH title="Fundamental score / 100">Score</TH>
@@ -78,19 +78,19 @@ export function PeerComparisonTable({ companies, currentSlug, sectorSlug }: Prop
               <TH title="5-year Profit CAGR">PAT 5Y</TH>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(255,255,255,0.03)]">
+          <tbody className="divide-y divide-[rgb(var(--chalk-100)_/_0.03)]">
             {sorted.map((co) => {
               const isCurrent = co.slug === currentSlug;
               return (
                 <tr
                   key={co.slug}
                   className={`
-                    hover:bg-[rgba(0,210,255,0.03)] transition-colors
+                    hover:bg-[rgb(var(--accent)_/_0.03)] transition-colors
                     ${isCurrent ? "border-l-2 border-l-accent bg-accent/[0.03]" : ""}
                   `}
                 >
                   {/* Company name */}
-                  <td className={`sticky left-0 z-10 px-4 py-3 border-r border-[rgba(255,255,255,0.04)] ${isCurrent ? "bg-ink-900" : "bg-ink-950"}`}>
+                  <td className={`sticky left-0 z-10 px-4 py-3 border-r border-[rgb(var(--chalk-100)_/_0.04)] ${isCurrent ? "bg-ink-900" : "bg-ink-950"}`}>
                     <Link href={`/sector/${sectorSlug}/${co.slug}`} className="group">
                       <p className={`font-semibold truncate max-w-[148px] transition-colors ${isCurrent ? "text-accent" : "text-chalk-50 group-hover:text-accent"}`}>
                         {co.name}
@@ -151,7 +151,7 @@ export function PeerComparisonTable({ companies, currentSlug, sectorSlug }: Prop
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-2.5 border-t border-[rgba(255,255,255,0.04)] flex flex-wrap gap-4 text-[10px] text-chalk-300/30 bg-[rgba(0,210,255,0.02)]">
+      <div className="px-4 py-2.5 border-t border-[rgb(var(--chalk-100)_/_0.04)] flex flex-wrap gap-4 text-[10px] text-chalk-300/30 bg-[rgb(var(--accent)_/_0.02)]">
         <span>Cyan cells = stronger than sector peers</span>
         <span>Red cells = higher debt</span>
         <span>Sorted by score ↓</span>

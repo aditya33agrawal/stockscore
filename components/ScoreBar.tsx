@@ -57,10 +57,10 @@ export function ScoreBarChart({ companies }: { companies: Company[] }) {
                   key={i}
                   fill={
                     d.score >= 70
-                      ? "#10B981"
+                      ? "#3F7A52"
                       : d.score >= 50
-                        ? "#F59E0B"
-                        : "#F87171"
+                        ? "#B8862B"
+                        : "#B0524E"
                   }
                 />
               ))}

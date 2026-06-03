@@ -25,7 +25,7 @@ export default function CompanyError({ error, reset }: { error: Error & { digest
         </button>
         <Link
           href="/sectors"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-5 py-2.5 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgba(255,255,255,0.18)] transition-all"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--chalk-100)_/_0.08)] px-5 py-2.5 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgb(var(--chalk-100)_/_0.18)] transition-all"
         >
           <ArrowLeft className="h-4 w-4" /> Back to sectors
         </Link>

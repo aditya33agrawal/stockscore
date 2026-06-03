@@ -12,7 +12,7 @@ export default function Icon() {
           width: 64,
           height: 64,
           borderRadius: 14,
-          backgroundColor: "#03060F",
+          backgroundColor: "#4A4A4A",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -27,7 +27,7 @@ export default function Icon() {
         >
           <polyline
             points="6,32 18,32 24,52 40,12 46,32 58,32"
-            stroke="#00D2FF"
+            stroke="#FFFFE3"
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"

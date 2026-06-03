@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { UserMenu } from "@/components/UserMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 const NAV_LINKS = [
   { href: "/sectors",          label: "Sectors" },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
   { href: "/about",            label: "About" },
+  { href: "/contact",          label: "Contact" },
 ];
 
 function WaveformIcon() {
@@ -36,8 +38,9 @@ function WaveformIcon() {
 }
 
 export function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen]           = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled]   = useState(false);
   const pathname = usePathname();
 
   // Close mobile menu on route change
@@ -64,8 +67,8 @@ export function Navbar() {
       className={clsx(
         "sticky top-0 z-40 transition-all duration-200",
         scrolled
-          ? "border-b border-[rgba(0,210,255,0.12)] bg-ink-950/90 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
-          : "border-b border-[rgba(0,210,255,0.07)] bg-ink-950/80 backdrop-blur-xl",
+          ? "border-b border-[rgb(var(--accent)_/_0.12)] bg-ink-950/90 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+          : "border-b border-[rgb(var(--accent)_/_0.07)] bg-ink-950/80 backdrop-blur-xl",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -106,26 +109,36 @@ export function Navbar() {
         </nav>
 
         {/* Desktop right CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/contact"
-            className="text-sm font-medium text-chalk-300 hover:text-chalk-50 transition-colors px-3 py-2"
+        <div className="hidden md:flex items-center gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300 hover:text-accent hover:border-accent/30 transition-colors"
           >
-            Contact
-          </Link>
+            <Search className="h-4 w-4" />
+          </button>
           <ThemeToggle />
           <UserMenu />
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-chalk-300 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
-          onClick={() => setOpen((o) => !o)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile: search + hamburger */}
+        <div className="md:hidden flex items-center gap-1">
+          <button
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-chalk-300 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+          <button
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-chalk-300 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile backdrop */}
@@ -139,7 +152,7 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       {open && (
-        <nav className="md:hidden relative z-40 border-t border-[rgba(0,210,255,0.07)] bg-ink-950 px-4 py-3 drawer-down">
+        <nav className="md:hidden relative z-40 border-t border-[rgb(var(--accent)_/_0.07)] bg-ink-950 px-4 py-3 drawer-down">
           <ul className="space-y-0.5">
             {[...NAV_LINKS, { href: "/contact", label: "Contact" }, { href: "/profile", label: "Profile" }, { href: "/bookmarks", label: "My Bookmarks" }].map((l) => {
               const active = pathname === l.href || pathname.startsWith(l.href + "/");
@@ -163,6 +176,7 @@ export function Navbar() {
           </ul>
         </nav>
       )}
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

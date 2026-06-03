@@ -7,7 +7,7 @@ export default function ProfileLoading() {
         <div className="skeleton h-4 w-72 rounded" />
       </div>
 
-      <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6 space-y-4">
+      <div className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-4">
           <div className="skeleton h-14 w-14 rounded-full" />
           <div className="space-y-2 flex-1">
@@ -17,7 +17,7 @@ export default function ProfileLoading() {
         </div>
       </div>
 
-      <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6 space-y-4">
+      <div className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6 space-y-4">
         <div className="skeleton h-5 w-44 rounded" />
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="space-y-2">

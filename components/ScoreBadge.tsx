@@ -59,7 +59,7 @@ export function ScoreBar({ score }: { score: number }) {
   const pct = Math.max(0, Math.min(100, score));
   const gradient =
     score >= 70
-      ? "#5B8DEF"
+      ? "#6D8196"
       : score >= 50
       ? "#C9962B"
       : "#D96A6A";

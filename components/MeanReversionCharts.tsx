@@ -58,8 +58,8 @@ export function SpikeRevertChart() {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#34d399" stopOpacity={0.5} />
-                <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                <stop offset="0%" stopColor="#3F7A52" stopOpacity={0.5} />
+                <stop offset="100%" stopColor="#3F7A52" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis dataKey="t" hide />
@@ -77,7 +77,7 @@ export function SpikeRevertChart() {
             <Area
               type="monotone"
               dataKey="v"
-              stroke="#34d399"
+              stroke="#3F7A52"
               strokeWidth={2}
               fill="url(#g1)"
               isAnimationActive={false}
@@ -177,7 +177,7 @@ export function LifeBellChart() {
 /* ---------- 3. Profession Longevity ---------- */
 const PROFESSIONS = [
   { name: "Carpentry", age: 7000, color: "#a78bfa" },
-  { name: "Farming", age: 12000, color: "#34d399" },
+  { name: "Farming", age: 12000, color: "#3F7A52" },
   { name: "Healing / Medicine", age: 5000, color: "#f472b6" },
   { name: "Finance / Lending", age: 5000, color: "#facc15" },
   { name: "Forging / Metalwork", age: 6000, color: "#fb923c" },
@@ -270,7 +270,7 @@ export function SpikeVsSlopeChart() {
             <Line
               type="monotone"
               dataKey="slope"
-              stroke="#34d399"
+              stroke="#3F7A52"
               strokeWidth={2}
               dot={false}
               name="Slow compound"
@@ -285,7 +285,7 @@ export function SpikeVsSlopeChart() {
           Sudden rise — gives it all back
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-[#34d399]" />
+          <span className="h-2 w-2 rounded-full bg-[#3F7A52]" />
           Slow compound — quietly overtakes
         </span>
       </div>

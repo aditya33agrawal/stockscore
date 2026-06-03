@@ -147,7 +147,7 @@ export function FeedbackForm() {
 
       {/* Error */}
       {status === "error" && (
-        <p className="rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400 ring-1 ring-red-500/20">
+        <p className="rounded-lg bg-bad/10 px-4 py-2.5 text-sm text-bad ring-1 ring-bad/20">
           {errorMsg}
         </p>
       )}

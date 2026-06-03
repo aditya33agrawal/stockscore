@@ -10,7 +10,7 @@ export default function BookmarksLoading() {
           <div className="skeleton h-5 w-40 rounded mb-4" />
           <div className="grid gap-3 sm:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-4 flex items-center justify-between">
+              <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-4 flex items-center justify-between">
                 <div className="space-y-2 flex-1">
                   <div className="skeleton h-4 w-36 rounded" />
                   <div className="skeleton h-3 w-24 rounded" />

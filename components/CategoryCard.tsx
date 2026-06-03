@@ -22,15 +22,15 @@ const CATEGORY_TOOLTIP_KEY: Record<string, keyof typeof TOOLTIPS> = {
   "Price & Technical": "category_technical",
 };
 
-// Category bars use classic green / amber / red — easier to read at a glance
+// Category bars use Ink Wash green / amber / red — easier to read at a glance
 function categoryBarColor(pct: number): string {
-  if (pct >= 70) return "#10B981";   // green
-  if (pct >= 40) return "#F59E0B";   // amber
-  return "#F87171";                  // red
+  if (pct >= 70) return "#3F7A52";   // good — green
+  if (pct >= 40) return "#B8862B";   // warn — amber
+  return "#B0524E";                  // bad — red
 }
 
 function categoryTextColor(pct: number): string {
-  if (pct >= 70) return "text-emerald-400";
+  if (pct >= 70) return "text-good";
   if (pct >= 40) return "text-warn";
   return "text-bad";
 }
@@ -90,13 +90,13 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
     <div
       className={clsx(
         "glass border-subtle rounded-2xl transition-all duration-200",
-        open && "border-[rgba(0,210,255,0.15)]",
+        open && "border-[rgb(var(--accent)_/_0.15)]",
       )}
     >
       {/* ── Collapsed header ─────────────────────────── */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-6 py-4 hover:bg-[rgba(0,210,255,0.03)] transition-colors text-left rounded-2xl"
+        className="w-full flex items-center justify-between gap-4 px-6 py-4 hover:bg-[rgb(var(--accent)_/_0.03)] transition-colors text-left rounded-2xl"
       >
         <div className="flex-1 min-w-0">
           {/* Name + score */}
@@ -152,12 +152,12 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
 
       {/* ── Expanded items ────────────────────────────── */}
       {open && (
-        <div className="border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.02)] px-6 py-2 rounded-b-2xl">
+        <div className="border-t border-[rgb(var(--chalk-100)_/_0.05)] bg-[rgb(var(--accent)_/_0.02)] px-6 py-2 rounded-b-2xl">
           <ul>
             {category.items.map((item, i) => (
               <li
                 key={i}
-                className="flex items-start justify-between gap-4 py-3 border-b border-[rgba(255,255,255,0.04)] last:border-0"
+                className="flex items-start justify-between gap-4 py-3 border-b border-[rgb(var(--chalk-100)_/_0.04)] last:border-0"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center">

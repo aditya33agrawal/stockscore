@@ -36,18 +36,18 @@ export interface MetricCardProps {
   };
 }
 
-const GRID   = { strokeDasharray: "3 3", stroke: "rgba(255,255,255,0.04)" };
-const AXIS_STYLE = { fill: "#7090B0", fontSize: 10 };
+const GRID   = { strokeDasharray: "3 3", stroke: "rgba(120,120,120,0.18)" };
+const AXIS_STYLE = { fill: "#84909C", fontSize: 10 };
 const TOOLTIP_STYLE = {
   contentStyle: {
-    background: "rgba(7,12,26,0.95)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "rgba(74,74,74,0.96)",
+    border: "1px solid rgb(var(--chalk-100)/0.08)",
     borderRadius: 12,
-    color: "#E8F4FF",
+    color: "#FFFFE3",
     fontSize: 11,
     backdropFilter: "blur(20px)",
   },
-  labelStyle: { color: "#7090B0" },
+  labelStyle: { color: "#84909C" },
 };
 
 function fmt(v: number, f?: string): string {
@@ -59,16 +59,16 @@ function fmt(v: number, f?: string): string {
 }
 
 const toneClass: Record<Tone, string> = {
-  excellent: "text-emerald-400",
-  good:      "text-accent",
+  excellent: "text-good",
+  good:      "text-good",
   neutral:   "text-chalk-300/70",
   warn:      "text-warn",
   bad:       "text-bad",
 };
 
 const badgeBg: Record<Tone, string> = {
-  excellent: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
-  good:      "border-accent/20 bg-accent/10 text-accent",
+  excellent: "border-good/30 bg-good/10 text-good",
+  good:      "border-good/20 bg-good/10 text-good",
   neutral:   "border-ink-700/60 bg-ink-800/40 text-chalk-300",
   warn:      "border-warn/20 bg-warn/10 text-warn",
   bad:       "border-bad/30 bg-bad/10 text-bad",
@@ -83,7 +83,7 @@ export function MetricCard({ title, headline, learnHref, badge, sentence, senten
   const hasData = spark && spark.rows.some((r) => r.value !== null);
 
   return (
-    <div className="glass border-subtle rounded-2xl p-5 flex flex-col gap-3 transition-all hover:border-[rgba(0,210,255,0.15)]">
+    <div className="glass border-subtle rounded-2xl p-5 flex flex-col gap-3 transition-all hover:border-[rgb(var(--accent)_/_0.15)]">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
@@ -118,7 +118,7 @@ export function MetricCard({ title, headline, learnHref, badge, sentence, senten
                   tickFormatter={(v) => fmt(v, spark.formatter)} />
                 <YAxis type="category" dataKey="label" tick={AXIS_STYLE} tickLine={false} axisLine={false} width={60} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={(v: number) => fmt(v, spark.formatter)} />
-                <Bar dataKey="value" name={spark.label ?? title} fill="#00D2FF" radius={[0, 3, 3, 0]} maxBarSize={18} />
+                <Bar dataKey="value" name={spark.label ?? title} fill="#6D8196" radius={[0, 3, 3, 0]} maxBarSize={18} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -132,7 +132,7 @@ export function MetricCard({ title, headline, learnHref, badge, sentence, senten
                   tickFormatter={(v) => fmt(v, spark.formatter)} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={(v: number) => fmt(v, spark.formatter)} />
                 <Line type="monotone" dataKey="value" name={spark.label ?? title}
-                  stroke="#00D2FF" strokeWidth={2} dot={false} connectNulls />
+                  stroke="#6D8196" strokeWidth={2} dot={false} connectNulls />
               </LineChart>
             </ResponsiveContainer>
           )}
@@ -146,7 +146,7 @@ export function MetricCard({ title, headline, learnHref, badge, sentence, senten
                   tickFormatter={(v) => fmt(v, spark.formatter)} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={(v: number) => fmt(v, spark.formatter)} />
                 <Bar dataKey="value" name={spark.label ?? title}
-                  fill="#00D2FF" radius={[2, 2, 0, 0]} maxBarSize={20} />
+                  fill="#6D8196" radius={[2, 2, 0, 0]} maxBarSize={20} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -159,8 +159,8 @@ export function MetricCard({ title, headline, learnHref, badge, sentence, senten
                 <YAxis tick={AXIS_STYLE} tickLine={false} axisLine={false} width={42}
                   tickFormatter={(v) => fmt(v, spark.formatter)} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={(v: number) => fmt(v, spark.formatter)} />
-                <Bar dataKey="v1" name={spark.label ?? "Sales"}      fill="#00D2FF" radius={[2, 2, 0, 0]} maxBarSize={14} />
-                <Bar dataKey="v2" name={spark.label2 ?? "Net Profit"} fill="rgba(255,255,255,0.25)" radius={[2, 2, 0, 0]} maxBarSize={14} />
+                <Bar dataKey="v1" name={spark.label ?? "Sales"}      fill="#6D8196" radius={[2, 2, 0, 0]} maxBarSize={14} />
+                <Bar dataKey="v2" name={spark.label2 ?? "Net Profit"} fill="#9A8C7C" radius={[2, 2, 0, 0]} maxBarSize={14} />
               </BarChart>
             </ResponsiveContainer>
           )}

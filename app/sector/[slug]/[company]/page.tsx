@@ -544,7 +544,7 @@ export default async function CompanyPage({
             href={`https://www.screener.in/company/${co.ticker}/consolidated/`}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-3 py-1.5 text-xs font-medium text-chalk-300/50 hover:border-[rgba(255,255,255,0.15)] hover:text-chalk-50 transition-all"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--chalk-100)_/_0.08)] px-3 py-1.5 text-xs font-medium text-chalk-300/50 hover:border-[rgb(var(--chalk-100)_/_0.15)] hover:text-chalk-50 transition-all"
           >
             View on Screener <ExternalLink className="h-3 w-3" />
           </a>
@@ -868,7 +868,7 @@ export default async function CompanyPage({
           <details className="group glass border-subtle rounded-2xl">
             <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
               <div>
-                <span className="text-sm font-semibold text-chalk-100">Factor Breakdown (v2)</span>
+                <span className="text-sm font-semibold text-chalk-100">Factor Breakdown</span>
                 <span className="ml-2 text-xs text-chalk-300/60">{co.factor_breakdown.length} factors · raw score {co.raw_total.toFixed(1)}/100</span>
               </div>
               <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />

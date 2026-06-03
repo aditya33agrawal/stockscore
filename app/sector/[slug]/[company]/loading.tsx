@@ -9,7 +9,7 @@ export default function CompanyLoading() {
       <div className="skeleton h-4 w-36 rounded mb-8" />
 
       {/* Company header card */}
-      <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6 sm:p-8 mb-8">
+      <div className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6 sm:p-8 mb-8">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="space-y-3 flex-1 min-w-0">
             <div className="skeleton h-2.5 w-48 rounded" />
@@ -44,7 +44,7 @@ export default function CompanyLoading() {
         </div>
         <div className="grid gap-3">
           {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl px-6 py-4">
+            <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl px-6 py-4">
               <div className="flex items-baseline justify-between mb-1.5">
                 <div className="skeleton h-4 w-36 rounded" />
                 <div className="skeleton h-3.5 w-14 rounded" />
@@ -59,8 +59,8 @@ export default function CompanyLoading() {
       {/* Strengths / Weaknesses */}
       <section className="mb-10 grid gap-4 md:grid-cols-2">
         {[
-          "border-emerald-500/15 bg-emerald-500/[0.03]",
-          "border-red-500/15 bg-red-500/[0.03]",
+          "border-good/15 bg-good/[0.03]",
+          "border-bad/15 bg-bad/[0.03]",
         ].map((cls, i) => (
           <div key={i} className={`border rounded-2xl p-5 space-y-3 ${cls}`}>
             <div className="skeleton h-5 w-32 rounded" />
@@ -79,7 +79,7 @@ export default function CompanyLoading() {
         <div className="skeleton h-2.5 w-40 rounded mb-4" />
         <div className="grid gap-4 md:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-5 space-y-3">
+            <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-5 space-y-3">
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
                   <div className="skeleton h-2.5 w-28 rounded" />
@@ -97,14 +97,14 @@ export default function CompanyLoading() {
       {/* Peer comparison */}
       <section className="mb-10">
         <div className="skeleton h-2.5 w-36 rounded mb-4" />
-        <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden">
-          <div className="flex items-center gap-4 px-4 py-3 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,210,255,0.02)]">
+        <div className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-4 px-4 py-3 border-b border-[rgb(var(--chalk-100)_/_0.05)] bg-[rgb(var(--accent)_/_0.02)]">
             {[160, 60, 60, 70, 50, 60, 60, 55, 50, 55, 50].map((w, i) => (
               <div key={i} className={`skeleton h-2.5 rounded`} style={{ width: `${w}px`, flexShrink: 0 }} />
             ))}
           </div>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-[rgba(255,255,255,0.03)]">
+            <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-[rgb(var(--chalk-100)_/_0.03)]">
               <div className="skeleton h-4 w-[160px] rounded" style={{ flexShrink: 0 }} />
               {[60, 60, 70, 50, 60, 60, 55, 50, 55, 50].map((w, j) => (
                 <div key={j} className="skeleton h-3 rounded" style={{ width: `${w}px`, flexShrink: 0 }} />
@@ -117,7 +117,7 @@ export default function CompanyLoading() {
       {/* Price chart */}
       <section className="mb-10">
         <div className="skeleton h-2.5 w-36 rounded mb-4" />
-        <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl h-80 skeleton" />
+        <div className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl h-80 skeleton" />
       </section>
 
       {/* Financial tables */}
@@ -125,7 +125,7 @@ export default function CompanyLoading() {
         <div className="skeleton h-2.5 w-36 rounded mb-4" />
         <div className="space-y-2">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl flex items-center justify-between px-5 py-4">
+            <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl flex items-center justify-between px-5 py-4">
               <div className="skeleton h-4 w-36 rounded" />
               <div className="skeleton h-4 w-4 rounded" />
             </div>

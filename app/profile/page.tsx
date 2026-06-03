@@ -65,7 +65,7 @@ export default async function ProfilePage() {
 
       <Link
         href="/bookmarks"
-        className="glass border-subtle rounded-2xl px-5 py-4 flex items-center justify-between hover:border-[rgba(0,210,255,0.2)] transition-all"
+        className="glass border-subtle rounded-2xl px-5 py-4 flex items-center justify-between hover:border-[rgb(var(--accent)_/_0.2)] transition-all"
       >
         <div className="flex items-center gap-3">
           <Bookmark className="h-5 w-5 text-accent" />

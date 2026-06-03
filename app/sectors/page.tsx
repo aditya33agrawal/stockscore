@@ -41,7 +41,7 @@ export default async function SectorsPage() {
           </h1>
           <Link
             href="/sectors/compare"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-2 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgba(255,255,255,0.15)] transition-all shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--chalk-100)_/_0.08)] px-4 py-2 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgb(var(--chalk-100)_/_0.15)] transition-all shrink-0"
           >
             <BarChart2 className="h-3.5 w-3.5" />
             Compare all

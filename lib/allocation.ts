@@ -33,14 +33,17 @@ export interface AllocationResult {
   slices: Slice[];
 }
 
+// Ink Wash categorical ramp — muted slate / violet / taupe / amber tones that
+// harmonize with the cream canvas. Deliberately avoids green/red (reserved for
+// value verdicts) so allocation segments are never mistaken for sentiment.
 const COLORS: Record<string, string> = {
-  stocks: "#34d399",
-  equity_mf: "#22d3ee",
-  us: "#60a5fa",
-  debt_mf: "#a78bfa",
-  bonds: "#f472b6",
-  gold: "#facc15",
-  real_estate: "#fb923c",
+  stocks: "#6D8196",      // slate (brand)
+  equity_mf: "#56687C",   // deep slate
+  us: "#8499AE",          // light slate
+  debt_mf: "#7C7196",     // muted violet
+  bonds: "#9A8C7C",       // warm taupe
+  gold: "#B8862B",        // amber
+  real_estate: "#A8755E", // terracotta
 };
 
 export function riskLabel(r: number): string {

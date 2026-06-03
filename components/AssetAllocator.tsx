@@ -213,8 +213,9 @@ export function AssetAllocator() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "#0b1117",
-                      border: "1px solid #1f2937",
+                      background: "rgb(var(--ink-800))",
+                      border: "1px solid rgb(var(--ink-700))",
+                      color: "rgb(var(--chalk-100))",
                       fontSize: 12,
                     }}
                     formatter={(v: number) => `${v}%`}
@@ -278,15 +279,15 @@ export function AssetAllocator() {
         :global(.select) {
           width: 100%;
           border-radius: 0.5rem;
-          border: 1px solid rgba(71, 85, 105, 0.4);
-          background: rgba(11, 17, 23, 0.6);
+          border: 1px solid rgb(var(--ink-700) / 0.6);
+          background: rgb(var(--ink-800) / 0.6);
           padding: 0.5rem 0.75rem;
-          color: #f1f5f9;
+          color: rgb(var(--chalk-50));
           font-size: 0.875rem;
           outline: none;
         }
         :global(.select:focus) {
-          border-color: rgba(16, 185, 129, 0.5);
+          border-color: rgb(var(--accent) / 0.6);
         }
       `}</style>
     </div>

@@ -4,75 +4,45 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
-/* ── Theme tokens — dark (default) ── */
+/* Ink Wash — Palette: Ink #4A4A4A · Mist #CBCBCB · Paper #FFFFE3 · Slate #6D8196 */
 :root {
-  color-scheme: dark;
-
-  /* Surface scale (darkest → mid) */
-  --ink-950: 6 9 18;
-  --ink-900: 12 18 31;
-  --ink-800: 18 27 44;
-  --ink-700: 28 41 64;
-  --ink-600: 42 58 86;
-  --ink-500: 60 78 108;
-
-  /* Text scale (brightest → muted) */
-  --chalk-50:  232 238 247;
-  --chalk-100: 215 224 236;
-  --chalk-200: 178 193 215;
-  --chalk-300: 122 140 168;
-
-  /* Brand — professional steel blue */
-  --accent:        91 141 239;
-  --accent-soft:   123 163 242;
-  --accent-deep:   58 107 200;
-
-  /* Status — muted */
-  --warn:     201 150 43;
-  --bad:      217 106 106;
-  --bad-deep: 178 70 70;
-
-  --panel-bg:      rgba(255, 255, 255, 0.025);
-  --panel-border:  rgba(255, 255, 255, 0.06);
-  --page-bg:       rgb(6 9 18);
-  --page-fg:       rgb(232 238 247);
-  --scrollbar-track: rgb(6 9 18);
-  --scrollbar-thumb: rgb(28 41 64);
-  --scrollbar-thumb-hover: rgb(42 58 86);
-}
-
-/* ── Theme tokens — light ── */
-:root.light, .light {
   color-scheme: light;
 
-  --ink-950: 255 255 255;
-  --ink-900: 248 250 252;
-  --ink-800: 241 245 249;
-  --ink-700: 226 232 240;
-  --ink-600: 203 213 225;
-  --ink-500: 148 163 184;
+  /* Surface scale: Paper → Mist (light → mid) */
+  --ink-950: 255 255 227;   /* Paper — page background        */
+  --ink-900: 250 250 224;   /* card / surface (slightly off)  */
+  --ink-800: 244 244 214;   /* raised surface                 */
+  --ink-700: 203 203 203;   /* Mist — borders                 */
+  --ink-600: 168 168 160;   /* stronger border / disabled     */
+  --ink-500: 122 128 130;   /* icon / muted chrome            */
 
-  --chalk-50:  15 23 42;
-  --chalk-100: 30 41 59;
-  --chalk-200: 71 85 105;
-  --chalk-300: 100 116 139;
+  /* Text scale: Ink → muted */
+  --chalk-50:  20 20 20;     /* near-black headings            */
+  --chalk-100: 47 47 47;     /* Ink — body text                */
+  --chalk-200: 74 74 74;     /* secondary text                 */
+  --chalk-300: 105 110 118;  /* muted / captions               */
 
-  --accent:        58 107 200;
-  --accent-soft:   91 141 239;
-  --accent-deep:   30 64 138;
+  /* Brand — Slate (chrome / interactive, NOT a verdict color) */
+  --accent:        109 129 150;   /* #6D8196 */
+  --accent-soft:   132 150 168;
+  --accent-deep:    86 104 124;
 
-  --warn:     180 130 35;
-  --bad:      195 80 80;
-  --bad-deep: 160 50 50;
+  /* Semantic verdict colors (tuned to sit on cream) */
+  --good:      63 122 82;    /* #3F7A52 — positive          */
+  --good-deep: 47 94 63;
+  --warn:      184 134 43;   /* #B8862B — caution           */
+  --bad:       176 82 78;    /* #B0524E — negative          */
+  --bad-deep:  138 63 60;
 
-  --panel-bg:      rgba(15, 23, 42, 0.02);
-  --panel-border:  rgba(15, 23, 42, 0.08);
-  --page-bg:       rgb(255 255 255);
-  --page-fg:       rgb(15 23 42);
-  --scrollbar-track: rgb(248 250 252);
-  --scrollbar-thumb: rgb(203 213 225);
-  --scrollbar-thumb-hover: rgb(148 163 184);
+  --panel-bg:      rgba(74, 74, 74, 0.04);
+  --panel-border:  rgba(74, 74, 74, 0.16);
+  --page-bg:       rgb(255 255 227);
+  --page-fg:       rgb(47 47 47);
+  --scrollbar-track: rgb(255 255 227);
+  --scrollbar-thumb: rgb(203 203 203);
+  --scrollbar-thumb-hover: rgb(168 168 160);
 }
+
 
 html {
   scroll-behavior: smooth;
@@ -140,19 +110,25 @@ html, body {
   border: 1px solid var(--panel-border);
 }
 
+/* Horizontal section divider */
+.section-rule {
+  border: none;
+  border-top: 1px solid rgba(74, 74, 74, 0.12);
+  margin: 0;
+}
+
 .glow-cyan {
   box-shadow: 0 0 0 1px rgb(var(--accent) / 0.15);
 }
 
-/* ── Hero grid (subtle, monotone) ── */
+/* ── Hero grid (dot matrix) ── */
 .hero-grid {
-  background-image:
-    linear-gradient(rgb(var(--chalk-300) / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--chalk-300) / 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+  background-image: radial-gradient(circle, rgb(var(--chalk-100) / 0.3) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 90% 85% at 50% 10%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 10%, black 20%, transparent 100%);
 }
+
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar          { height: 6px; width: 6px; }
@@ -325,7 +301,7 @@ html, body {
   color: rgb(var(--chalk-100));
   font-size: 12px;
   line-height: 1.45;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  box-shadow: 0 6px 20px rgba(74,74,74,0.18);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;

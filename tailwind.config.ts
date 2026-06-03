@@ -5,7 +5,6 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -35,6 +34,10 @@ const config: Config = {
         },
         warn: {
           DEFAULT: "rgb(var(--warn) / <alpha-value>)",
+        },
+        good: {
+          DEFAULT: "rgb(var(--good) / <alpha-value>)",
+          deep:    "rgb(var(--good-deep) / <alpha-value>)",
         },
         bad: {
           DEFAULT: "rgb(var(--bad) / <alpha-value>)",

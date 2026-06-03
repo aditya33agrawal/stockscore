@@ -56,13 +56,11 @@ export function SectorSearch({
     <div ref={ref} className="relative mx-auto max-w-xl">
       {/* Input */}
       <div
-        className={`
-          flex items-center gap-3 rounded-2xl border px-5 py-1 transition-all duration-200
-          ${focused
-            ? "border-accent/30 bg-ink-900 shadow-[0_0_40px_rgba(0,210,255,0.1)]"
-            : "border-[rgba(255,255,255,0.1)] bg-ink-900/80 hover:border-[rgba(255,255,255,0.15)]"
-          }
-        `}
+        className="flex items-center gap-3 rounded-2xl border px-5 py-1 transition-all duration-200"
+        style={{
+          background: "#fff",
+          borderColor: focused ? "rgb(var(--accent)/0.4)" : "rgb(var(--ink-700))",
+        }}
       >
         <Search className="h-4 w-4 shrink-0 text-accent/50" />
         <input
@@ -72,19 +70,23 @@ export function SectorSearch({
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => setFocused(true)}
           placeholder="Search sector or company…"
-          className="flex-1 bg-transparent py-3 text-[15px] text-chalk-50 placeholder:text-chalk-300/30 outline-none"
+          className="flex-1 bg-transparent py-3 text-[15px] text-chalk-100 placeholder:text-chalk-300/50 outline-none focus-visible:outline-none"
         />
-        <kbd className="hidden sm:inline-block shrink-0 num text-[11px] text-chalk-300/25 border border-[rgba(255,255,255,0.07)] rounded px-1.5 py-0.5">
-          ⌘K
-        </kbd>
       </div>
 
       {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin bg-ink-900 border border-ink-700/80 rounded-2xl shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
+        <div
+          className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin rounded-2xl border"
+          style={{
+            background: "#fff",
+            borderColor: "rgb(var(--ink-700))",
+            boxShadow: "0 20px 60px rgba(74,74,74,0.15)",
+          }}
+        >
           {results.length === 0 ? (
-            <div className="px-5 py-6 text-sm text-chalk-300/50">
-              No match for <span className="text-chalk-50">&ldquo;{q}&rdquo;</span>
+            <div className="px-5 py-6 text-sm text-chalk-300/60">
+              No match for <span className="text-chalk-100 font-medium">&ldquo;{q}&rdquo;</span>
             </div>
           ) : (
             <ul>
@@ -94,7 +96,8 @@ export function SectorSearch({
                     <Link
                       href={`/sector/${r.sector.slug}`}
                       onClick={() => { setFocused(false); setQ(""); }}
-                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.06] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0"
+                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.05] transition-colors border-b last:border-0"
+                      style={{ borderColor: "rgb(var(--ink-700)/0.5)" }}
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-accent shrink-0">
@@ -102,10 +105,10 @@ export function SectorSearch({
                         </span>
                         <div className="min-w-0">
                           <p className="font-semibold text-chalk-50 text-sm truncate">{r.sector.name}</p>
-                          <p className="text-[11px] text-chalk-300/40 mt-0.5">Sector · {r.sector.companies_count} companies</p>
+                          <p className="text-[11px] text-chalk-300/60 mt-0.5">Sector · {r.sector.companies_count} companies</p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-medium text-accent/50 shrink-0">Sector →</span>
+                      <span className="text-[10px] font-medium text-accent/60 shrink-0">Sector →</span>
                     </Link>
                   </li>
                 ) : (
@@ -113,15 +116,19 @@ export function SectorSearch({
                     <Link
                       href={`/sector/${r.company.sector_slug}/${r.company.slug}`}
                       onClick={() => { setFocused(false); setQ(""); }}
-                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.06] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0"
+                      className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-accent/[0.05] transition-colors border-b last:border-0"
+                      style={{ borderColor: "rgb(var(--ink-700)/0.5)" }}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-ink-700/60 text-chalk-300/50 shrink-0">
+                        <span
+                          className="flex h-7 w-7 items-center justify-center rounded-lg shrink-0"
+                          style={{ background: "rgb(var(--ink-800))", color: "rgb(var(--chalk-300)/0.7)" }}
+                        >
                           <Building2 className="h-3.5 w-3.5" />
                         </span>
                         <div className="min-w-0">
                           <p className="font-semibold text-chalk-50 text-sm truncate">{r.company.name}</p>
-                          <p className="text-[11px] text-chalk-300/40 mt-0.5 num">{r.company.ticker} · {r.company.sector_name}</p>
+                          <p className="text-[11px] text-chalk-300/60 mt-0.5 num">{r.company.ticker} · {r.company.sector_name}</p>
                         </div>
                       </div>
                       <span className="num text-sm font-bold text-accent shrink-0">

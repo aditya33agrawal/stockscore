@@ -21,7 +21,7 @@ interface Props {
   title: string;
 }
 
-const COLORS = ["#10B981", "#3B82F6", "#F59E0B", "#A855F7", "#F87171"];
+const COLORS = ["#3F7A52", "#6D8196", "#B8862B", "#9C6FD4", "#B0524E"];
 const GRID = { strokeDasharray: "3 3", stroke: "#1A2233" };
 const AXIS_STYLE = { fill: "#9FB0C8", fontSize: 11 };
 const TOOLTIP_STYLE = {
@@ -203,9 +203,9 @@ export function FinancialTableChart({ csv, title }: Props) {
                 type="monotone"
                 dataKey={spec.secondary}
                 name={spec.secondary}
-                stroke="#F59E0B"
+                stroke="#B8862B"
                 strokeWidth={2}
-                dot={{ r: 3, fill: "#F59E0B" }}
+                dot={{ r: 3, fill: "#B8862B" }}
                 connectNulls
               />
             )}
@@ -254,7 +254,7 @@ export function FinancialTableChart({ csv, title }: Props) {
                 type="monotone"
                 dataKey={spec.secondary}
                 name={spec.secondary}
-                stroke="#F59E0B"
+                stroke="#B8862B"
                 strokeWidth={2}
                 strokeDasharray="4 2"
                 dot={false}

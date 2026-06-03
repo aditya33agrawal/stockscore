@@ -14,12 +14,12 @@ import type { Company } from "@/lib/types";
 
 // Obsidian palette — cyan primary, violet secondary, then complementary tones
 const PALETTE = [
-  "#00D2FF",  // cyan
+  "#6D8196",  // cyan
   "#7C3AED",  // violet
-  "#10B981",  // emerald
-  "#F59E0B",  // amber
+  "#3F7A52",  // emerald
+  "#B8862B",  // amber
   "#F472B6",  // pink
-  "#38E8FF",  // cyan-soft
+  "#8499AE",  // cyan-soft
   "#9B6BF5",  // violet-soft
   "#34D399",  // green-soft
 ];
@@ -69,13 +69,13 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
               onClick={() => setEnabled((e) => ({ ...e, [co.slug]: !e[co.slug] }))}
               className="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all"
               style={{
-                borderColor: isOn ? `${color}40` : "rgba(255,255,255,0.06)",
-                background:  isOn ? `${color}12` : "rgba(255,255,255,0.02)",
-                color:       isOn ? color          : "rgba(255,255,255,0.3)",
+                borderColor: isOn ? `${color}40` : "rgb(var(--chalk-100)/0.06)",
+                background:  isOn ? `${color}12` : "rgb(var(--chalk-100)/0.02)",
+                color:       isOn ? color          : "rgb(var(--chalk-100)/0.3)",
                 opacity:     isOn ? 1               : 0.6,
               }}
             >
-              <span className="h-2 w-2 rounded-full shrink-0" style={{ background: isOn ? color : "rgba(255,255,255,0.2)" }} />
+              <span className="h-2 w-2 rounded-full shrink-0" style={{ background: isOn ? color : "rgb(var(--chalk-100)/0.2)" }} />
               {co.ticker}
             </button>
           );
@@ -86,10 +86,10 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
       <div className="h-[420px] w-full overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data} outerRadius="68%" margin={{ top: 16, right: 32, bottom: 16, left: 32 }}>
-            <PolarGrid stroke="rgba(255,255,255,0.06)" />
+            <PolarGrid stroke="rgba(120,120,120,0.2)" />
             <PolarAngleAxis
               dataKey="category"
-              tick={{ fill: "#7090B0", fontSize: 10 }}
+              tick={{ fill: "#84909C", fontSize: 10 }}
             />
             <PolarRadiusAxis
               angle={90}
@@ -112,13 +112,13 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
             )}
             <Tooltip
               contentStyle={{
-                background: "rgba(7,12,26,0.95)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(74,74,74,0.96)",
+                border: "1px solid rgb(var(--chalk-100)/0.08)",
                 borderRadius: 12,
                 fontSize: 12,
                 backdropFilter: "blur(20px)",
               }}
-              labelStyle={{ color: "#E8F4FF", fontWeight: 600, marginBottom: 4 }}
+              labelStyle={{ color: "#FFFFE3", fontWeight: 600, marginBottom: 4 }}
               itemStyle={{ color: "#B8D0EC" }}
             />
           </RadarChart>

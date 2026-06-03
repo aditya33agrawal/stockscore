@@ -23,14 +23,15 @@ export default function BlogPost() {
         <ArrowLeft className="h-4 w-4" /> Back
       </Link>
 
-      <header className="mb-10">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+      <header className="mb-12">
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-4">
           BLOG · Aditya Agrawal
         </p>
-        <h1 className="mt-2 text-4xl md:text-5xl font-bold tracking-tight text-chalk-50">
-          The Mean Reversion of Everything
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] text-chalk-50">
+          The Mean Reversion<br className="hidden sm:block" /> of Everything
         </h1>
-        <p className="mt-4 text-chalk-300 text-lg leading-relaxed serif">
+        <div className="mt-6 w-16 h-0.5 bg-accent/40 rounded-full" />
+        <p className="mt-6 text-chalk-300 text-xl leading-relaxed serif">
           What a stock chart taught me about life, careers, and why carpenters
           will outlast software engineers.
         </p>

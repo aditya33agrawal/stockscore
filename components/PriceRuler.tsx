@@ -81,7 +81,7 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
 
       {/* Track */}
       <div className="relative mx-2">
-        <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+        <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "rgb(var(--chalk-100)/0.05)" }}>
           {/* Red zone: below lower DMA */}
           <div
             className="absolute top-0 left-0 h-full"
@@ -101,7 +101,7 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
           {/* Cyan zone: above upper DMA */}
           <div
             className="absolute top-0 right-0 h-full"
-            style={{ left: `${rightZoneStart}%`, background: "rgba(0,210,255,0.3)" }}
+            style={{ left: `${rightZoneStart}%`, background: "rgb(var(--accent)/0.3)" }}
           />
         </div>
 
@@ -110,8 +110,8 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
           className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-ink-950 z-10"
           style={{
             left: `${cmpPos}%`,
-            backgroundColor: "#00D2FF",
-            boxShadow: "0 0 12px rgba(0,210,255,0.6)",
+            backgroundColor: "#6D8196",
+            boxShadow: "0 0 12px rgb(var(--accent)/0.6)",
           }}
         />
       </div>
@@ -121,9 +121,9 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
         {(() => {
           const markers = [
             low52w  != null ? { pos: toPos(low52w,  min, max), label: "52wL", value: fmtPrice(low52w),  color: "#4A6080" } : null,
-            dma200  != null && d200Pos != null ? { pos: d200Pos, label: "200D", value: fmtPrice(dma200), color: "#F87171" } : null,
-            dma50   != null && d50Pos  != null ? { pos: d50Pos,  label: "50D",  value: fmtPrice(dma50),  color: "#F59E0B" } : null,
-            { pos: cmpPos, label: "CMP", value: fmtPrice(cmp), color: "#00D2FF", isCmp: true },
+            dma200  != null && d200Pos != null ? { pos: d200Pos, label: "200D", value: fmtPrice(dma200), color: "#B0524E" } : null,
+            dma50   != null && d50Pos  != null ? { pos: d50Pos,  label: "50D",  value: fmtPrice(dma50),  color: "#B8862B" } : null,
+            { pos: cmpPos, label: "CMP", value: fmtPrice(cmp), color: "#6D8196", isCmp: true },
             high52w != null ? { pos: toPos(high52w, min, max), label: "52wH", value: fmtPrice(high52w), color: "#4A6080" } : null,
           ].filter((m): m is NonNullable<typeof m> => m !== null);
 
@@ -161,7 +161,7 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
       </div>
 
       {/* Quick stats */}
-      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-chalk-300/40 border-t border-[rgba(255,255,255,0.05)] pt-3 num">
+      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-chalk-300/40 border-t border-[rgb(var(--chalk-100)_/_0.05)] pt-3 num">
         {dma50 != null && (
           <span>
             vs 50D:{" "}

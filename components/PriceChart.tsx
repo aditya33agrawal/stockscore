@@ -34,10 +34,25 @@ function sma(candles: Candle[], period: number): IndicatorPoint[] {
   return out;
 }
 
-const PRICE_COLOR = "#00D2FF";
-const SMA50_COLOR = "#38E8FF";
-const SMA100_COLOR = "#7C3AED";
-const SMA200_COLOR = "#F59E0B";
+// Ink Wash overlay colors — chosen to read on both Paper (#FFFFE3) and
+// Ink-Night (#1E1F21). Slate is the brand line; SMAs use distinct hues that
+// are deliberately NOT green/red (those are reserved for value verdicts).
+const PRICE_COLOR = "#6D8196";  // slate — brand
+const SMA50_COLOR = "#B8862B";  // amber
+const SMA100_COLOR = "#7C3AED"; // violet
+const SMA200_COLOR = "#9A8C7C"; // warm taupe (reads on paper + ink-night)
+
+// Read a `--token` (space-separated RGB triple) from :root → legacy "rgba(r, g, b, a)".
+// Falls back to a neutral gray when called before mount / SSR.
+// Note: lightweight-charts cannot parse CSS Color 4 "rgb(r g b / a)" syntax.
+function cssRgb(token: string, alpha = 1): string {
+  if (typeof document === "undefined") return `rgba(120,120,120,${alpha})`;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+  if (!v) return `rgba(120,120,120,${alpha})`;
+  const parts = v.split(/\s+/);
+  if (parts.length === 3) return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+  return `rgba(120,120,120,${alpha})`;
+}
 
 function fmt(n: number | undefined): string {
   if (n === undefined || !Number.isFinite(n)) return "—";
@@ -104,20 +119,20 @@ export function PriceChart({ symbol }: { symbol: string }) {
       priceChart = createChart(priceRef.current!, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
-          textColor: "#7090B0",
+          textColor: cssRgb("--chalk-300"),
           fontFamily: "ui-sans-serif, system-ui",
           attributionLogo: false,
         },
         grid: {
-          vertLines: { color: "rgba(255,255,255,0.04)" },
-          horzLines: { color: "rgba(255,255,255,0.04)" },
+          vertLines: { color: cssRgb("--chalk-300", 0.1) },
+          horzLines: { color: cssRgb("--chalk-300", 0.1) },
         },
-        rightPriceScale: { borderColor: "rgba(255,255,255,0.08)" },
-        timeScale: { borderColor: "rgba(255,255,255,0.08)", timeVisible: false },
+        rightPriceScale: { borderColor: cssRgb("--ink-700") },
+        timeScale: { borderColor: cssRgb("--ink-700"), timeVisible: false },
         crosshair: {
           mode: CrosshairMode.Magnet,
-          vertLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#0C1426", style: LineStyle.Dashed },
-          horzLine: { color: "rgba(255,255,255,0.15)", labelBackgroundColor: "#0C1426", style: LineStyle.Dashed },
+          vertLine: { color: cssRgb("--chalk-300", 0.4), labelBackgroundColor: cssRgb("--ink-800"), style: LineStyle.Dashed },
+          horzLine: { color: cssRgb("--chalk-300", 0.4), labelBackgroundColor: cssRgb("--ink-800"), style: LineStyle.Dashed },
         },
         height: 380,
         width: priceRef.current!.clientWidth,
@@ -128,8 +143,8 @@ export function PriceChart({ symbol }: { symbol: string }) {
         addAreaSeries: (opts: object) => { setData: (d: object[]) => void };
       }).addAreaSeries({
         lineColor: PRICE_COLOR,
-        topColor: "rgba(59,130,246,0.45)",
-        bottomColor: "rgba(59,130,246,0.02)",
+        topColor: "rgba(109,129,150,0.40)",
+        bottomColor: "rgba(109,129,150,0.02)",
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,

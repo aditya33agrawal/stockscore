@@ -35,14 +35,14 @@ function ScoreDeltaBadge({ delta }: { delta: number | null }) {
   }
   if (delta > 0) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-400">
+      <span className="inline-flex items-center gap-1 rounded-lg border border-good/25 bg-good/10 px-2 py-0.5 text-[11px] font-semibold text-good">
         <TrendingUp className="h-3 w-3" />
         +{delta} pts
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-lg border border-red-500/25 bg-red-500/10 px-2 py-0.5 text-[11px] font-semibold text-red-400">
+    <span className="inline-flex items-center gap-1 rounded-lg border border-bad/25 bg-bad/10 px-2 py-0.5 text-[11px] font-semibold text-bad">
       <TrendingDown className="h-3 w-3" />
       {delta} pts
     </span>
@@ -120,16 +120,16 @@ function MetricRow({
       <ArrowRight className="h-3 w-3 shrink-0 text-chalk-300/25" />
       <span className={clsx(
         "num font-semibold",
-        sentiment === "good"    ? "text-emerald-400" :
-        sentiment === "bad"     ? "text-red-400"     :
+        sentiment === "good"    ? "text-good" :
+        sentiment === "bad"     ? "text-bad"     :
                                   "text-chalk-50"
       )}>
         {fmt(after, unit)}
       </span>
       <span className={clsx(
         "ml-auto num text-[11px]",
-        sentiment === "good" ? "text-emerald-400/70" :
-        sentiment === "bad"  ? "text-red-400/70"     :
+        sentiment === "good" ? "text-good/70" :
+        sentiment === "bad"  ? "text-bad/70"     :
                                "text-chalk-300/40"
       )}>
         {delta !== null && Math.abs(delta) >= 0.01
@@ -163,8 +163,8 @@ function CmpRow({ before, after, delta, pctDelta }: {
       {pctDelta !== null && (
         <span className={clsx(
           "ml-auto num text-[11px] font-semibold",
-          isPositive ? "text-emerald-400/80" :
-          isNegative ? "text-red-400/80"     :
+          isPositive ? "text-good/80" :
+          isNegative ? "text-bad/80"     :
                        "text-chalk-300/40"
         )}>
           {pctDelta > 0 ? "+" : ""}{pctDelta}%
@@ -202,7 +202,7 @@ export function BookmarkCard({
 
   return (
     <li>
-      <div className="glass border-subtle rounded-2xl overflow-hidden transition-all hover:border-[rgba(0,210,255,0.15)]">
+      <div className="glass border-subtle rounded-2xl overflow-hidden transition-all hover:border-[rgb(var(--accent)_/_0.15)]">
         {/* ── Top row: name + badges ─────────────────────────────────────── */}
         <Link
           href={`/sector/${sectorSlug}/${companySlug}`}
@@ -274,7 +274,7 @@ export function BookmarkCard({
 
         {/* ── Expandable details section ───────────────────────────────────── */}
         {hasDetails && expanded && (
-          <div className="px-5 pb-4 border-t border-[rgba(255,255,255,0.05)]">
+          <div className="px-5 pb-4 border-t border-[rgb(var(--chalk-100)_/_0.05)]">
             <div className="pt-3 space-y-0">
               {/* CMP */}
               {(diff!.cmpBefore !== null || diff!.cmpAfter !== null) && (
@@ -301,7 +301,7 @@ export function BookmarkCard({
 
               {/* Category deltas — only show changed ones */}
               {diff!.categoryDeltas.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.05)]">
+                <div className="mt-3 pt-3 border-t border-[rgb(var(--chalk-100)_/_0.05)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35 mb-2">
                     Score breakdown changes
                   </p>
@@ -311,8 +311,8 @@ export function BookmarkCard({
                         <span className="text-chalk-300/50 truncate">{c.name}</span>
                         <span className={clsx(
                           "num font-semibold ml-2",
-                          c.delta > 0 ? "text-emerald-400" :
-                          c.delta < 0 ? "text-red-400"     :
+                          c.delta > 0 ? "text-good" :
+                          c.delta < 0 ? "text-bad"     :
                                         "text-chalk-300/50"
                         )}>
                           {c.delta > 0 ? "+" : ""}{c.delta}

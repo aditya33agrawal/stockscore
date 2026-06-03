@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="absolute inset-0 hero-grid pointer-events-none" />
       <div
         className="absolute top-[-160px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgb(var(--accent)/0.1) 0%, transparent 70%)" }}
       />
 
       <div className="relative mx-auto max-w-xl px-6 py-24 text-center">
@@ -33,7 +33,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/sectors"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] px-5 py-2.5 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgba(255,255,255,0.18)] transition-all"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--chalk-100)_/_0.08)] px-5 py-2.5 text-sm font-medium text-chalk-300 hover:text-chalk-50 hover:border-[rgb(var(--chalk-100)_/_0.18)] transition-all"
           >
             <Compass className="h-4 w-4" /> Browse sectors <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -48,7 +48,7 @@ export default function NotFound() {
             <Link
               key={c.href}
               href={c.href}
-              className="glass border-subtle rounded-2xl p-4 hover:border-[rgba(0,210,255,0.2)] hover:-translate-y-0.5 transition-all"
+              className="glass border-subtle rounded-2xl p-4 hover:border-[rgb(var(--accent)_/_0.2)] hover:-translate-y-0.5 transition-all"
             >
               <p className="text-sm font-semibold text-chalk-50 mb-1">{c.label}</p>
               <p className="text-xs text-chalk-300/60 leading-relaxed">{c.desc}</p>

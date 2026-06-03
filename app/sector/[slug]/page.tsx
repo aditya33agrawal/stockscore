@@ -76,7 +76,7 @@ export default async function SectorPage({ params }: { params: { slug: string } 
             ["Median D/E",        stats.median_de?.toFixed(2) ?? "—"],
             ["Median Div Yield",  stats.median_dividend_yield != null ? `${stats.median_dividend_yield.toFixed(2)}%` : "—"],
           ].map(([label, value]) => (
-            <div key={label} className="glass border-subtle rounded-2xl p-4 hover:border-[rgba(0,210,255,0.15)] transition-all">
+            <div key={label} className="glass border-subtle rounded-2xl p-4 hover:border-[rgb(var(--accent)_/_0.15)] transition-all">
               <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-chalk-300/55 mb-1.5">{label}</p>
               <p className="num text-xl font-bold text-chalk-50">{value}</p>
             </div>

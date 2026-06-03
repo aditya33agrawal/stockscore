@@ -12,7 +12,7 @@ export default function AppleIcon() {
           width: 180,
           height: 180,
           borderRadius: 36,
-          backgroundColor: "#03060F",
+          backgroundColor: "#4A4A4A",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -27,7 +27,7 @@ export default function AppleIcon() {
         >
           <polyline
             points="20,90 52,90 68,146 112,34 128,90 160,90"
-            stroke="#00D2FF"
+            stroke="#FFFFE3"
             strokeWidth="13"
             strokeLinecap="round"
             strokeLinejoin="round"

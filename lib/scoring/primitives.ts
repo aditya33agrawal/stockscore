@@ -29,7 +29,13 @@ export function linDown(x: number, lo: number, hi: number): number {
  * Score = 0 outside [a, d], ramps to 1 on [a,b), holds 1 on [b,c],
  * ramps back to 0 on (c,d].
  */
-export function band(x: number, a: number, b: number, c: number, d: number): number {
+export function band(
+  x: number,
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+): number {
   if (x < a || x > d) return 0;
   if (x >= b && x <= c) return 1;
   if (x < b && b > a) return (x - a) / (b - a);

@@ -99,9 +99,9 @@ export function UserMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 mt-2 w-64 rounded-2xl border border-[rgba(0,210,255,0.12)] bg-ink-950/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden z-50"
+          className="absolute right-0 mt-2 w-64 rounded-2xl border border-[rgb(var(--accent)_/_0.12)] bg-ink-950/95 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden z-50"
         >
-          <div className="px-4 py-3 border-b border-[rgba(0,210,255,0.07)]">
+          <div className="px-4 py-3 border-b border-[rgb(var(--accent)_/_0.07)]">
             <p className="text-sm font-semibold text-chalk-50 truncate">{displayName}</p>
             <p className="text-xs text-chalk-300/60 truncate mt-0.5">{user.email}</p>
           </div>

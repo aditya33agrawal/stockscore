@@ -14,7 +14,7 @@ export default function HomeLoading() {
           <div className="skeleton h-10 w-1/2 rounded-xl mx-auto mb-10" />
           <div className="skeleton h-14 max-w-xl rounded-2xl mx-auto" />
           {/* Stats strip */}
-          <div className="mt-10 inline-flex items-center gap-12 border border-[rgba(255,255,255,0.06)] rounded-2xl px-12 py-5">
+          <div className="mt-10 inline-flex items-center gap-12 border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl px-12 py-5">
             {[80, 80, 100].map((w, i) => (
               <div key={i} className="text-center">
                 <div className={`skeleton h-8 w-${w === 80 ? '10' : '14'} rounded-lg mx-auto mb-2`} />
@@ -31,7 +31,7 @@ export default function HomeLoading() {
         <div className="skeleton h-8 w-64 rounded-lg mb-10" />
         <div className="grid gap-5 sm:grid-cols-3">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6">
+            <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6">
               <div className="skeleton h-10 w-10 rounded-xl mb-4" />
               <div className="skeleton h-5 w-28 rounded mb-3" />
               <div className="space-y-2">
@@ -52,7 +52,7 @@ export default function HomeLoading() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="border border-[rgba(255,255,255,0.06)] rounded-2xl p-6 space-y-4">
+            <div key={i} className="border border-[rgb(var(--chalk-100)_/_0.06)] rounded-2xl p-6 space-y-4">
               <div className="flex items-start justify-between">
                 <div className="space-y-2 flex-1">
                   <div className="skeleton h-2.5 w-20 rounded" />
@@ -65,7 +65,7 @@ export default function HomeLoading() {
                 <div className="skeleton h-3 w-full rounded" />
                 <div className="skeleton h-3 w-4/5 rounded" />
               </div>
-              <div className="pt-2 border-t border-[rgba(255,255,255,0.04)] flex justify-between">
+              <div className="pt-2 border-t border-[rgb(var(--chalk-100)_/_0.04)] flex justify-between">
                 <div className="skeleton h-3 w-14 rounded" />
                 <div className="skeleton h-3 w-20 rounded" />
               </div>

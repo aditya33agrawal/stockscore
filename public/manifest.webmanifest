@@ -4,8 +4,8 @@
   "description": "Transparent fundamental analysis of Indian equities, scored sector by sector.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#03060F",
-  "theme_color": "#03060F",
+  "background_color": "#FFFFE3",
+  "theme_color": "#FFFFE3",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
