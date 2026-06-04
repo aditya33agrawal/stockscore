@@ -1,0 +1,82 @@
+◇ injected env (8) from .env.local // tip: ⌘ enable debugging { debug: true }
+Resolving 538 unique symbols against screener.in …
+Logging in to screener.in (3 to resolve) …
+  [1/3] HBLPOWER         -> HBLENGINE
+  [2/3] BLACKBOX         -> BBOX
+  [3/3] TBOTECH          -> TBOTEK
+
+──────────── STANDARDIZE REPORT ────────────
+Sectors: 47 -> 46
+Symbols rewritten to canonical: 62
+Cross-sector dups auto-resolved: 34
+Unresolved symbols (dropped):    0
+Explicit drops:                  38
+UNDECIDED cross-sector dups:     0
+
+Rewrites:
+  CASTROL -> CASTROLIND
+  CPCL -> CHENNPETRO
+  CANARABANK -> CANBK
+  LTIM -> MINDTREE
+  HEXAWARE -> HEXT
+  ZENSAR -> ZENSARTECH
+  NIIT -> NIITLTD
+  JB -> JBCHEPHARM
+  CEAT -> CEATLTD
+  FORCE -> FORCEMOT
+  WEBSOL -> WEBELSOLAR
+  ORIENTGREEN -> GREENPOWER
+  ORIENT -> ORIENTELEC
+  SIGNATUREGLOBAL -> SIGNATURE
+  ARVINDSMRT -> ARVSMART
+  MAXLIFE -> MFSL
+  ANANDRATH -> ANANDRATHI
+  L&TFH -> LTF
+  ARMAN -> ARMANFIN
+  CLEANSCI -> CLEAN
+  INSECTICIDES -> INSECTICID
+  BAYER -> BAYERCROP
+  VARDHMAN -> VTL
+  NAHARSPG -> NAHARSPING
+  ALOKIND -> ALOKINDS
+  SIYARAM -> SIYSIL
+  TEXMACO -> TEXRAIL
+  HBLPOWER -> HBLENGINE
+  MTAR -> MTARTECH
+  DATAPATTERNS -> DATAPATTNS
+  SICAL -> SICALLOG
+  TIPSINDLTD -> TIPSMUSIC
+  BATA -> BATAINDIA
+  ZOMATO -> ETERNAL
+  INFOEDGE -> NAUKRI
+  CAREERP -> CPEDU
+  ASTER -> ASTERDM
+  NARAYANA -> NH
+  BARBEQUE -> UFBL
+  BURGERKING -> RBA
+  BLACKBOX -> BBOX
+  SPEL -> SPICELEC
+  ANTONY -> AWHCL
+  TBOTECH -> TBOTEK
+  SINCLAIRS -> SINCLAIR
+  KAMAT -> KAMATHOTEL
+  DILIPBUILDCON -> DBL
+  AHLUWALIA -> AHLUCONT
+  PSP -> PSPPROJECT
+  FINOLEX -> FINCABLES
+  STERLITE -> STLTECH
+  RENAISSANCE -> RGL
+  ANDRAPAPER -> ANDHRAPAP
+  ORIENTPAPER -> ORIENTPPR
+  MIRCELECTRONICS -> MIRCELECTR
+  DWARIKESH -> DWARKESH
+  UGAR -> UGARSUGAR
+  NECTAR -> NECLIFE
+  POWERFIN -> PFC
+  TILAKNAGAR -> TI
+  SOM -> SDBL
+  JAGATJIT -> JAGAJITIND
+
+Report: /Users/adityaagrawal/Desktop/stockscore/logs/config-standardize-report.json
+
+✅ Dry run. Review /Users/adityaagrawal/Desktop/stockscore/sectors_config.proposed.json, then re-run with --write.

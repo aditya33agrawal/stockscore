@@ -1,0 +1,190 @@
+{
+  "generated_at": "2026-06-04T11:42:50.333Z",
+  "total_companies": 493,
+  "defaulter_count": 22,
+  "defaulters": [
+    {
+      "sector": "Asset Management",
+      "company": "ISEC",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Asset Management",
+      "company": "NAM-INDIA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "BAJAJ-AUTO",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Aviation",
+      "company": "INDIGO",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "CUB",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "PNB",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Goods",
+      "company": "ABB",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Goods",
+      "company": "LT",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "CLEAN",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Defence",
+      "company": "BEL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Defence",
+      "company": "HAL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Defence",
+      "company": "IDEAFORGE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Healthcare & Hospitals",
+      "company": "NH",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Jewellery & Luxury",
+      "company": "TITAN",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Logistics",
+      "company": "CONCOR",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Logistics",
+      "company": "TCI",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Marine & Fisheries",
+      "company": "ZEAL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "LTF",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Paper & Packaging",
+      "company": "AGI",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Spirits & Beverages",
+      "company": "TI",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Telecom",
+      "company": "IDEA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Textiles & Apparel",
+      "company": "RAYMOND",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    }
+  ]
+}

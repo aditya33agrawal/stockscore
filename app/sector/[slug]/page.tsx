@@ -82,13 +82,6 @@ export default async function SectorPage({ params }: { params: { slug: string } 
             </div>
           ))}
         </div>
-        {sector.analyst_note && (
-          <div className="mt-4 glass border-subtle rounded-xl px-5 py-4 border-l-2 border-l-accent/40">
-            <p className="text-sm text-chalk-300/60 italic">
-              &ldquo;{sector.analyst_note}&rdquo;{" "}
-              </p>
-          </div>
-        )}
       </section>
 
       {/* Leaderboard */}

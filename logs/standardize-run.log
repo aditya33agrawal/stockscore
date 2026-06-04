@@ -1,0 +1,671 @@
+npm WARN exec The following package was not found and will be installed: tsx
+◇ injected env (7) from .env.local // tip: ⌁ auth for agents [www.vestauth.com]
+Resolving 538 unique symbols against screener.in …
+Logging in to screener.in (538 to resolve) …
+  [1/538] RELIANCE         ok
+  [2/538] ONGC             ok
+  [3/538] BPCL             ok
+  [4/538] IOC              ok
+  [5/538] HINDPETRO        ok
+  [6/538] OIL              ok
+  [7/538] GAIL             ok
+  [8/538] PETRONET         ok
+  [9/538] MGL              ok
+  [10/538] IGL              ok
+  [11/538] GUJGASLTD        ok
+  [12/538] CASTROL          -> CASTROLIND
+  [13/538] MRPL             ok
+  [14/538] CPCL             -> CHENNPETRO
+  [15/538] CHENNPETRO       ok
+  [16/538] HDFCBANK         ok
+  [17/538] ICICIBANK        ok
+  [18/538] SBIN             ok
+  [19/538] KOTAKBANK        ok
+  [20/538] AXISBANK         ok
+  [21/538] INDUSINDBK       ok
+  [22/538] BANKBARODA       ok
+  [23/538] PNB              ok
+  [24/538] CANARABANK       UNRESOLVED
+  [25/538] UNIONBANK        ok
+  [26/538] IDFCFIRSTB       ok
+  [27/538] FEDERALBNK       ok
+  [28/538] BANDHANBNK       ok
+  [29/538] AUBANK           ok
+  [30/538] RBLBANK          ok
+  [31/538] YESBANK          ok
+  [32/538] KARURVYSYA       ok
+  [33/538] SOUTHBANK        ok
+  [34/538] CUB              ok
+  [35/538] DCBBANK          ok
+  [36/538] TCS              ok
+  [37/538] INFY             ok
+  [38/538] HCLTECH          ok
+  [39/538] WIPRO            ok
+  [40/538] TECHM            ok
+  [41/538] LTIM             -> ALLTIME
+  [42/538] PERSISTENT       ok
+  [43/538] COFORGE          ok
+  [44/538] MPHASIS          ok
+  [45/538] KPITTECH         ok
+  [46/538] TATAELXSI        ok
+  [47/538] CYIENT           ok
+  [48/538] MASTEK           ok
+  [49/538] HEXAWARE         -> HEXT
+  [50/538] ZENSAR           -> ZENSARTECH
+  [51/538] BSOFT            ok
+  [52/538] NIIT             -> NIITMTS
+  [53/538] SUNPHARMA        ok
+  [54/538] DRREDDY          ok
+  [55/538] CIPLA            ok
+  [56/538] DIVISLAB         ok
+  [57/538] LUPIN            ok
+  [58/538] TORNTPHARM       ok
+  [59/538] AUROPHARMA       ok
+  [60/538] BIOCON           ok
+  [61/538] ALKEM            ok
+  [62/538] GLENMARK         ok
+  [63/538] IPCALAB          ok
+  [64/538] ABBOTINDIA       ok
+  [65/538] PFIZER           ok
+  [66/538] GLAXO            ok
+  [67/538] GRANULES         ok
+  [68/538] NATCOPHARM       ok
+  [69/538] WOCKPHARMA       ok
+  [70/538] JB               -> JBMA
+  [71/538] LAURUSLABS       ok
+  [72/538] MARUTI           ok
+  [73/538] TMCV             ok
+  [74/538] TMPV             ok
+  [75/538] M&M              ok
+  [76/538] BAJAJ-AUTO       UNRESOLVED
+  [77/538] TVSMOTOR         ok
+  [78/538] HEROMOTOCO       ok
+  [79/538] EICHERMOT        ok
+  [80/538] ASHOKLEY         ok
+  [81/538] MOTHERSON        ok
+  [82/538] BHARATFORG       ok
+  [83/538] MRF              ok
+  [84/538] APOLLOTYRE       ok
+  [85/538] CEAT             -> CEATLTD
+  [86/538] BALKRISIND       ok
+  [87/538] FORCE            -> FORCEMOT
+  [88/538] ESCORTS          ok
+  [89/538] TIINDIA          ok
+  [90/538] ADANIGREEN       ok
+  [91/538] TATAPOWER        ok
+  [92/538] SUZLON           ok
+  [93/538] NHPC             ok
+  [94/538] SJVN             ok
+  [95/538] INOXWIND         ok
+  [96/538] WEBSOL           -> WEBELSOLAR
+  [97/538] ORIENTGREEN      UNRESOLVED
+  [98/538] BORORENEW        ok
+  [99/538] GFIL             -> BAGFILMS
+  [100/538] PRIMEEI          UNRESOLVED
+  [101/538] SOLAREDGE        UNRESOLVED
+  [102/538] HINDUNILVR       ok
+  [103/538] ITC              ok
+  [104/538] NESTLEIND        ok
+  [105/538] BRITANNIA        ok
+  [106/538] DABUR            ok
+  [107/538] MARICO           ok
+  [108/538] GODREJCP         ok
+  [109/538] COLPAL           ok
+  [110/538] TATACONSUM       ok
+  [111/538] EMAMILTD         ok
+  [112/538] VBL              ok
+  [113/538] JYOTHYLAB        ok
+  [114/538] PGHH             ok
+  [115/538] UBL              ok
+  [116/538] GILLETTE         ok
+  [117/538] BAJAJCON         ok
+  [118/538] PATANJALI        ok
+  [119/538] BHARTIARTL       ok
+  [120/538] IDEA             ok
+  [121/538] TATACOMM         ok
+  [122/538] ROUTE            ok
+  [123/538] TEJASNET         ok
+  [124/538] HFCL             ok
+  [125/538] STLTECH          ok
+  [126/538] VINDHYATEL       ok
+  [127/538] TTML             ok
+  [128/538] RAILTEL          ok
+  [129/538] TATASTEEL        ok
+  [130/538] JSWSTEEL         ok
+  [131/538] HINDALCO         ok
+  [132/538] VEDL             ok
+  [133/538] SAIL             ok
+  [134/538] NMDC             ok
+  [135/538] COALINDIA        ok
+  [136/538] JINDALSTEL       ok
+  [137/538] HINDCOPPER       ok
+  [138/538] NATIONALUM       ok
+  [139/538] MOIL             ok
+  [140/538] WELCORP          ok
+  [141/538] RATNAMANI        ok
+  [142/538] APLAPOLLO        ok
+  [143/538] JSPL             UNRESOLVED
+  [144/538] NTPC             ok
+  [145/538] POWERGRID        ok
+  [146/538] ADANIPOWER       ok
+  [147/538] TORNTPOWER       ok
+  [148/538] CESC             ok
+  [149/538] JSWENERGY        ok
+  [150/538] RPOWER           ok
+  [151/538] JPPOWER          ok
+  [152/538] GMRP&UI          ok
+  [153/538] MAHAGENCO        UNRESOLVED
+  [154/538] LT               ok
+  [155/538] SIEMENS          ok
+  [156/538] ABB              ok
+  [157/538] BHEL             ok
+  [158/538] CGPOWER          ok
+  [159/538] CUMMINSIND       ok
+  [160/538] THERMAX          ok
+  [161/538] AIAENG           ok
+  [162/538] ELGIEQUIP        ok
+  [163/538] GRINDWELL        ok
+  [164/538] TIMKEN           ok
+  [165/538] SKFINDIA         ok
+  [166/538] SCHAEFFLER       ok
+  [167/538] BFUTILITIE       ok
+  [168/538] VOLTAS           ok
+  [169/538] ULTRACEMCO       ok
+  [170/538] AMBUJACEM        ok
+  [171/538] ACC              ok
+  [172/538] SHREECEM         ok
+  [173/538] DALBHARAT        ok
+  [174/538] JKCEMENT         ok
+  [175/538] RAMCOCEM         ok
+  [176/538] BIRLACORPN       ok
+  [177/538] NUVOCO           ok
+  [178/538] STARCEMENT       ok
+  [179/538] SAGCEM           ok
+  [180/538] ORIENTCEM        ok
+  [181/538] HEIDELBERG       ok
+  [182/538] TITAN            ok
+  [183/538] HAVELLS          ok
+  [184/538] DIXON            ok
+  [185/538] BLUESTARCO       ok
+  [186/538] CROMPTON         ok
+  [187/538] VGUARD           ok
+  [188/538] AMBER            ok
+  [189/538] SYMPHONY         ok
+  [190/538] WHIRLPOOL        ok
+  [191/538] ORIENT           -> ORIENTELEC
+  [192/538] BAJAJELEC        ok
+  [193/538] LLOYD            -> LLOYDSME
+  [194/538] USHA             -> USHAMART
+  [195/538] DLF              ok
+  [196/538] LODHA            ok
+  [197/538] GODREJPROP       ok
+  [198/538] OBEROIRLTY       ok
+  [199/538] PHOENIXLTD       ok
+  [200/538] PRESTIGE         ok
+  [201/538] BRIGADE          ok
+  [202/538] SOBHA            ok
+  [203/538] KOLTEPATIL       ok
+  [204/538] MAHLIFE          ok
+  [205/538] SUNTECK          ok
+  [206/538] SIGNATUREGLOBAL  -> SIGNATURE
+  [207/538] ANANTRAJ         ok
+  [208/538] ARVSMART         ok
+  [209/538] ARVINDSMRT       UNRESOLVED
+  [210/538] INDIGO           ok
+  [211/538] SPICEJET         ok
+  [212/538] GMRAIRPORT       ok
+  [213/538] CELEBI           UNRESOLVED
+  [214/538] TAALENT          UNRESOLVED
+  [215/538] GLOBALVECT       ok
+  [216/538] AIDINDIA         UNRESOLVED
+  [217/538] BLUEDART         ok
+  [218/538] LICI             ok
+  [219/538] SBILIFE          ok
+  [220/538] HDFCLIFE         ok
+  [221/538] ICICIPRULI       ok
+  [222/538] ICICIGI          ok
+  [223/538] STARHEALTH       ok
+  [224/538] BAJAJFINSV       ok
+  [225/538] NIACL            ok
+  [226/538] GICRE            ok
+  [227/538] GODIGIT          ok
+  [228/538] POLICYBZR        ok
+  [229/538] MAXLIFE          UNRESOLVED
+  [230/538] HDFCAMC          ok
+  [231/538] NAM-INDIA        UNRESOLVED
+  [232/538] UTIAMC           ok
+  [233/538] ABSLAMC          ok
+  [234/538] 360ONE           ok
+  [235/538] IIFL             ok
+  [236/538] MOTILALOFS       ok
+  [237/538] ANANDRATH        -> ANANDRATHI
+  [238/538] ISEC             ok
+  [239/538] NUVAMA           ok
+  [240/538] GEOJITFSL        ok
+  [241/538] ANGELONE         ok
+  [242/538] BAJFINANCE       ok
+  [243/538] CHOLAFIN         ok
+  [244/538] SHRIRAMFIN       ok
+  [245/538] MUTHOOTFIN       ok
+  [246/538] MANAPPURAM       ok
+  [247/538] L&TFH            UNRESOLVED
+  [248/538] LICHSGFIN        ok
+  [249/538] POONAWALLA       ok
+  [250/538] JMFINANCIL       ok
+  [251/538] CREDITACC        ok
+  [252/538] AAVAS            ok
+  [253/538] HOMEFIRST        ok
+  [254/538] UGROCAP          ok
+  [255/538] ARMAN            -> ARMANFIN
+  [256/538] PIDILITIND       ok
+  [257/538] SRF              ok
+  [258/538] TATACHEM         ok
+  [259/538] AARTIIND         ok
+  [260/538] DEEPAKNTR        ok
+  [261/538] PIIND            ok
+  [262/538] NAVINFLUOR       ok
+  [263/538] VINATIORGA       ok
+  [264/538] FINEORG          ok
+  [265/538] NOCIL            ok
+  [266/538] IOLCP            ok
+  [267/538] SUDARSCHEM       ok
+  [268/538] GALAXYSURF       ok
+  [269/538] ALKYLAMINE       ok
+  [270/538] CLEANSCI         UNRESOLVED
+  [271/538] ATUL             ok
+  [272/538] BALAGOPALAN      UNRESOLVED
+  [273/538] UPL              ok
+  [274/538] COROMANDEL       ok
+  [275/538] FACT             ok
+  [276/538] CHAMBLFERT       ok
+  [277/538] GNFC             ok
+  [278/538] NFL              ok
+  [279/538] RALLIS           ok
+  [280/538] DHARMAJ          ok
+  [281/538] INSECTICIDES     -> INSECTICID
+  [282/538] BAYER            -> BAYERCROP
+  [283/538] SUMICHEM         ok
+  [284/538] KSCL             ok
+  [285/538] PAGEIND          ok
+  [286/538] TRIDENT          ok
+  [287/538] RAYMOND          ok
+  [288/538] WELSPUNLIV       ok
+  [289/538] ARVIND           ok
+  [290/538] KPRMILL          ok
+  [291/538] VARDHMAN         UNRESOLVED
+  [292/538] HIMATSEIDE       ok
+  [293/538] NAHARSPG         UNRESOLVED
+  [294/538] GRASIM           ok
+  [295/538] SPENTEX          UNRESOLVED
+  [296/538] ALOKIND          -> ALOKINDS
+  [297/538] SIYARAM          UNRESOLVED
+  [298/538] CONCOR           ok
+  [299/538] DELHIVERY        ok
+  [300/538] TCI              ok
+  [301/538] VRLLOG           ok
+  [302/538] GATI             -> JISLJALEQS
+  [303/538] ALLCARGO         ok
+  [304/538] MAHLOG           ok
+  [305/538] AEGISLOG         ok
+  [306/538] SNOWMAN          ok
+  [307/538] REDINGTON        ok
+  [308/538] TVSSCS           ok
+  [309/538] IRCTC            ok
+  [310/538] IRFC             ok
+  [311/538] RVNL             ok
+  [312/538] RITES            ok
+  [313/538] IRCON            ok
+  [314/538] TITAGARH         ok
+  [315/538] BEML             ok
+  [316/538] TEXMACO          -> TEXRAIL
+  [317/538] JUPITERIND       UNRESOLVED
+  [318/538] KERNEX           ok
+  [319/538] HBLPOWER         UNRESOLVED
+  [320/538] HAL              ok
+  [321/538] BEL              ok
+  [322/538] BDL              ok
+  [323/538] COCHINSHIP       ok
+  [324/538] MAZDOCK          ok
+  [325/538] GRSE             ok
+  [326/538] MIDHANI          ok
+  [327/538] MTAR             -> MTARTECH
+  [328/538] DATAPATTERNS     UNRESOLVED
+  [329/538] CENTUM           ok
+  [330/538] PARAS            ok
+  [331/538] IDEAFORGE        ok
+  [332/538] DYNAMATECH       ok
+  [333/538] ASTRAMICRO       ok
+  [334/538] SOLARINDS        ok
+  [335/538] ADANIPORTS       ok
+  [336/538] JSWINFRA         ok
+  [337/538] SCI              ok
+  [338/538] GPPL             ok
+  [339/538] SEAMECLTD        ok
+  [340/538] SHREYAS          UNRESOLVED
+  [341/538] TRANSSHIP        UNRESOLVED
+  [342/538] ESCOSL           UNRESOLVED
+  [343/538] SICAL            -> SICALLOG
+  [344/538] GESHIP           ok
+  [345/538] ZEEL             ok
+  [346/538] SUNTV            ok
+  [347/538] PVRINOX          ok
+  [348/538] SAREGAMA         ok
+  [349/538] NETWORK18        ok
+  [350/538] TV18BRDCST       ok
+  [351/538] NAZARA           ok
+  [352/538] BALAJITELE       ok
+  [353/538] TIPSINDLTD       UNRESOLVED
+  [354/538] SHEMAROO         ok
+  [355/538] EROSMEDIA        ok
+  [356/538] ORTELCOMM        UNRESOLVED
+  [357/538] DMART            ok
+  [358/538] TRENT            ok
+  [359/538] VMART            ok
+  [360/538] SHOPERSTOP       ok
+  [361/538] ABFRL            ok
+  [362/538] METROBRAND       ok
+  [363/538] BATA             -> BATAINDIA
+  [364/538] CAMPUS           ok
+  [365/538] RELAXO           ok
+  [366/538] KHADIM           ok
+  [367/538] MANYAVAR         ok
+  [368/538] LTFOODS          ok
+  [369/538] SPENCERS         ok
+  [370/538] ZOMATO           -> ETERNAL
+  [371/538] PAYTM            ok
+  [372/538] NYKAA            ok
+  [373/538] NAUKRI           ok
+  [374/538] INDIAMART        ok
+  [375/538] MAPMYINDIA       ok
+  [376/538] EASEMYTRIP       ok
+  [377/538] CARTRADE         ok
+  [378/538] JUSTDIAL         ok
+  [379/538] INFOEDGE         UNRESOLVED
+  [380/538] SWIGGY           ok
+  [381/538] NIITLTD          ok
+  [382/538] VERANDA          ok
+  [383/538] APTECHT          ok
+  [384/538] CAREERP          UNRESOLVED
+  [385/538] CLEDUCATE        ok
+  [386/538] MTEDUCARE        ok
+  [387/538] NAVNETEDUL       ok
+  [388/538] GLOBALEDGE       UNRESOLVED
+  [389/538] TREEHOUSE        ok
+  [390/538] SHAREINDIA       ok
+  [391/538] APOLLOHOSP       ok
+  [392/538] MAXHEALTH        ok
+  [393/538] FORTIS           ok
+  [394/538] MEDANTA          ok
+  [395/538] KIMS             ok
+  [396/538] LALPATHLAB       ok
+  [397/538] METROPOLIS       ok
+  [398/538] ASTER            -> ASTERDM
+  [399/538] NARAYANA         -> NH
+  [400/538] HCG              ok
+  [401/538] VIJAYA           ok
+  [402/538] YATHARTH         ok
+  [403/538] SYNGENE          ok
+  [404/538] THYROCARE        ok
+  [405/538] JUBLFOOD         ok
+  [406/538] DEVYANI          ERROR TypeError: fetch failed
+  [407/538] WESTLIFE         ok
+  [408/538] SAPPHIRE         ok
+  [409/538] BARBEQUE         -> UFBL
+  [410/538] RRGENTERPR       UNRESOLVED
+  [411/538] BURGERKING       UNRESOLVED
+  [412/538] NETWEB           ok
+  [413/538] BLACKBOX         UNRESOLVED
+  [414/538] NELCO            ok
+  [415/538] SIFY             UNRESOLVED
+  [416/538] YOTTA            UNRESOLVED
+  [417/538] KAYNES           ok
+  [418/538] SYRMA            ok
+  [419/538] ASMTECH          UNRESOLVED
+  [420/538] MOSCHIP          ok
+  [421/538] SPEL             -> SPICELEC
+  [422/538] AVALON           ok
+  [423/538] PGEL             ok
+  [424/538] VEXIL            UNRESOLVED
+  [425/538] WABAG            ok
+  [426/538] IONEXCHANG       ok
+  [427/538] EMSLIMITED       ok
+  [428/538] ANTONY           -> AWHCL
+  [429/538] RAMKY            ok
+  [430/538] SSWL             ok
+  [431/538] RSWM             ok
+  [432/538] CLEANENVIRO      UNRESOLVED
+  [433/538] EESL             UNRESOLVED
+  [434/538] INDHOTEL         ok
+  [435/538] EIHOTEL          ok
+  [436/538] LEMONTREE        ERROR TypeError: fetch failed
+  [437/538] CHALET           ok
+  [438/538] MHRIL            ok
+  [439/538] YATRA            ok
+  [440/538] TBOTECH          UNRESOLVED
+  [441/538] SINCLAIRS        -> SINCLAIR
+  [442/538] KAMAT            -> KAMATHOTEL
+  [443/538] MAHINDRAHOLIDAYS UNRESOLVED
+  [444/538] DELTACORP        ok
+  [445/538] ONMOBILE         ok
+  [446/538] SANDESH          ok
+  [447/538] PLAYGAMES24      UNRESOLVED
+  [448/538] GMMPFAUDLR       ok
+  [449/538] NBCC             ok
+  [450/538] KEC              ok
+  [451/538] IRB              ok
+  [452/538] PNCINFRA         ok
+  [453/538] NCC              ok
+  [454/538] HGINFRA          ok
+  [455/538] JKIL             ok
+  [456/538] DILIPBUILDCON    UNRESOLVED
+  [457/538] SADBHAV          ok
+  [458/538] AHLUWALIA        -> AHLUCONT
+  [459/538] JMC              -> KJMCFIN
+  [460/538] PSP              -> PSPPROJECT
+  [461/538] POLYCAB          ok
+  [462/538] KEI              ok
+  [463/538] RRKABEL          ok
+  [464/538] FINOLEX          -> FINCABLES
+  [465/538] STERLITE         -> STLTECH
+  [466/538] HISIL            ERROR TypeError: fetch failed
+  [467/538] PARAMOUNT        ok
+  [468/538] CABLETEL         UNRESOLVED
+  [469/538] KSB              ok
+  [470/538] INOXGREEN        ok
+  [471/538] ASIANPAINT       ok
+  [472/538] BERGEPAINT       ok
+  [473/538] KANSAINER        ok
+  [474/538] AKZOINDIA        UNRESOLVED
+  [475/538] INDIGOPNTS       ok
+  [476/538] SHALPAINTS       ok
+  [477/538] SIRCA            ok
+  [478/538] JENSANDNIC       UNRESOLVED
+  [479/538] KAMDHENU         ok
+  [480/538] KALYANKJIL       ok
+  [481/538] SENCO            ok
+  [482/538] THANGAMAYL       ok
+  [483/538] RAJESHEXPO       ok
+  [484/538] PCJEWELLER       ok
+  [485/538] GOLDIAM          ok
+  [486/538] RENAISSANCE      -> RGL
+  [487/538] ETHOSLTD         ok
+  [488/538] KDDL             ok
+  [489/538] JKPAPER          ok
+  [490/538] TNPL             ok
+  [491/538] SESHAPAPER       ok
+  [492/538] HUHTAMAKI        ok
+  [493/538] AGI              ok
+  [494/538] TCPLPACK         ok
+  [495/538] ANDRAPAPER       UNRESOLVED
+  [496/538] SATIA            ERROR TypeError: fetch failed
+  [497/538] ORIENTPAPER      UNRESOLVED
+  [498/538] MIRCELECTRONICS  UNRESOLVED
+  [499/538] BALRAMCHIN       ok
+  [500/538] TRIVENI          ok
+  [501/538] RENUKA           ok
+  [502/538] DALMIASUG        ERROR TypeError: fetch failed
+  [503/538] BAJAJHIND        ok
+  [504/538] EIDPARRY         ok
+  [505/538] DWARIKESH        -> DWARKESH
+  [506/538] UTTAMSUGAR       ok
+  [507/538] UGAR             -> UGARSUGAR
+  [508/538] DHAMPURSUG       ok
+  [509/538] AVANTIFEED       ok
+  [510/538] WATERBASE        ok
+  [511/538] ZEAL             ok
+  [512/538] UNIROYAL         UNRESOLVED
+  [513/538] NECTAR           -> NECLIFE
+  [514/538] APEX             ok
+  [515/538] COASTCORP        ok
+  [516/538] REPRO            ok
+  [517/538] SCHAND           ok
+  [518/538] HTMEDIA          ok
+  [519/538] DBCORP           ok
+  [520/538] JAGRAN           ok
+  [521/538] TVTODAY          ok
+  [522/538] SUNPUBLISHING    UNRESOLVED
+  [523/538] MTARTECH         ok
+  [524/538] PFC              ok
+  [525/538] RECLTD           ok
+  [526/538] HUDCO            ok
+  [527/538] NABFID           UNRESOLVED
+  [528/538] POWERFIN         UNRESOLVED
+  [529/538] PTCIL            ok
+  [530/538] UNITDSPR         ok
+  [531/538] RADICO           ok
+  [532/538] GLOBUSSPR        ERROR TypeError: fetch failed
+  [533/538] TILAKNAGAR       -> TI
+  [534/538] PICCADIL         ok
+  [535/538] SOM              -> SOMANYCERA
+  [536/538] JAGATJIT         -> JAGAJITIND
+  [537/538] KHODAY           UNRESOLVED
+  [538/538] DVLABRW          UNRESOLVED
+
+──────────── STANDARDIZE REPORT ────────────
+Sectors: 47 -> 46
+Symbols rewritten to canonical: 45
+Cross-sector dups auto-resolved: 29
+Unresolved symbols (dropped):    62
+Explicit drops:                  0
+UNDECIDED cross-sector dups:     3
+
+Rewrites:
+  CASTROL -> CASTROLIND
+  CPCL -> CHENNPETRO
+  LTIM -> ALLTIME
+  HEXAWARE -> HEXT
+  ZENSAR -> ZENSARTECH
+  NIIT -> NIITMTS
+  JB -> JBMA
+  CEAT -> CEATLTD
+  FORCE -> FORCEMOT
+  WEBSOL -> WEBELSOLAR
+  GFIL -> BAGFILMS
+  ORIENT -> ORIENTELEC
+  LLOYD -> LLOYDSME
+  USHA -> USHAMART
+  SIGNATUREGLOBAL -> SIGNATURE
+  ANANDRATH -> ANANDRATHI
+  ARMAN -> ARMANFIN
+  INSECTICIDES -> INSECTICID
+  BAYER -> BAYERCROP
+  ALOKIND -> ALOKINDS
+  GATI -> JISLJALEQS
+  TEXMACO -> TEXRAIL
+  MTAR -> MTARTECH
+  SICAL -> SICALLOG
+  BATA -> BATAINDIA
+  ZOMATO -> ETERNAL
+  ASTER -> ASTERDM
+  NARAYANA -> NH
+  BARBEQUE -> UFBL
+  SPEL -> SPICELEC
+  ANTONY -> AWHCL
+  SINCLAIRS -> SINCLAIR
+  KAMAT -> KAMATHOTEL
+  AHLUWALIA -> AHLUCONT
+  JMC -> KJMCFIN
+  PSP -> PSPPROJECT
+  FINOLEX -> FINCABLES
+  STERLITE -> STLTECH
+  RENAISSANCE -> RGL
+  DWARIKESH -> DWARKESH
+  UGAR -> UGARSUGAR
+  NECTAR -> NECLIFE
+  TILAKNAGAR -> TI
+  SOM -> SOMANYCERA
+  JAGATJIT -> JAGAJITIND
+
+Unresolved (verify or add to sector_overrides.drop / alias):
+  CANARABANK  [banking]
+  BAJAJ-AUTO  [automobile]
+  ORIENTGREEN  [renewable-energy]
+  PRIMEEI  [renewable-energy]
+  SOLAREDGE  [renewable-energy]
+  JSPL  [metal-mining]
+  MAHAGENCO  [power]
+  ARVINDSMRT  [real-estate]
+  CELEBI  [aviation]
+  TAALENT  [aviation]
+  AIDINDIA  [aviation]
+  MAXLIFE  [insurance]
+  NAM-INDIA  [asset-management]
+  L&TFH  [nbfc-finance]
+  CLEANSCI  [chemicals]
+  BALAGOPALAN  [chemicals]
+  VARDHMAN  [textiles-apparel]
+  NAHARSPG  [textiles-apparel]
+  SPENTEX  [textiles-apparel]
+  SIYARAM  [textiles-apparel]
+  JUPITERIND  [railways]
+  HBLPOWER  [railways]
+  DATAPATTERNS  [defence, space-technology]
+  SHREYAS  [shipping-ports]
+  TRANSSHIP  [shipping-ports]
+  ESCOSL  [shipping-ports]
+  TIPSINDLTD  [media-entertainment, gaming-gambling]
+  ORTELCOMM  [media-entertainment]
+  INFOEDGE  [internet-ecommerce]
+  CAREERP  [education]
+  GLOBALEDGE  [education]
+  DEVYANI  [quick-commerce-food]
+  RRGENTERPR  [quick-commerce-food]
+  BURGERKING  [quick-commerce-food]
+  BLACKBOX  [data-centers-digital]
+  SIFY  [data-centers-digital]
+  YOTTA  [data-centers-digital]
+  ASMTECH  [semiconductors-electronics]
+  VEXIL  [semiconductors-electronics]
+  CLEANENVIRO  [water-waste-management]
+  EESL  [water-waste-management]
+  LEMONTREE  [hospitality-tourism]
+  TBOTECH  [hospitality-tourism]
+  MAHINDRAHOLIDAYS  [hospitality-tourism]
+  PLAYGAMES24  [gaming-gambling]
+  DILIPBUILDCON  [construction-infra]
+  HISIL  [cables-electricals]
+  CABLETEL  [cables-electricals]
+  AKZOINDIA  [paints]
+  JENSANDNIC  [paints]
+  ANDRAPAPER  [paper-packaging]
+  SATIA  [paper-packaging]
+  ORIENTPAPER  [paper-packaging]
+  MIRCELECTRONICS  [paper-packaging]
+  DALMIASUG  [sugar-distilleries]
+  UNIROYAL  [marine-fisheries]
+  SUNPUBLISHING  [printing-publishing]
+  NABFID  [infrastructure-finance]
+  POWERFIN  [infrastructure-finance]
+  GLOBUSSPR  [spirits-beverages]
+  KHODAY  [spirits-beverages]
+  DVLABRW  [spirits-beverages]
+
+⚠️  UNDECIDED — add a primary_sector entry for each:
+  "ZENSARTECH": "?"   // currently in: information-technology, gaming-gambling
+  "IRFC": "?"   // currently in: railways, infrastructure-finance
+  "ETERNAL": "?"   // currently in: internet-ecommerce, quick-commerce-food
+
+Report: /Users/adityaagrawal/Desktop/stockscore/logs/config-standardize-report.json
+
+❌ Refusing to finalize — resolve the undecided dups in sector_overrides.json.
+   Proposed (for inspection only): /Users/adityaagrawal/Desktop/stockscore/sectors_config.proposed.json

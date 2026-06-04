@@ -84,7 +84,7 @@ export function GlobalSearch({
       {/* Backdrop */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(255,255,227,0.7)", backdropFilter: "blur(6px)" }}
+        style={{ background: "rgb(var(--ink-950) / 0.65)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -98,7 +98,9 @@ export function GlobalSearch({
         <div
           className="flex items-center gap-3 rounded-2xl border px-5 py-1"
           style={{
-            background: "#fff",
+            background: "rgb(var(--ink-900) / 0.78)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
             borderColor: "rgb(var(--ink-700))",
             boxShadow: "0 20px 60px rgba(74,74,74,0.16)",
           }}
@@ -126,7 +128,9 @@ export function GlobalSearch({
           <div
             className="mt-2 rounded-2xl border overflow-hidden"
             style={{
-              background: "#fff",
+              background: "rgb(var(--ink-900) / 0.85)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               borderColor: "rgb(var(--ink-700))",
               boxShadow: "0 20px 60px rgba(74,74,74,0.16)",
             }}
@@ -192,7 +196,9 @@ export function GlobalSearch({
           <div
             className="mt-2 rounded-2xl border px-5 py-6 text-sm text-chalk-300/60"
             style={{
-              background: "#fff",
+              background: "rgb(var(--ink-900) / 0.85)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               borderColor: "rgb(var(--ink-700))",
               boxShadow: "0 20px 60px rgba(74,74,74,0.12)",
             }}

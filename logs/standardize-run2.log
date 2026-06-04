@@ -1,0 +1,173 @@
+◇ injected env (8) from .env.local // tip: ◈ secrets for agents [www.dotenvx.com]
+Resolving 538 unique symbols against screener.in …
+Logging in to screener.in (66 to resolve) …
+  [1/66] CANARABANK       -> CANBK
+  [2/66] LTIM             -> MINDTREE
+  [3/66] NIIT             -> NIITLTD
+  [4/66] JB               -> JBCHEPHARM
+  [5/66] BAJAJ-AUTO       ok
+  [6/66] ORIENTGREEN      -> GREENPOWER
+  [7/66] PRIMEEI          UNRESOLVED
+  [8/66] SOLAREDGE        UNRESOLVED
+  [9/66] JSPL             UNRESOLVED
+  [10/66] MAHAGENCO        UNRESOLVED
+  [11/66] ARVINDSMRT       -> ARVSMART
+  [12/66] CELEBI           UNRESOLVED
+  [13/66] TAALENT          UNRESOLVED
+  [14/66] AIDINDIA         UNRESOLVED
+  [15/66] MAXLIFE          -> MFSL
+  [16/66] NAM-INDIA        ok
+  [17/66] L&TFH            -> LTF
+  [18/66] CLEANSCI         -> CLEAN
+  [19/66] BALAGOPALAN      UNRESOLVED
+  [20/66] VARDHMAN         -> VTL
+  [21/66] NAHARSPG         -> NAHARSPING
+  [22/66] SPENTEX          UNRESOLVED
+  [23/66] SIYARAM          -> SIYSIL
+  [24/66] JUPITERIND       UNRESOLVED
+  [25/66] HBLPOWER         UNRESOLVED
+  [26/66] DATAPATTERNS     -> DATAPATTNS
+  [27/66] SHREYAS          UNRESOLVED
+  [28/66] TRANSSHIP        UNRESOLVED
+  [29/66] ESCOSL           UNRESOLVED
+  [30/66] TIPSINDLTD       -> TIPSMUSIC
+  [31/66] ORTELCOMM        UNRESOLVED
+  [32/66] INFOEDGE         -> NAUKRI
+  [33/66] CAREERP          -> CPEDU
+  [34/66] GLOBALEDGE       UNRESOLVED
+  [35/66] DEVYANI          ok
+  [36/66] RRGENTERPR       UNRESOLVED
+  [37/66] BURGERKING       -> RBA
+  [38/66] BLACKBOX         UNRESOLVED
+  [39/66] SIFY             UNRESOLVED
+  [40/66] YOTTA            UNRESOLVED
+  [41/66] ASMTECH          UNRESOLVED
+  [42/66] VEXIL            UNRESOLVED
+  [43/66] CLEANENVIRO      UNRESOLVED
+  [44/66] EESL             UNRESOLVED
+  [45/66] LEMONTREE        ok
+  [46/66] TBOTECH          UNRESOLVED
+  [47/66] MAHINDRAHOLIDAYS UNRESOLVED
+  [48/66] PLAYGAMES24      UNRESOLVED
+  [49/66] DILIPBUILDCON    -> DBL
+  [50/66] HISIL            UNRESOLVED
+  [51/66] CABLETEL         UNRESOLVED
+  [52/66] AKZOINDIA        UNRESOLVED
+  [53/66] JENSANDNIC       UNRESOLVED
+  [54/66] ANDRAPAPER       -> ANDHRAPAP
+  [55/66] SATIA            ok
+  [56/66] ORIENTPAPER      -> ORIENTPPR
+  [57/66] MIRCELECTRONICS  -> MIRCELECTR
+  [58/66] DALMIASUG        ok
+  [59/66] UNIROYAL         UNRESOLVED
+  [60/66] SUNPUBLISHING    UNRESOLVED
+  [61/66] NABFID           UNRESOLVED
+  [62/66] POWERFIN         -> PFC
+  [63/66] GLOBUSSPR        ok
+  [64/66] SOM              -> SDBL
+  [65/66] KHODAY           UNRESOLVED
+  [66/66] DVLABRW          UNRESOLVED
+
+──────────── STANDARDIZE REPORT ────────────
+Sectors: 47 -> 46
+Symbols rewritten to canonical: 59
+Cross-sector dups auto-resolved: 34
+Unresolved symbols (dropped):    29
+Explicit drops:                  12
+UNDECIDED cross-sector dups:     0
+
+Rewrites:
+  CASTROL -> CASTROLIND
+  CPCL -> CHENNPETRO
+  CANARABANK -> CANBK
+  LTIM -> MINDTREE
+  HEXAWARE -> HEXT
+  ZENSAR -> ZENSARTECH
+  NIIT -> NIITLTD
+  JB -> JBCHEPHARM
+  CEAT -> CEATLTD
+  FORCE -> FORCEMOT
+  WEBSOL -> WEBELSOLAR
+  ORIENTGREEN -> GREENPOWER
+  ORIENT -> ORIENTELEC
+  SIGNATUREGLOBAL -> SIGNATURE
+  ARVINDSMRT -> ARVSMART
+  MAXLIFE -> MFSL
+  ANANDRATH -> ANANDRATHI
+  L&TFH -> LTF
+  ARMAN -> ARMANFIN
+  CLEANSCI -> CLEAN
+  INSECTICIDES -> INSECTICID
+  BAYER -> BAYERCROP
+  VARDHMAN -> VTL
+  NAHARSPG -> NAHARSPING
+  ALOKIND -> ALOKINDS
+  SIYARAM -> SIYSIL
+  TEXMACO -> TEXRAIL
+  MTAR -> MTARTECH
+  DATAPATTERNS -> DATAPATTNS
+  SICAL -> SICALLOG
+  TIPSINDLTD -> TIPSMUSIC
+  BATA -> BATAINDIA
+  ZOMATO -> ETERNAL
+  INFOEDGE -> NAUKRI
+  CAREERP -> CPEDU
+  ASTER -> ASTERDM
+  NARAYANA -> NH
+  BARBEQUE -> UFBL
+  BURGERKING -> RBA
+  SPEL -> SPICELEC
+  ANTONY -> AWHCL
+  SINCLAIRS -> SINCLAIR
+  KAMAT -> KAMATHOTEL
+  DILIPBUILDCON -> DBL
+  AHLUWALIA -> AHLUCONT
+  PSP -> PSPPROJECT
+  FINOLEX -> FINCABLES
+  STERLITE -> STLTECH
+  RENAISSANCE -> RGL
+  ANDRAPAPER -> ANDHRAPAP
+  ORIENTPAPER -> ORIENTPPR
+  MIRCELECTRONICS -> MIRCELECTR
+  DWARIKESH -> DWARKESH
+  UGAR -> UGARSUGAR
+  NECTAR -> NECLIFE
+  POWERFIN -> PFC
+  TILAKNAGAR -> TI
+  SOM -> SDBL
+  JAGATJIT -> JAGAJITIND
+
+Unresolved (verify or add to sector_overrides.drop / alias):
+  PRIMEEI  [renewable-energy]
+  JSPL  [metal-mining]
+  TAALENT  [aviation]
+  AIDINDIA  [aviation]
+  JUPITERIND  [railways]
+  HBLPOWER  [railways]
+  SHREYAS  [shipping-ports]
+  TRANSSHIP  [shipping-ports]
+  ESCOSL  [shipping-ports]
+  ORTELCOMM  [media-entertainment]
+  GLOBALEDGE  [education]
+  RRGENTERPR  [quick-commerce-food]
+  BLACKBOX  [data-centers-digital]
+  SIFY  [data-centers-digital]
+  YOTTA  [data-centers-digital]
+  ASMTECH  [semiconductors-electronics]
+  VEXIL  [semiconductors-electronics]
+  CLEANENVIRO  [water-waste-management]
+  EESL  [water-waste-management]
+  TBOTECH  [hospitality-tourism]
+  MAHINDRAHOLIDAYS  [hospitality-tourism]
+  PLAYGAMES24  [gaming-gambling]
+  HISIL  [cables-electricals]
+  CABLETEL  [cables-electricals]
+  JENSANDNIC  [paints]
+  UNIROYAL  [marine-fisheries]
+  SUNPUBLISHING  [printing-publishing]
+  KHODAY  [spirits-beverages]
+  DVLABRW  [spirits-beverages]
+
+Report: /Users/adityaagrawal/Desktop/stockscore/logs/config-standardize-report.json
+
+✅ Dry run. Review /Users/adityaagrawal/Desktop/stockscore/sectors_config.proposed.json, then re-run with --write.

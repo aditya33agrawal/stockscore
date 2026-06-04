@@ -1,0 +1,970 @@
+{
+  "sectors": [
+    {
+      "slug": "oil-gas",
+      "name": "Oil & Gas",
+      "description": "Public sector oil refining, marketing, exploration and gas distribution companies in India.",
+      "analyst_note": "PSU-heavy sector; margins highly sensitive to crude oil prices and government subsidy policy.",
+      "cyclical": true,
+      "companies": [
+        "RELIANCE",
+        "ONGC",
+        "BPCL",
+        "IOC",
+        "HINDPETRO",
+        "OIL",
+        "GAIL",
+        "PETRONET",
+        "MGL",
+        "IGL",
+        "GUJGASLTD",
+        "CASTROL",
+        "MRPL",
+        "CPCL",
+        "CHENNPETRO"
+      ]
+    },
+    {
+      "slug": "banking",
+      "name": "Banking",
+      "description": "Public and private sector banks providing retail, corporate and digital banking services.",
+      "analyst_note": "Credit growth, NPA trends, CASA ratio and RBI policy rates are major sector drivers.",
+      "companies": [
+        "HDFCBANK",
+        "ICICIBANK",
+        "SBIN",
+        "KOTAKBANK",
+        "AXISBANK",
+        "INDUSINDBK",
+        "BANKBARODA",
+        "PNB",
+        "CANARABANK",
+        "UNIONBANK",
+        "IDFCFIRSTB",
+        "FEDERALBNK",
+        "BANDHANBNK",
+        "AUBANK",
+        "RBLBANK",
+        "YESBANK",
+        "KARURVYSYA",
+        "SOUTHBANK",
+        "CUB",
+        "DCBBANK"
+      ]
+    },
+    {
+      "slug": "information-technology",
+      "name": "Information Technology",
+      "description": "Software services, cloud computing, consulting and digital transformation companies.",
+      "analyst_note": "Revenue largely depends on US and European enterprise spending and currency movement.",
+      "companies": [
+        "TCS",
+        "INFY",
+        "HCLTECH",
+        "WIPRO",
+        "TECHM",
+        "LTIM",
+        "PERSISTENT",
+        "COFORGE",
+        "MPHASIS",
+        "KPITTECH",
+        "TATAELXSI",
+        "CYIENT",
+        "MASTEK",
+        "HEXAWARE",
+        "ZENSAR",
+        "BSOFT",
+        "NIIT"
+      ]
+    },
+    {
+      "slug": "pharmaceuticals",
+      "name": "Pharmaceuticals",
+      "description": "Drug manufacturers, API producers, biotechnology firms and healthcare solution providers.",
+      "analyst_note": "USFDA approvals, export demand and domestic healthcare spending strongly impact valuations.",
+      "companies": [
+        "SUNPHARMA",
+        "DRREDDY",
+        "CIPLA",
+        "DIVISLAB",
+        "LUPIN",
+        "TORNTPHARM",
+        "AUROPHARMA",
+        "BIOCON",
+        "ALKEM",
+        "GLENMARK",
+        "IPCALAB",
+        "ABBOTINDIA",
+        "PFIZER",
+        "GLAXO",
+        "GRANULES",
+        "NATCOPHARM",
+        "WOCKPHARMA",
+        "JB",
+        "LAURUSLABS"
+      ]
+    },
+    {
+      "slug": "automobile",
+      "name": "Automobile",
+      "description": "Passenger vehicle, commercial vehicle, two-wheeler manufacturers and auto ancillaries.",
+      "analyst_note": "EV adoption, rural demand and commodity prices influence profitability.",
+      "companies": [
+        "MARUTI",
+        "TMCV",
+        "TMPV",
+        "M&M",
+        "BAJAJ-AUTO",
+        "TVSMOTOR",
+        "HEROMOTOCO",
+        "EICHERMOT",
+        "ASHOKLEY",
+        "MOTHERSON",
+        "BHARATFORG",
+        "MRF",
+        "APOLLOTYRE",
+        "CEAT",
+        "BALKRISIND",
+        "FORCE",
+        "ESCORTS",
+        "TIINDIA"
+      ]
+    },
+    {
+      "slug": "renewable-energy",
+      "name": "Renewable Energy",
+      "description": "Companies involved in solar, wind, hydro and clean energy generation.",
+      "analyst_note": "Government incentives and clean energy transition policies are long-term growth drivers.",
+      "companies": [
+        "ADANIGREEN",
+        "TATAPOWER",
+        "SUZLON",
+        "NHPC",
+        "SJVN",
+        "INOXWIND",
+        "WEBSOL",
+        "ORIENTGREEN",
+        "BORORENEW",
+        "GFIL",
+        "PRIMEEI",
+        "SOLAREDGE"
+      ]
+    },
+    {
+      "slug": "fmcg",
+      "name": "FMCG",
+      "description": "Fast-moving consumer goods companies producing daily-use products.",
+      "analyst_note": "Defensive sector with stable cash flows; rural consumption trends are important indicators.",
+      "companies": [
+        "HINDUNILVR",
+        "ITC",
+        "NESTLEIND",
+        "BRITANNIA",
+        "DABUR",
+        "MARICO",
+        "GODREJCP",
+        "COLPAL",
+        "TATACONSUM",
+        "EMAMILTD",
+        "VBL",
+        "JYOTHYLAB",
+        "PGHH",
+        "UBL",
+        "GILLETTE",
+        "BAJAJCON",
+        "PATANJALI"
+      ]
+    },
+    {
+      "slug": "telecom",
+      "name": "Telecom",
+      "description": "Telecommunication and digital connectivity service providers.",
+      "analyst_note": "ARPU growth, 5G rollout and subscriber additions remain key performance metrics.",
+      "companies": [
+        "BHARTIARTL",
+        "IDEA",
+        "TATACOMM",
+        "ROUTE",
+        "TEJASNET",
+        "HFCL",
+        "STLTECH",
+        "VINDHYATEL",
+        "TTML",
+        "RAILTEL"
+      ]
+    },
+    {
+      "slug": "metal-mining",
+      "name": "Metal & Mining",
+      "description": "Steel, aluminium, copper, diversified mining and mineral companies.",
+      "analyst_note": "Commodity cycles and global demand heavily influence earnings volatility.",
+      "cyclical": true,
+      "companies": [
+        "TATASTEEL",
+        "JSWSTEEL",
+        "HINDALCO",
+        "VEDL",
+        "SAIL",
+        "NMDC",
+        "COALINDIA",
+        "JINDALSTEL",
+        "HINDCOPPER",
+        "NATIONALUM",
+        "MOIL",
+        "WELCORP",
+        "RATNAMANI",
+        "APLAPOLLO",
+        "JSPL"
+      ]
+    },
+    {
+      "slug": "power",
+      "name": "Power",
+      "description": "Power generation, transmission and distribution companies.",
+      "analyst_note": "Infrastructure expansion and rising electricity demand support long-term sector growth.",
+      "companies": [
+        "NTPC",
+        "POWERGRID",
+        "ADANIPOWER",
+        "TATAPOWER",
+        "TORNTPOWER",
+        "CESC",
+        "NHPC",
+        "SJVN",
+        "JSWENERGY",
+        "RPOWER",
+        "JPPOWER",
+        "GMRP&UI",
+        "MAHAGENCO"
+      ]
+    },
+    {
+      "slug": "capital-goods",
+      "name": "Capital Goods",
+      "description": "Engineering, industrial equipment, heavy machinery and infrastructure solution providers.",
+      "analyst_note": "Government capex and manufacturing growth strongly support order books.",
+      "companies": [
+        "LT",
+        "SIEMENS",
+        "ABB",
+        "BHEL",
+        "CGPOWER",
+        "CUMMINSIND",
+        "THERMAX",
+        "AIAENG",
+        "ELGIEQUIP",
+        "GRINDWELL",
+        "TIMKEN",
+        "SKFINDIA",
+        "SCHAEFFLER",
+        "BFUTILITIE",
+        "VOLTAS"
+      ]
+    },
+    {
+      "slug": "cement",
+      "name": "Cement",
+      "description": "Manufacturers of cement and construction materials.",
+      "analyst_note": "Infrastructure spending and real estate activity are major growth catalysts.",
+      "cyclical": true,
+      "companies": [
+        "ULTRACEMCO",
+        "AMBUJACEM",
+        "ACC",
+        "SHREECEM",
+        "DALBHARAT",
+        "JKCEMENT",
+        "RAMCOCEM",
+        "BIRLACORPN",
+        "NUVOCO",
+        "STARCEMENT",
+        "SAGCEM",
+        "ORIENTCEM",
+        "HEIDELBERG"
+      ]
+    },
+    {
+      "slug": "consumer-durables",
+      "name": "Consumer Durables",
+      "description": "Appliance, electronics, household equipment and lifestyle product manufacturers.",
+      "analyst_note": "Urban demand and premiumization trends are driving revenue growth.",
+      "companies": [
+        "TITAN",
+        "HAVELLS",
+        "DIXON",
+        "VOLTAS",
+        "BLUESTARCO",
+        "CROMPTON",
+        "VGUARD",
+        "AMBER",
+        "SYMPHONY",
+        "WHIRLPOOL",
+        "ORIENT",
+        "BAJAJELEC",
+        "LLOYD",
+        "USHA"
+      ]
+    },
+    {
+      "slug": "real-estate",
+      "name": "Real Estate",
+      "description": "Residential, commercial and mixed-use property developers.",
+      "analyst_note": "Interest rates, housing demand and urbanization trends impact sector performance.",
+      "companies": [
+        "DLF",
+        "LODHA",
+        "GODREJPROP",
+        "OBEROIRLTY",
+        "PHOENIXLTD",
+        "PRESTIGE",
+        "BRIGADE",
+        "SOBHA",
+        "KOLTEPATIL",
+        "MAHLIFE",
+        "SUNTECK",
+        "SIGNATUREGLOBAL",
+        "ANANTRAJ",
+        "ARVSMART",
+        "ARVINDSMRT"
+      ]
+    },
+    {
+      "slug": "aviation",
+      "name": "Aviation",
+      "description": "Airline operators, airport infrastructure and aviation-related service companies.",
+      "analyst_note": "Fuel costs and passenger traffic recovery significantly affect profitability.",
+      "cyclical": true,
+      "companies": [
+        "INDIGO",
+        "SPICEJET",
+        "GMRAIRPORT",
+        "CELEBI",
+        "TAALENT",
+        "GLOBALVECT",
+        "AIDINDIA",
+        "BLUEDART"
+      ]
+    },
+    {
+      "slug": "insurance",
+      "name": "Insurance",
+      "description": "Life, health and general insurance providers offering protection, savings and investment products.",
+      "analyst_note": "Premium growth, persistency ratio and solvency margins are major valuation drivers.",
+      "companies": [
+        "LICI",
+        "SBILIFE",
+        "HDFCLIFE",
+        "ICICIPRULI",
+        "ICICIGI",
+        "STARHEALTH",
+        "BAJAJFINSV",
+        "NIACL",
+        "GICRE",
+        "GODIGIT",
+        "POLICYBZR",
+        "MAXLIFE"
+      ]
+    },
+    {
+      "slug": "asset-management",
+      "name": "Asset Management",
+      "description": "Mutual fund houses, wealth managers and investment management companies.",
+      "analyst_note": "AUM growth and retail SIP inflows significantly impact revenue visibility.",
+      "companies": [
+        "HDFCAMC",
+        "NAM-INDIA",
+        "UTIAMC",
+        "ABSLAMC",
+        "360ONE",
+        "IIFL",
+        "MOTILALOFS",
+        "ANANDRATH",
+        "ISEC",
+        "NUVAMA",
+        "GEOJITFSL",
+        "ANGELONE"
+      ]
+    },
+    {
+      "slug": "nbfc-finance",
+      "name": "NBFC & Finance",
+      "description": "Non-banking financial companies focused on retail, vehicle, gold and housing financing.",
+      "analyst_note": "Asset quality, borrowing costs and loan growth determine profitability.",
+      "companies": [
+        "BAJFINANCE",
+        "BAJAJFINSV",
+        "CHOLAFIN",
+        "SHRIRAMFIN",
+        "MUTHOOTFIN",
+        "MANAPPURAM",
+        "L&TFH",
+        "LICHSGFIN",
+        "POONAWALLA",
+        "JMFINANCIL",
+        "CREDITACC",
+        "AAVAS",
+        "HOMEFIRST",
+        "UGROCAP",
+        "ARMAN"
+      ]
+    },
+    {
+      "slug": "chemicals",
+      "name": "Chemicals",
+      "description": "Specialty, industrial, performance and agrochemical manufacturers.",
+      "analyst_note": "Export demand and raw material prices strongly influence margins.",
+      "cyclical": true,
+      "companies": [
+        "PIDILITIND",
+        "SRF",
+        "TATACHEM",
+        "AARTIIND",
+        "DEEPAKNTR",
+        "PIIND",
+        "NAVINFLUOR",
+        "VINATIORGA",
+        "FINEORG",
+        "NOCIL",
+        "IOLCP",
+        "SUDARSCHEM",
+        "GALAXYSURF",
+        "ALKYLAMINE",
+        "CLEANSCI",
+        "ATUL",
+        "BALAGOPALAN"
+      ]
+    },
+    {
+      "slug": "fertilizers-agrochemicals",
+      "name": "Fertilizers & Agrochemicals",
+      "description": "Companies manufacturing fertilizers, pesticides and crop nutrition products.",
+      "analyst_note": "Monsoon trends and government subsidy policies remain critical growth factors.",
+      "cyclical": true,
+      "companies": [
+        "UPL",
+        "COROMANDEL",
+        "FACT",
+        "CHAMBLFERT",
+        "GNFC",
+        "NFL",
+        "RALLIS",
+        "DHARMAJ",
+        "INSECTICIDES",
+        "BAYER",
+        "SUMICHEM",
+        "KSCL"
+      ]
+    },
+    {
+      "slug": "textiles-apparel",
+      "name": "Textiles & Apparel",
+      "description": "Textile manufacturers, garment exporters and branded apparel companies.",
+      "analyst_note": "Export demand and cotton price fluctuations influence operating margins.",
+      "cyclical": true,
+      "companies": [
+        "PAGEIND",
+        "TRIDENT",
+        "RAYMOND",
+        "WELSPUNLIV",
+        "ARVIND",
+        "KPRMILL",
+        "VARDHMAN",
+        "HIMATSEIDE",
+        "NAHARSPG",
+        "GRASIM",
+        "SPENTEX",
+        "ALOKIND",
+        "SIYARAM"
+      ]
+    },
+    {
+      "slug": "logistics",
+      "name": "Logistics",
+      "description": "Transportation, warehousing, courier and supply-chain solution providers.",
+      "analyst_note": "E-commerce growth and infrastructure development support long-term demand.",
+      "companies": [
+        "CONCOR",
+        "DELHIVERY",
+        "BLUEDART",
+        "TCI",
+        "VRLLOG",
+        "GATI",
+        "ALLCARGO",
+        "MAHLOG",
+        "AEGISLOG",
+        "SNOWMAN",
+        "REDINGTON",
+        "TVSSCS"
+      ]
+    },
+    {
+      "slug": "railways",
+      "name": "Railways",
+      "description": "Railway infrastructure, wagon manufacturing, engineering and services companies.",
+      "analyst_note": "Government railway capex and modernization initiatives drive order inflows.",
+      "companies": [
+        "IRCTC",
+        "IRFC",
+        "RVNL",
+        "RITES",
+        "IRCON",
+        "RAILTEL",
+        "TITAGARH",
+        "BEML",
+        "TEXMACO",
+        "JUPITERIND",
+        "KERNEX",
+        "HBLPOWER"
+      ]
+    },
+    {
+      "slug": "defence",
+      "name": "Defence",
+      "description": "Defence manufacturing, aerospace, military equipment and indigenization companies.",
+      "analyst_note": "Indigenization and rising defence budgets create strong long-term opportunities.",
+      "companies": [
+        "HAL",
+        "BEL",
+        "BDL",
+        "COCHINSHIP",
+        "MAZDOCK",
+        "GRSE",
+        "MIDHANI",
+        "MTAR",
+        "DATAPATTERNS",
+        "CENTUM",
+        "PARAS",
+        "IDEAFORGE",
+        "DYNAMATECH",
+        "ASTRAMICRO",
+        "SOLARINDS"
+      ]
+    },
+    {
+      "slug": "shipping-ports",
+      "name": "Shipping & Ports",
+      "description": "Port operators, shipping lines and marine logistics companies.",
+      "analyst_note": "Global trade volumes and freight rates heavily impact earnings cycles.",
+      "cyclical": true,
+      "companies": [
+        "ADANIPORTS",
+        "JSWINFRA",
+        "SCI",
+        "GPPL",
+        "SEAMECLTD",
+        "SHREYAS",
+        "TRANSSHIP",
+        "ESCOSL",
+        "SICAL",
+        "GESHIP"
+      ]
+    },
+    {
+      "slug": "media-entertainment",
+      "name": "Media & Entertainment",
+      "description": "Broadcasting, cinema, music, OTT and digital entertainment companies.",
+      "analyst_note": "Advertising demand and digital streaming growth shape sector profitability.",
+      "companies": [
+        "ZEEL",
+        "SUNTV",
+        "PVRINOX",
+        "SAREGAMA",
+        "NETWORK18",
+        "TV18BRDCST",
+        "NAZARA",
+        "BALAJITELE",
+        "TIPSINDLTD",
+        "SHEMAROO",
+        "EROSMEDIA",
+        "ORTELCOMM"
+      ]
+    },
+    {
+      "slug": "retail",
+      "name": "Retail",
+      "description": "Organized retail chains, fashion and omnichannel consumer businesses.",
+      "analyst_note": "Consumption growth and store expansion are major revenue drivers.",
+      "companies": [
+        "DMART",
+        "TRENT",
+        "VMART",
+        "SHOPERSTOP",
+        "ABFRL",
+        "METROBRAND",
+        "BATA",
+        "CAMPUS",
+        "RELAXO",
+        "KHADIM",
+        "MANYAVAR",
+        "LTFOODS",
+        "SPENCERS"
+      ]
+    },
+    {
+      "slug": "internet-ecommerce",
+      "name": "Internet & E-Commerce",
+      "description": "Digital platform, online marketplace and internet-based consumer businesses.",
+      "analyst_note": "User growth, profitability and platform monetization remain key investor focus areas.",
+      "companies": [
+        "ZOMATO",
+        "PAYTM",
+        "NYKAA",
+        "NAUKRI",
+        "POLICYBZR",
+        "INDIAMART",
+        "MAPMYINDIA",
+        "EASEMYTRIP",
+        "CARTRADE",
+        "JUSTDIAL",
+        "INFOEDGE",
+        "SWIGGY"
+      ]
+    },
+    {
+      "slug": "education",
+      "name": "Education",
+      "description": "Education technology, coaching, training and skill-development companies.",
+      "analyst_note": "Digital learning adoption and skill-development demand support long-term expansion.",
+      "companies": [
+        "NIITLTD",
+        "VERANDA",
+        "APTECHT",
+        "CAREERP",
+        "CLEDUCATE",
+        "MTEDUCARE",
+        "NAVNETEDUL",
+        "GLOBALEDGE",
+        "TREEHOUSE",
+        "SHAREINDIA"
+      ]
+    },
+    {
+      "slug": "healthcare-hospitals",
+      "name": "Healthcare & Hospitals",
+      "description": "Hospital chains, diagnostics, pathology labs and healthcare service providers.",
+      "analyst_note": "Occupancy rates, medical tourism and healthcare spending drive sector growth.",
+      "companies": [
+        "APOLLOHOSP",
+        "MAXHEALTH",
+        "FORTIS",
+        "MEDANTA",
+        "KIMS",
+        "LALPATHLAB",
+        "METROPOLIS",
+        "ASTER",
+        "NARAYANA",
+        "HCG",
+        "VIJAYA",
+        "YATHARTH",
+        "SYNGENE",
+        "THYROCARE"
+      ]
+    },
+    {
+      "slug": "quick-commerce-food",
+      "name": "Quick Commerce & Food Delivery",
+      "description": "Online food delivery, instant commerce and QSR platform companies.",
+      "analyst_note": "Order growth, delivery efficiency and profitability metrics are closely tracked.",
+      "companies": [
+        "ZOMATO",
+        "SWIGGY",
+        "JUBLFOOD",
+        "DEVYANI",
+        "WESTLIFE",
+        "SAPPHIRE",
+        "BARBEQUE",
+        "RRGENTERPR",
+        "BURGERKING"
+      ]
+    },
+    {
+      "slug": "data-centers-digital",
+      "name": "Data Centers & Digital Infrastructure",
+      "description": "Digital infrastructure, cloud hosting, networking and data center operators.",
+      "analyst_note": "AI adoption and enterprise cloud demand are accelerating infrastructure investments.",
+      "companies": [
+        "TATACOMM",
+        "NETWEB",
+        "BLACKBOX",
+        "ROUTE",
+        "NELCO",
+        "TEJASNET",
+        "STLTECH",
+        "SIFY",
+        "HCLTECH",
+        "YOTTA"
+      ]
+    },
+    {
+      "slug": "semiconductors-electronics",
+      "name": "Semiconductors & Electronics",
+      "description": "Electronics manufacturing services (EMS) and semiconductor ecosystem companies.",
+      "analyst_note": "PLI schemes and electronics export growth support sector expansion.",
+      "companies": [
+        "DIXON",
+        "KAYNES",
+        "SYRMA",
+        "ASMTECH",
+        "MOSCHIP",
+        "SPEL",
+        "AVALON",
+        "CENTUM",
+        "PGEL",
+        "VEXIL",
+        "AMBER",
+        "BEL"
+      ]
+    },
+    {
+      "slug": "water-waste-management",
+      "name": "Water & Waste Management",
+      "description": "Water treatment, recycling and environmental management companies.",
+      "analyst_note": "Urban infrastructure and sustainability initiatives are boosting demand.",
+      "companies": [
+        "WABAG",
+        "IONEXCHANG",
+        "EMSLIMITED",
+        "ANTONY",
+        "RAMKY",
+        "SSWL",
+        "RSWM",
+        "CLEANENVIRO",
+        "EESL"
+      ]
+    },
+    {
+      "slug": "hospitality-tourism",
+      "name": "Hospitality & Tourism",
+      "description": "Hotel chains, resorts, travel agencies and tourism service providers.",
+      "analyst_note": "Travel recovery and rising discretionary spending support sector growth.",
+      "companies": [
+        "INDHOTEL",
+        "EIHOTEL",
+        "LEMONTREE",
+        "CHALET",
+        "MHRIL",
+        "EASEMYTRIP",
+        "YATRA",
+        "TBOTECH",
+        "SINCLAIRS",
+        "KAMAT",
+        "MAHINDRAHOLIDAYS"
+      ]
+    },
+    {
+      "slug": "gaming-gambling",
+      "name": "Gaming & Online Entertainment",
+      "description": "Gaming, fantasy sports and online entertainment platform companies.",
+      "analyst_note": "User engagement and regulatory developments strongly impact valuations.",
+      "companies": [
+        "NAZARA",
+        "DELTACORP",
+        "ONMOBILE",
+        "TIPSINDLTD",
+        "SANDESH",
+        "PLAYGAMES24",
+        "GMMPFAUDLR",
+        "ZENSAR"
+      ]
+    },
+    {
+      "slug": "construction-infra",
+      "name": "Construction & Infrastructure",
+      "description": "Infrastructure developers, EPC contractors, road and urban construction firms.",
+      "analyst_note": "Government capex and infrastructure pipeline visibility drive growth momentum.",
+      "companies": [
+        "LT",
+        "NBCC",
+        "KEC",
+        "IRB",
+        "PNCINFRA",
+        "NCC",
+        "HGINFRA",
+        "JKIL",
+        "DILIPBUILDCON",
+        "SADBHAV",
+        "AHLUWALIA",
+        "JMC",
+        "GPPL",
+        "PSP"
+      ]
+    },
+    {
+      "slug": "cables-electricals",
+      "name": "Cables & Electrical Equipment",
+      "description": "Electrical wires, cables, switchgear and industrial electrical equipment manufacturers.",
+      "analyst_note": "Power infrastructure growth and housing demand support sector expansion.",
+      "companies": [
+        "POLYCAB",
+        "KEI",
+        "HAVELLS",
+        "RRKABEL",
+        "FINOLEX",
+        "VGUARD",
+        "STERLITE",
+        "HISIL",
+        "PARAMOUNT",
+        "CABLETEL",
+        "KSB",
+        "INOXGREEN"
+      ]
+    },
+    {
+      "slug": "paints",
+      "name": "Paints",
+      "description": "Decorative and industrial paint manufacturing companies.",
+      "analyst_note": "Crude derivative prices and housing demand affect profitability.",
+      "companies": [
+        "ASIANPAINT",
+        "BERGEPAINT",
+        "KANSAINER",
+        "AKZOINDIA",
+        "INDIGOPNTS",
+        "SHALPAINTS",
+        "SIRCA",
+        "JENSANDNIC",
+        "KAMDHENU"
+      ]
+    },
+    {
+      "slug": "jewellery-luxury",
+      "name": "Jewellery & Luxury",
+      "description": "Jewellery retailers, luxury watches and premium lifestyle product companies.",
+      "analyst_note": "Gold prices and discretionary spending influence sector performance.",
+      "companies": [
+        "TITAN",
+        "KALYANKJIL",
+        "SENCO",
+        "THANGAMAYL",
+        "RAJESHEXPO",
+        "PCJEWELLER",
+        "GOLDIAM",
+        "RENAISSANCE",
+        "ETHOSLTD",
+        "KDDL"
+      ]
+    },
+    {
+      "slug": "paper-packaging",
+      "name": "Paper & Packaging",
+      "description": "Paper, packaging, containers and corrugated board manufacturing companies.",
+      "analyst_note": "E-commerce packaging demand and pulp prices drive earnings.",
+      "cyclical": true,
+      "companies": [
+        "JKPAPER",
+        "TNPL",
+        "SESHAPAPER",
+        "HUHTAMAKI",
+        "AGI",
+        "TCPLPACK",
+        "ANDRAPAPER",
+        "SATIA",
+        "ORIENTPAPER",
+        "MIRCELECTRONICS"
+      ]
+    },
+    {
+      "slug": "sugar-distilleries",
+      "name": "Sugar & Distilleries",
+      "description": "Sugar producers, ethanol blending and distillery companies.",
+      "analyst_note": "Ethanol policy and sugarcane production trends significantly impact margins.",
+      "cyclical": true,
+      "companies": [
+        "BALRAMCHIN",
+        "TRIVENI",
+        "RENUKA",
+        "DALMIASUG",
+        "BAJAJHIND",
+        "EIDPARRY",
+        "DWARIKESH",
+        "UTTAMSUGAR",
+        "UGAR",
+        "KSCL",
+        "DHAMPURSUG"
+      ]
+    },
+    {
+      "slug": "marine-fisheries",
+      "name": "Marine & Fisheries",
+      "description": "Seafood export, aquaculture and marine product companies.",
+      "analyst_note": "Export demand and currency movements affect sector profitability.",
+      "cyclical": true,
+      "companies": [
+        "AVANTIFEED",
+        "WATERBASE",
+        "ZEAL",
+        "UNIROYAL",
+        "NECTAR",
+        "APEX",
+        "COASTCORP"
+      ]
+    },
+    {
+      "slug": "printing-publishing",
+      "name": "Printing & Publishing",
+      "description": "Publishing, printing, newspaper and educational content companies.",
+      "analyst_note": "Advertising and educational content demand shape earnings growth.",
+      "companies": [
+        "NAVNETEDUL",
+        "REPRO",
+        "SCHAND",
+        "HTMEDIA",
+        "DBCORP",
+        "JAGRAN",
+        "TVTODAY",
+        "SUNPUBLISHING"
+      ]
+    },
+    {
+      "slug": "space-technology",
+      "name": "Space Technology",
+      "description": "Emerging aerospace, satellite technology and space ecosystem companies.",
+      "analyst_note": "India's growing private space ecosystem offers strong long-term growth potential.",
+      "companies": [
+        "HAL",
+        "BHEL",
+        "MTAR",
+        "MTARTECH",
+        "PARAS",
+        "CENTUM",
+        "DATAPATTERNS",
+        "ASTRAMICRO",
+        "SOLARINDS",
+        "IDEAFORGE"
+      ]
+    },
+    {
+      "slug": "infrastructure-finance",
+      "name": "Infrastructure Finance",
+      "description": "Government-backed and specialised financial institutions that lend to power, railway and infrastructure projects.",
+      "analyst_note": "Loan book growth, asset quality in project finance and government support are key valuation drivers.",
+      "companies": [
+        "PFC",
+        "RECLTD",
+        "IRFC",
+        "HUDCO",
+        "NABFID",
+        "POWERFIN",
+        "PTCIL"
+      ]
+    },
+    {
+      "slug": "spirits-beverages",
+      "name": "Spirits & Beverages",
+      "description": "Alcoholic beverages including whisky, rum, beer, wine and premium spirits manufacturers.",
+      "analyst_note": "State excise policy, premiumisation trends and volume growth in IMFL are key sector drivers.",
+      "companies": [
+        "UNITDSPR",
+        "RADICO",
+        "GLOBUSSPR",
+        "TILAKNAGAR",
+        "UBL",
+        "PICCADIL",
+        "SOM",
+        "JAGATJIT",
+        "KHODAY",
+        "DVLABRW"
+      ]
+    }
+  ]
+}

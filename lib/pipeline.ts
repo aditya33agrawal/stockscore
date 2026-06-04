@@ -302,7 +302,20 @@ function printDefaultersReport(log: Log, defaulters: Defaulter[], totalCompanies
   if (logFile) log(`Log: ${logFile}`);
 }
 
-export async function runPipeline(log: Log, targetSectorSlug?: string, force = false): Promise<void> {
+export async function runPipeline(log: Log, targetSectorSlug?: string, force = false): Promise<Defaulter[]> {
+  log("[pipeline] Validating config …");
+  const { validateConfig } = await import("./config-validate");
+  const configErrors = await validateConfig();
+  if (configErrors.length > 0) {
+    log(`[pipeline] ✗ Config invalid — ${configErrors.length} issue(s):`);
+    for (const e of configErrors) log(`  • ${e}`);
+    throw new Error(
+      `sectors_config.json failed validation (${configErrors.length} issue(s)). ` +
+        `Run \`npm run standardize:config\` then \`npm run validate:config\`.`,
+    );
+  }
+  log("[pipeline] Config valid ✓");
+
   log("[pipeline] Loading config …");
   const config = await loadConfig();
 
@@ -440,4 +453,5 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
   printDefaultersReport(log, defaulters, totalCompanies, logFile);
 
   log(`\n[pipeline] Done ✓`);
+  return defaulters;
 }

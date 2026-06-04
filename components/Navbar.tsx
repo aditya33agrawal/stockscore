@@ -130,6 +130,7 @@ export function Navbar() {
           >
             <Search className="h-5 w-5" />
           </button>
+          <ThemeToggle />
           <button
             className="flex h-9 w-9 items-center justify-center rounded-lg text-chalk-300 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
             onClick={() => setOpen((o) => !o)}

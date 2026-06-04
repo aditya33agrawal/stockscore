@@ -1,0 +1,1039 @@
+
+> stock-score@0.1.0 refresh:sector
+> npx tsx scripts/refresh.ts
+
+◇ injected env (8) from .env.local // tip: ⌘ enable debugging { debug: true }
+{"ts":"2026-06-04T11:35:30.542Z","level":"info","msg":"script.start","script":"refresh","sector":null,"force":false}
+[pipeline] Validating config …
+[pipeline] Config valid ✓
+[pipeline] Loading config …
+[pipeline] Ensuring DB tables …
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "companies" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "sectors" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "top_ticker" of relation "sectors" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "market_sectors" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "market_sectors_meta" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "chart_data" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "sector_config" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "users" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "sessions" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "sessions_user_idx" already exists, skipping',
+  file: 'index.c',
+  line: '889',
+  routine: 'index_create'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "bookmarks" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "score_snapshot" of relation "bookmarks" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "snapshot_taken_at" of relation "bookmarks" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "is_backfilled" of relation "bookmarks" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "feedback" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "ip" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "user_agent" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "referer" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "request_id" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "country" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42701',
+  message: 'column "user_id" of relation "feedback" already exists, skipping',
+  file: 'tablecmds.c',
+  line: '7471',
+  routine: 'check_for_column_name_collision'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "refresh_runs" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "refresh_errors" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "refresh_errors_run_idx" already exists, skipping',
+  file: 'index.c',
+  line: '889',
+  routine: 'index_create'
+}
+[pipeline] DB ready ✓
+[pipeline] Logging in to screener.in …
+[pipeline] Authenticated ✓
+
+[sector] Asset Management (12 companies)
+  [company] 360ONE — fresh (0d old), skip ✓
+  [company] ABSLAMC — fresh (0d old), skip ✓
+  [company] ANANDRATHI — fresh (0d old), skip ✓
+  [company] ANGELONE — fresh (0d old), skip ✓
+  [company] GEOJITFSL — fresh (0d old), skip ✓
+  [company] HDFCAMC — fresh (0d old), skip ✓
+  [company] IIFL — fresh (0d old), skip ✓
+  [company] ISEC — searching …
+  [company] ISEC → https://www.screener.in/company/ISEC/consolidated/
+  [company] ISEC — parsed HTML
+  [company] ISEC — fetched quick ratios + peers
+  [company] ISEC — fetched announcements
+  [company] ISEC — score: 44.8/100 (Watchlist)
+  [company] MOTILALOFS — fresh (0d old), skip ✓
+  [company] NAM-INDIA — searching …
+  [company] NAM-INDIA → https://www.screener.in/company/NAM-INDIA/consolidated/
+  [company] NAM-INDIA — parsed HTML
+  [company] NAM-INDIA — fetched quick ratios + peers
+  [company] NAM-INDIA — fetched announcements
+  [company] NAM-INDIA — score: 62.5/100 (Accumulate)
+  [company] NUVAMA — fresh (0d old), skip ✓
+  [company] UTIAMC — fresh (0d old), skip ✓
+  [company] NAM-INDIA — saved to DB
+  [company] ISEC — saved to DB
+[sector] Asset Management — saved to DB
+
+[sector] Automobile (18 companies)
+  [company] APOLLOTYRE — fresh (0d old), skip ✓
+  [company] ASHOKLEY — fresh (0d old), skip ✓
+  [company] BAJAJ-AUTO — searching …
+  [company] BAJAJ-AUTO → https://www.screener.in/company/BAJAJ-AUTO/consolidated/
+  [company] BAJAJ-AUTO — parsed HTML
+  [company] BAJAJ-AUTO — fetched quick ratios + peers
+  [company] BAJAJ-AUTO — fetched announcements
+  [company] BAJAJ-AUTO — score: 57/100 (Accumulate)
+  [company] BALKRISIND — fresh (0d old), skip ✓
+  [company] BHARATFORG — fresh (0d old), skip ✓
+  [company] CEATLTD — fresh (0d old), skip ✓
+  [company] EICHERMOT — fresh (0d old), skip ✓
+  [company] ESCORTS — fresh (0d old), skip ✓
+  [company] FORCEMOT — fresh (0d old), skip ✓
+  [company] HEROMOTOCO — fresh (0d old), skip ✓
+  [company] M&M — fresh (0d old), skip ✓
+  [company] MARUTI — fresh (0d old), skip ✓
+  [company] MOTHERSON — fresh (0d old), skip ✓
+  [company] MRF — fresh (0d old), skip ✓
+  [company] TIINDIA — fresh (0d old), skip ✓
+  [company] TMCV — fresh (0d old), skip ✓
+  [company] TMPV — fresh (0d old), skip ✓
+  [company] TVSMOTOR — fresh (0d old), skip ✓
+  [company] BAJAJ-AUTO — saved to DB
+[sector] Automobile — saved to DB
+
+[sector] Aviation (4 companies)
+  [company] GLOBALVECT — fresh (0d old), skip ✓
+  [company] GMRAIRPORT — fresh (0d old), skip ✓
+  [company] INDIGO — searching …
+  [company] INDIGO → https://www.screener.in/company/INDIGO/consolidated/
+  [company] INDIGO — parsed HTML
+  [company] INDIGO — fetched quick ratios + peers
+  [company] INDIGO — fetched announcements
+  [company] INDIGO — score: 31/100 (Avoid)
+  [company] SPICEJET — fresh (0d old), skip ✓
+  [company] INDIGO — saved to DB
+[sector] Aviation — saved to DB
+
+[sector] Banking (20 companies)
+  [company] AUBANK — fresh (0d old), skip ✓
+  [company] AXISBANK — fresh (0d old), skip ✓
+  [company] BANDHANBNK — fresh (0d old), skip ✓
+  [company] BANKBARODA — fresh (0d old), skip ✓
+  [company] CANBK — fresh (0d old), skip ✓
+  [company] CUB — searching …
+  [company] CUB → https://www.screener.in/company/CUB/consolidated/
+  [company] CUB — parsed HTML
+  [company] CUB — fetched announcements
+  [company] CUB — score: 23.1/100 (Avoid)
+  [company] DCBBANK — fresh (0d old), skip ✓
+  [company] FEDERALBNK — fresh (0d old), skip ✓
+  [company] HDFCBANK — fresh (0d old), skip ✓
+  [company] ICICIBANK — fresh (0d old), skip ✓
+  [company] IDFCFIRSTB — fresh (0d old), skip ✓
+  [company] INDUSINDBK — fresh (0d old), skip ✓
+  [company] KARURVYSYA — fresh (0d old), skip ✓
+  [company] KOTAKBANK — fresh (0d old), skip ✓
+  [company] PNB — searching …
+  [company] PNB → https://www.screener.in/company/PNB/consolidated/
+  [company] PNB — parsed HTML
+  [company] PNB — fetched quick ratios + peers
+  [company] PNB — fetched announcements
+  [company] PNB — score: 44.8/100 (Watchlist)
+  [company] RBLBANK — fresh (0d old), skip ✓
+  [company] SBIN — fresh (0d old), skip ✓
+  [company] SOUTHBANK — fresh (0d old), skip ✓
+  [company] UNIONBANK — fresh (0d old), skip ✓
+  [company] YESBANK — fresh (0d old), skip ✓
+  [company] PNB — saved to DB
+  [company] CUB — saved to DB
+[sector] Banking — saved to DB
+
+[sector] Cables & Electrical Equipment (8 companies)
+  [company] FINCABLES — fresh (0d old), skip ✓
+  [company] INOXGREEN — fresh (0d old), skip ✓
+  [company] KEI — fresh (0d old), skip ✓
+  [company] KSB — fresh (0d old), skip ✓
+  [company] PARAMOUNT — fresh (0d old), skip ✓
+  [company] POLYCAB — fresh (0d old), skip ✓
+  [company] RRKABEL — fresh (0d old), skip ✓
+  [company] VGUARD — fresh (0d old), skip ✓
+[sector] Cables & Electrical Equipment — saved to DB
+
+[sector] Capital Goods (14 companies)
+  [company] ABB — searching …
+  [company] ABB → https://www.screener.in/company/ABB/consolidated/
+  [company] ABB — parsed HTML
+  [company] ABB — fetched quick ratios + peers
+  [company] ABB — fetched announcements
+  [company] ABB — score: 30/100 (Avoid)
+  [company] AIAENG — fresh (0d old), skip ✓
+  [company] BFUTILITIE — fresh (0d old), skip ✓
+  [company] BHEL — fresh (0d old), skip ✓
+  [company] CGPOWER — fresh (0d old), skip ✓
+  [company] CUMMINSIND — fresh (0d old), skip ✓
+  [company] ELGIEQUIP — fresh (0d old), skip ✓
+  [company] GRINDWELL — fresh (0d old), skip ✓
+  [company] LT — searching …
+  [company] LT → https://www.screener.in/company/LT/consolidated/
+  [company] LT — parsed HTML
+  [company] LT — fetched quick ratios + peers
+  [company] LT — fetched announcements
+  [company] LT — score: 45.5/100 (Watchlist)
+  [company] SCHAEFFLER — fresh (0d old), skip ✓
+  [company] SIEMENS — fresh (0d old), skip ✓
+  [company] SKFINDIA — fresh (0d old), skip ✓
+  [company] THERMAX — fresh (0d old), skip ✓
+  [company] TIMKEN — fresh (0d old), skip ✓
+  [company] LT — saved to DB
+  [company] ABB — saved to DB
+[sector] Capital Goods — saved to DB
+
+[sector] Cement (13 companies)
+  [company] ACC — fresh (0d old), skip ✓
+  [company] AMBUJACEM — fresh (0d old), skip ✓
+  [company] BIRLACORPN — fresh (0d old), skip ✓
+  [company] DALBHARAT — fresh (0d old), skip ✓
+  [company] HEIDELBERG — fresh (0d old), skip ✓
+  [company] JKCEMENT — fresh (0d old), skip ✓
+  [company] NUVOCO — fresh (0d old), skip ✓
+  [company] ORIENTCEM — fresh (0d old), skip ✓
+  [company] RAMCOCEM — fresh (0d old), skip ✓
+  [company] SAGCEM — fresh (0d old), skip ✓
+  [company] SHREECEM — fresh (0d old), skip ✓
+  [company] STARCEMENT — fresh (0d old), skip ✓
+  [company] ULTRACEMCO — fresh (0d old), skip ✓
+[sector] Cement — saved to DB
+
+[sector] Chemicals (16 companies)
+  [company] AARTIIND — fresh (0d old), skip ✓
+  [company] ALKYLAMINE — fresh (0d old), skip ✓
+  [company] ATUL — fresh (0d old), skip ✓
+  [company] CLEAN — searching …
+  [company] CLEAN → https://www.screener.in/company/CLEAN/consolidated/
+  [company] CLEAN — parsed HTML
+  [company] CLEAN — fetched quick ratios + peers
+  [company] CLEAN — fetched announcements
+  [company] CLEAN — score: 34.5/100 (Avoid)
+  [company] DEEPAKNTR — fresh (0d old), skip ✓
+  [company] FINEORG — fresh (0d old), skip ✓
+  [company] GALAXYSURF — fresh (0d old), skip ✓
+  [company] IOLCP — fresh (0d old), skip ✓
+  [company] NAVINFLUOR — fresh (0d old), skip ✓
+  [company] NOCIL — fresh (0d old), skip ✓
+  [company] PIDILITIND — fresh (0d old), skip ✓
+  [company] PIIND — fresh (0d old), skip ✓
+  [company] SRF — fresh (0d old), skip ✓
+  [company] SUDARSCHEM — fresh (0d old), skip ✓
+  [company] TATACHEM — fresh (0d old), skip ✓
+  [company] VINATIORGA — fresh (0d old), skip ✓
+  [company] CLEAN — saved to DB
+[sector] Chemicals — saved to DB
+
+[sector] Construction & Infrastructure (11 companies)
+  [company] AHLUCONT — fresh (0d old), skip ✓
+  [company] DBL — fresh (0d old), skip ✓
+  [company] HGINFRA — fresh (0d old), skip ✓
+  [company] IRB — fresh (0d old), skip ✓
+  [company] JKIL — fresh (0d old), skip ✓
+  [company] KEC — fresh (0d old), skip ✓
+  [company] NBCC — fresh (0d old), skip ✓
+  [company] NCC — fresh (0d old), skip ✓
+  [company] PNCINFRA — fresh (0d old), skip ✓
+  [company] PSPPROJECT — fresh (0d old), skip ✓
+  [company] SADBHAV — fresh (0d old), skip ✓
+[sector] Construction & Infrastructure — saved to DB
+
+[sector] Consumer Durables (8 companies)
+  [company] BAJAJELEC — fresh (0d old), skip ✓
+  [company] BLUESTARCO — fresh (0d old), skip ✓
+  [company] CROMPTON — fresh (0d old), skip ✓
+  [company] HAVELLS — fresh (0d old), skip ✓
+  [company] ORIENTELEC — fresh (0d old), skip ✓
+  [company] SYMPHONY — fresh (0d old), skip ✓
+  [company] VOLTAS — fresh (0d old), skip ✓
+  [company] WHIRLPOOL — fresh (0d old), skip ✓
+[sector] Consumer Durables — saved to DB
+
+[sector] Data Centers & Digital Infrastructure (3 companies)
+  [company] BBOX — fresh (0d old), skip ✓
+  [company] NELCO — fresh (0d old), skip ✓
+  [company] NETWEB — fresh (0d old), skip ✓
+[sector] Data Centers & Digital Infrastructure — saved to DB
+
+[sector] Defence (14 companies)
+  [company] ASTRAMICRO — fresh (0d old), skip ✓
+  [company] BDL — fresh (0d old), skip ✓
+  [company] BEL — searching …
+  [company] BEL → https://www.screener.in/company/BEL/consolidated/
+  [company] BEL — parsed HTML
+  [company] BEL — fetched quick ratios + peers
+  [company] BEL — fetched announcements
+  [company] BEL — score: 55/100 (Accumulate)
+  [company] COCHINSHIP — fresh (0d old), skip ✓
+  [company] DATAPATTNS — fresh (0d old), skip ✓
+  [company] DYNAMATECH — fresh (0d old), skip ✓
+  [company] GRSE — fresh (0d old), skip ✓
+  [company] HAL — searching …
+  [company] HAL → https://www.screener.in/company/HAL/consolidated/
+  [company] HAL — parsed HTML
+  [company] HAL — fetched quick ratios + peers
+  [company] HAL — fetched announcements
+  [company] HAL — score: 57.7/100 (Accumulate)
+  [company] IDEAFORGE — searching …
+  [company] IDEAFORGE → https://www.screener.in/company/IDEAFORGE/consolidated/
+  [company] IDEAFORGE — parsed HTML
+  [company] IDEAFORGE — fetched quick ratios + peers
+  [company] IDEAFORGE — fetched announcements
+  [company] IDEAFORGE — score: 27.2/100 (Avoid)
+  [company] MAZDOCK — fresh (0d old), skip ✓
+  [company] MIDHANI — fresh (0d old), skip ✓
+  [company] MTARTECH — fresh (0d old), skip ✓
+  [company] PARAS — fresh (0d old), skip ✓
+  [company] SOLARINDS — fresh (0d old), skip ✓
+  [company] HAL — saved to DB
+  [company] BEL — saved to DB
+  [company] IDEAFORGE — saved to DB
+[sector] Defence — saved to DB
+
+[sector] Education (8 companies)
+  [company] APTECHT — fresh (0d old), skip ✓
+  [company] CLEDUCATE — fresh (0d old), skip ✓
+  [company] CPEDU — fresh (0d old), skip ✓
+  [company] MTEDUCARE — fresh (0d old), skip ✓
+  [company] NIITLTD — fresh (0d old), skip ✓
+  [company] SHAREINDIA — fresh (0d old), skip ✓
+  [company] TREEHOUSE — fresh (0d old), skip ✓
+  [company] VERANDA — fresh (0d old), skip ✓
+[sector] Education — saved to DB
+
+[sector] Fertilizers & Agrochemicals (12 companies)
+  [company] BAYERCROP — fresh (0d old), skip ✓
+  [company] CHAMBLFERT — fresh (0d old), skip ✓
+  [company] COROMANDEL — fresh (0d old), skip ✓
+  [company] DHARMAJ — fresh (0d old), skip ✓
+  [company] FACT — fresh (0d old), skip ✓
+  [company] GNFC — fresh (0d old), skip ✓
+  [company] INSECTICID — fresh (0d old), skip ✓
+  [company] KSCL — fresh (0d old), skip ✓
+  [company] NFL — fresh (0d old), skip ✓
+  [company] RALLIS — fresh (0d old), skip ✓
+  [company] SUMICHEM — fresh (0d old), skip ✓
+  [company] UPL — fresh (0d old), skip ✓
+[sector] Fertilizers & Agrochemicals — saved to DB
+
+[sector] FMCG (16 companies)
+  [company] BAJAJCON — fresh (0d old), skip ✓
+  [company] BRITANNIA — fresh (0d old), skip ✓
+  [company] COLPAL — fresh (0d old), skip ✓
+  [company] DABUR — fresh (0d old), skip ✓
+  [company] EMAMILTD — fresh (0d old), skip ✓
+  [company] GILLETTE — fresh (0d old), skip ✓
+  [company] GODREJCP — fresh (0d old), skip ✓
+  [company] HINDUNILVR — fresh (0d old), skip ✓
+  [company] ITC — fresh (0d old), skip ✓
+  [company] JYOTHYLAB — fresh (0d old), skip ✓
+  [company] MARICO — fresh (0d old), skip ✓
+  [company] NESTLEIND — fresh (0d old), skip ✓
+  [company] PATANJALI — fresh (0d old), skip ✓
+  [company] PGHH — fresh (0d old), skip ✓
+  [company] TATACONSUM — fresh (0d old), skip ✓
+  [company] VBL — fresh (0d old), skip ✓
+[sector] FMCG — saved to DB
+
+[sector] Gaming & Online Entertainment (5 companies)
+  [company] DELTACORP — fresh (0d old), skip ✓
+  [company] GMMPFAUDLR — fresh (0d old), skip ✓
+  [company] NAZARA — fresh (0d old), skip ✓
+  [company] ONMOBILE — fresh (0d old), skip ✓
+  [company] SANDESH — fresh (0d old), skip ✓
+[sector] Gaming & Online Entertainment — saved to DB
+
+[sector] Healthcare & Hospitals (14 companies)
+  [company] APOLLOHOSP — fresh (0d old), skip ✓
+  [company] ASTERDM — fresh (0d old), skip ✓
+  [company] FORTIS — fresh (0d old), skip ✓
+  [company] HCG — fresh (0d old), skip ✓
+  [company] KIMS — fresh (0d old), skip ✓
+  [company] LALPATHLAB — fresh (0d old), skip ✓
+  [company] MAXHEALTH — fresh (0d old), skip ✓
+  [company] MEDANTA — fresh (0d old), skip ✓
+  [company] METROPOLIS — fresh (0d old), skip ✓
+  [company] NH — searching …
+  [company] NH → https://www.screener.in/company/NH/consolidated/
+  [company] NH — parsed HTML
+  [company] NH — fetched quick ratios + peers
+  [company] NH — fetched announcements
+  [company] NH — score: 50.9/100 (Watchlist)
+  [company] SYNGENE — fresh (0d old), skip ✓
+  [company] THYROCARE — fresh (0d old), skip ✓
+  [company] VIJAYA — fresh (0d old), skip ✓
+  [company] YATHARTH — fresh (0d old), skip ✓
+  [company] NH — saved to DB
+[sector] Healthcare & Hospitals — saved to DB
+
+[sector] Hospitality & Tourism (10 companies)
+  [company] CHALET — fresh (0d old), skip ✓
+  [company] EASEMYTRIP — fresh (0d old), skip ✓
+  [company] EIHOTEL — fresh (0d old), skip ✓
+  [company] INDHOTEL — fresh (0d old), skip ✓
+  [company] KAMATHOTEL — fresh (0d old), skip ✓
+  [company] LEMONTREE — fresh (0d old), skip ✓
+  [company] MHRIL — fresh (0d old), skip ✓
+  [company] SINCLAIR — fresh (0d old), skip ✓
+  [company] TBOTEK — fresh (0d old), skip ✓
+  [company] YATRA — fresh (0d old), skip ✓
+[sector] Hospitality & Tourism — saved to DB
+
+[sector] Information Technology (16 companies)
+  [company] BSOFT — fresh (0d old), skip ✓
+  [company] COFORGE — fresh (0d old), skip ✓
+  [company] CYIENT — fresh (0d old), skip ✓
+  [company] HCLTECH — fresh (0d old), skip ✓
+  [company] HEXT — fresh (0d old), skip ✓
+  [company] INFY — fresh (0d old), skip ✓
+  [company] KPITTECH — fresh (0d old), skip ✓
+  [company] MASTEK — fresh (0d old), skip ✓
+  [company] MINDTREE — fresh (0d old), skip ✓
+  [company] MPHASIS — fresh (0d old), skip ✓
+  [company] PERSISTENT — fresh (0d old), skip ✓
+  [company] TATAELXSI — fresh (0d old), skip ✓
+  [company] TCS — fresh (0d old), skip ✓
+  [company] TECHM — fresh (0d old), skip ✓
+  [company] WIPRO — fresh (0d old), skip ✓
+  [company] ZENSARTECH — fresh (0d old), skip ✓
+[sector] Information Technology — saved to DB
+
+[sector] Infrastructure Finance (5 companies)
+  [company] HUDCO — fresh (0d old), skip ✓
+  [company] IRFC — fresh (0d old), skip ✓
+  [company] PFC — fresh (0d old), skip ✓
+  [company] PTCIL — fresh (0d old), skip ✓
+  [company] RECLTD — fresh (0d old), skip ✓
+[sector] Infrastructure Finance — saved to DB
+
+[sector] Insurance (10 companies)
+  [company] GICRE — fresh (0d old), skip ✓
+  [company] GODIGIT — fresh (0d old), skip ✓
+  [company] HDFCLIFE — fresh (0d old), skip ✓
+  [company] ICICIGI — fresh (0d old), skip ✓
+  [company] ICICIPRULI — fresh (0d old), skip ✓
+  [company] LICI — fresh (0d old), skip ✓
+  [company] MFSL — fresh (0d old), skip ✓
+  [company] NIACL — fresh (0d old), skip ✓
+  [company] SBILIFE — fresh (0d old), skip ✓
+  [company] STARHEALTH — fresh (0d old), skip ✓
+[sector] Insurance — saved to DB
+
+[sector] Internet & E-Commerce (10 companies)
+  [company] CARTRADE — fresh (0d old), skip ✓
+  [company] ETERNAL — fresh (0d old), skip ✓
+  [company] INDIAMART — fresh (0d old), skip ✓
+  [company] JUSTDIAL — fresh (0d old), skip ✓
+  [company] MAPMYINDIA — fresh (0d old), skip ✓
+  [company] NAUKRI — fresh (0d old), skip ✓
+  [company] NYKAA — fresh (0d old), skip ✓
+  [company] PAYTM — fresh (0d old), skip ✓
+  [company] POLICYBZR — fresh (0d old), skip ✓
+  [company] SWIGGY — fresh (0d old), skip ✓
+[sector] Internet & E-Commerce — saved to DB
+
+[sector] Jewellery & Luxury (10 companies)
+  [company] ETHOSLTD — fresh (0d old), skip ✓
+  [company] GOLDIAM — fresh (0d old), skip ✓
+  [company] KALYANKJIL — fresh (0d old), skip ✓
+  [company] KDDL — fresh (0d old), skip ✓
+  [company] PCJEWELLER — fresh (0d old), skip ✓
+  [company] RAJESHEXPO — fresh (0d old), skip ✓
+  [company] RGL — fresh (0d old), skip ✓
+  [company] SENCO — fresh (0d old), skip ✓
+  [company] THANGAMAYL — fresh (0d old), skip ✓
+  [company] TITAN — searching …
+  [company] TITAN → https://www.screener.in/company/TITAN/consolidated/
+  [company] TITAN — parsed HTML
+  [company] TITAN — fetched quick ratios + peers
+  [company] TITAN — fetched announcements
+  [company] TITAN — score: 58.7/100 (Accumulate)
+  [company] TITAN — saved to DB
+[sector] Jewellery & Luxury — saved to DB
+
+[sector] Logistics (11 companies)
+  [company] AEGISLOG — fresh (0d old), skip ✓
+  [company] ALLCARGO — fresh (0d old), skip ✓
+  [company] BLUEDART — fresh (0d old), skip ✓
+  [company] CONCOR — searching …
+  [company] CONCOR → https://www.screener.in/company/CONCOR/consolidated/
+  [company] CONCOR — parsed HTML
+  [company] CONCOR — fetched quick ratios + peers
+  [company] CONCOR — fetched announcements
+  [company] CONCOR — score: 38.8/100 (Avoid)
+  [company] DELHIVERY — fresh (0d old), skip ✓
+  [company] MAHLOG — fresh (0d old), skip ✓
+  [company] REDINGTON — fresh (0d old), skip ✓
+  [company] SNOWMAN — fresh (0d old), skip ✓
+  [company] TCI — searching …
+  [company] TCI → https://www.screener.in/company/TCI/consolidated/
+  [company] TCI — parsed HTML
+  [company] TCI — fetched quick ratios + peers
+  [company] TCI — fetched announcements
+  [company] TCI — score: 60.7/100 (Accumulate)
+  [company] TVSSCS — fresh (0d old), skip ✓
+  [company] VRLLOG — fresh (0d old), skip ✓
+  [company] TCI — saved to DB
+  [company] CONCOR — saved to DB
+[sector] Logistics — saved to DB
+
+[sector] Marine & Fisheries (6 companies)
+  [company] APEX — fresh (0d old), skip ✓
+  [company] AVANTIFEED — fresh (0d old), skip ✓
+  [company] COASTCORP — fresh (0d old), skip ✓
+  [company] NECLIFE — fresh (0d old), skip ✓
+  [company] WATERBASE — fresh (0d old), skip ✓
+  [company] ZEAL — searching …
+  [company] ZEAL → https://www.screener.in/company/ZEAL/consolidated/
+  [company] ZEAL — parsed HTML
+  [company] ZEAL — fetched quick ratios + peers
+  [company] ZEAL — fetched announcements
+  [company] ZEAL — score: 49.2/100 (Watchlist)
+  [company] ZEAL — saved to DB
+[sector] Marine & Fisheries — saved to DB
+
+[sector] Media & Entertainment (10 companies)
+  [company] BALAJITELE — fresh (0d old), skip ✓
+  [company] EROSMEDIA — fresh (0d old), skip ✓
+  [company] NETWORK18 — fresh (0d old), skip ✓
+  [company] PVRINOX — fresh (0d old), skip ✓
+  [company] SAREGAMA — fresh (0d old), skip ✓
+  [company] SHEMAROO — fresh (0d old), skip ✓
+  [company] SUNTV — fresh (0d old), skip ✓
+  [company] TIPSMUSIC — fresh (0d old), skip ✓
+  [company] TV18BRDCST — fresh (0d old), skip ✓
+  [company] ZEEL — fresh (0d old), skip ✓
+[sector] Media & Entertainment — saved to DB
+
+[sector] Metal & Mining (14 companies)
+  [company] APLAPOLLO — fresh (0d old), skip ✓
+  [company] COALINDIA — fresh (0d old), skip ✓
+  [company] HINDALCO — fresh (0d old), skip ✓
+  [company] HINDCOPPER — fresh (0d old), skip ✓
+  [company] JINDALSTEL — fresh (0d old), skip ✓
+  [company] JSWSTEEL — fresh (0d old), skip ✓
+  [company] MOIL — fresh (0d old), skip ✓
+  [company] NATIONALUM — fresh (0d old), skip ✓
+  [company] NMDC — fresh (0d old), skip ✓
+  [company] RATNAMANI — fresh (0d old), skip ✓
+  [company] SAIL — fresh (0d old), skip ✓
+  [company] TATASTEEL — fresh (0d old), skip ✓
+  [company] VEDL — fresh (0d old), skip ✓
+  [company] WELCORP — fresh (0d old), skip ✓
+[sector] Metal & Mining — saved to DB
+
+[sector] NBFC & Finance (15 companies)
+  [company] AAVAS — fresh (0d old), skip ✓
+  [company] ARMANFIN — fresh (0d old), skip ✓
+  [company] BAJAJFINSV — fresh (0d old), skip ✓
+  [company] BAJFINANCE — fresh (0d old), skip ✓
+  [company] CHOLAFIN — fresh (0d old), skip ✓
+  [company] CREDITACC — fresh (0d old), skip ✓
+  [company] HOMEFIRST — fresh (0d old), skip ✓
+  [company] JMFINANCIL — fresh (0d old), skip ✓
+  [company] LICHSGFIN — fresh (0d old), skip ✓
+  [company] LTF — searching …
+  [company] LTF → https://www.screener.in/company/LTF/consolidated/
+  [company] LTF — parsed HTML
+  [company] LTF — fetched quick ratios + peers
+  [company] LTF — fetched announcements
+  [company] LTF — score: 34.3/100 (Avoid)
+  [company] MANAPPURAM — fresh (0d old), skip ✓
+  [company] MUTHOOTFIN — fresh (0d old), skip ✓
+  [company] POONAWALLA — fresh (0d old), skip ✓
+  [company] SHRIRAMFIN — fresh (0d old), skip ✓
+  [company] UGROCAP — fresh (0d old), skip ✓
+  [company] LTF — saved to DB
+[sector] NBFC & Finance — saved to DB
+
+[sector] Oil & Gas (14 companies)
+  [company] BPCL — fresh (0d old), skip ✓
+  [company] CASTROLIND — fresh (0d old), skip ✓
+  [company] CHENNPETRO — fresh (0d old), skip ✓
+  [company] GAIL — fresh (0d old), skip ✓
+  [company] GUJGASLTD — fresh (0d old), skip ✓
+  [company] HINDPETRO — fresh (0d old), skip ✓
+  [company] IGL — fresh (0d old), skip ✓
+  [company] IOC — fresh (0d old), skip ✓
+  [company] MGL — fresh (0d old), skip ✓
+  [company] MRPL — fresh (0d old), skip ✓
+  [company] OIL — fresh (0d old), skip ✓
+  [company] ONGC — fresh (0d old), skip ✓
+  [company] PETRONET — fresh (0d old), skip ✓
+  [company] RELIANCE — fresh (0d old), skip ✓
+[sector] Oil & Gas — saved to DB
+
+[sector] Paints (7 companies)
+  [company] ASIANPAINT — fresh (0d old), skip ✓
+  [company] BERGEPAINT — fresh (0d old), skip ✓
+  [company] INDIGOPNTS — fresh (0d old), skip ✓
+  [company] KAMDHENU — fresh (0d old), skip ✓
+  [company] KANSAINER — fresh (0d old), skip ✓
+  [company] SHALPAINTS — fresh (0d old), skip ✓
+  [company] SIRCA — fresh (0d old), skip ✓
+[sector] Paints — saved to DB
+
+[sector] Paper & Packaging (10 companies)
+  [company] AGI — searching …
+  [company] AGI → https://www.screener.in/company/AGI/consolidated/
+  [company] AGI — parsed HTML
+  [company] AGI — fetched quick ratios + peers
+  [company] AGI — fetched announcements
+  [company] AGI — score: 54.5/100 (Watchlist)
+  [company] ANDHRAPAP — fresh (0d old), skip ✓
+  [company] HUHTAMAKI — fresh (0d old), skip ✓
+  [company] JKPAPER — fresh (0d old), skip ✓
+  [company] MIRCELECTR — fresh (0d old), skip ✓
+  [company] ORIENTPPR — fresh (0d old), skip ✓
+  [company] SATIA — fresh (0d old), skip ✓
+  [company] SESHAPAPER — fresh (0d old), skip ✓
+  [company] TCPLPACK — fresh (0d old), skip ✓
+  [company] TNPL — fresh (0d old), skip ✓
+  [company] AGI — saved to DB
+[sector] Paper & Packaging — saved to DB
+
+[sector] Pharmaceuticals (19 companies)
+  [company] ABBOTINDIA — fresh (0d old), skip ✓
+  [company] ALKEM — fresh (0d old), skip ✓
+  [company] AUROPHARMA — fresh (0d old), skip ✓
+  [company] BIOCON — fresh (0d old), skip ✓
+  [company] CIPLA — fresh (0d old), skip ✓
+  [company] DIVISLAB — fresh (0d old), skip ✓
+  [company] DRREDDY — fresh (0d old), skip ✓
+  [company] GLAXO — fresh (0d old), skip ✓
+  [company] GLENMARK — fresh (0d old), skip ✓
+  [company] GRANULES — fresh (0d old), skip ✓
+  [company] IPCALAB — fresh (0d old), skip ✓
+  [company] JBCHEPHARM — fresh (0d old), skip ✓
+  [company] LAURUSLABS — fresh (0d old), skip ✓
+  [company] LUPIN — fresh (0d old), skip ✓
+  [company] NATCOPHARM — fresh (0d old), skip ✓
+  [company] PFIZER — fresh (0d old), skip ✓
+  [company] SUNPHARMA — fresh (0d old), skip ✓
+  [company] TORNTPHARM — fresh (0d old), skip ✓
+  [company] WOCKPHARMA — fresh (0d old), skip ✓
+[sector] Pharmaceuticals — saved to DB
+
+[sector] Power (12 companies)
+  [company] ADANIPOWER — fresh (0d old), skip ✓
+  [company] CESC — fresh (0d old), skip ✓
+  [company] GMRP&UI — fresh (0d old), skip ✓
+  [company] JPPOWER — fresh (0d old), skip ✓
+  [company] JSWENERGY — fresh (0d old), skip ✓
+  [company] NHPC — fresh (0d old), skip ✓
+  [company] NTPC — fresh (0d old), skip ✓
+  [company] POWERGRID — fresh (0d old), skip ✓
+  [company] RPOWER — fresh (0d old), skip ✓
+  [company] SJVN — fresh (0d old), skip ✓
+  [company] TATAPOWER — fresh (0d old), skip ✓
+  [company] TORNTPOWER — fresh (0d old), skip ✓
+[sector] Power — saved to DB
+
+[sector] Printing & Publishing (7 companies)
+  [company] DBCORP — fresh (0d old), skip ✓
+  [company] HTMEDIA — fresh (0d old), skip ✓
+  [company] JAGRAN — fresh (0d old), skip ✓
+  [company] NAVNETEDUL — fresh (0d old), skip ✓
+  [company] REPRO — fresh (0d old), skip ✓
+  [company] SCHAND — fresh (0d old), skip ✓
+  [company] TVTODAY — fresh (0d old), skip ✓
+[sector] Printing & Publishing — saved to DB
+
+[sector] Quick Commerce & Food Delivery (6 companies)
+  [company] DEVYANI — fresh (0d old), skip ✓
+  [company] JUBLFOOD — fresh (0d old), skip ✓
+  [company] RBA — fresh (0d old), skip ✓
+  [company] SAPPHIRE — fresh (0d old), skip ✓
+  [company] UFBL — fresh (0d old), skip ✓
+  [company] WESTLIFE — fresh (0d old), skip ✓
+[sector] Quick Commerce & Food Delivery — saved to DB
+
+[sector] Railways (10 companies)
+  [company] BEML — fresh (0d old), skip ✓
+  [company] HBLENGINE — fresh (0d old), skip ✓
+  [company] IRCON — fresh (0d old), skip ✓
+  [company] IRCTC — fresh (0d old), skip ✓
+  [company] KERNEX — fresh (0d old), skip ✓
+  [company] RAILTEL — fresh (0d old), skip ✓
+  [company] RITES — fresh (0d old), skip ✓
+  [company] RVNL — fresh (0d old), skip ✓
+  [company] TEXRAIL — fresh (0d old), skip ✓
+  [company] TITAGARH — fresh (0d old), skip ✓
+[sector] Railways — saved to DB
+
+[sector] Real Estate (14 companies)
+  [company] ANANTRAJ — fresh (0d old), skip ✓
+  [company] ARVSMART — fresh (0d old), skip ✓
+  [company] BRIGADE — fresh (0d old), skip ✓
+  [company] DLF — fresh (0d old), skip ✓
+  [company] GODREJPROP — fresh (0d old), skip ✓
+  [company] KOLTEPATIL — fresh (0d old), skip ✓
+  [company] LODHA — fresh (0d old), skip ✓
+  [company] MAHLIFE — fresh (0d old), skip ✓
+  [company] OBEROIRLTY — fresh (0d old), skip ✓
+  [company] PHOENIXLTD — fresh (0d old), skip ✓
+  [company] PRESTIGE — fresh (0d old), skip ✓
+  [company] SIGNATURE — fresh (0d old), skip ✓
+  [company] SOBHA — fresh (0d old), skip ✓
+  [company] SUNTECK — fresh (0d old), skip ✓
+[sector] Real Estate — saved to DB
+
+[sector] Renewable Energy (6 companies)
+  [company] ADANIGREEN — fresh (0d old), skip ✓
+  [company] BORORENEW — fresh (0d old), skip ✓
+  [company] GREENPOWER — fresh (0d old), skip ✓
+  [company] INOXWIND — fresh (0d old), skip ✓
+  [company] SUZLON — fresh (0d old), skip ✓
+  [company] WEBELSOLAR — fresh (0d old), skip ✓
+[sector] Renewable Energy — saved to DB
+
+[sector] Retail (13 companies)
+  [company] ABFRL — fresh (0d old), skip ✓
+  [company] BATAINDIA — fresh (0d old), skip ✓
+  [company] CAMPUS — fresh (0d old), skip ✓
+  [company] DMART — fresh (0d old), skip ✓
+  [company] KHADIM — fresh (0d old), skip ✓
+  [company] LTFOODS — fresh (0d old), skip ✓
+  [company] MANYAVAR — fresh (0d old), skip ✓
+  [company] METROBRAND — fresh (0d old), skip ✓
+  [company] RELAXO — fresh (0d old), skip ✓
+  [company] SHOPERSTOP — fresh (0d old), skip ✓
+  [company] SPENCERS — fresh (0d old), skip ✓
+  [company] TRENT — fresh (0d old), skip ✓
+  [company] VMART — fresh (0d old), skip ✓
+[sector] Retail — saved to DB
+
+[sector] Semiconductors & Electronics (9 companies)
+  [company] AMBER — fresh (0d old), skip ✓
+  [company] AVALON — fresh (0d old), skip ✓
+  [company] CENTUM — fresh (0d old), skip ✓
+  [company] DIXON — fresh (0d old), skip ✓
+  [company] KAYNES — fresh (0d old), skip ✓
+  [company] MOSCHIP — fresh (0d old), skip ✓
+  [company] PGEL — fresh (0d old), skip ✓
+  [company] SPICELEC — fresh (0d old), skip ✓
+  [company] SYRMA — fresh (0d old), skip ✓
+[sector] Semiconductors & Electronics — saved to DB
+
+[sector] Shipping & Ports (7 companies)
+  [company] ADANIPORTS — fresh (0d old), skip ✓
+  [company] GESHIP — fresh (0d old), skip ✓
+  [company] GPPL — fresh (0d old), skip ✓
+  [company] JSWINFRA — fresh (0d old), skip ✓
+  [company] SCI — fresh (0d old), skip ✓
+  [company] SEAMECLTD — fresh (0d old), skip ✓
+  [company] SICALLOG — fresh (0d old), skip ✓
+[sector] Shipping & Ports — saved to DB
+
+[sector] Spirits & Beverages (8 companies)
+  [company] GLOBUSSPR — fresh (0d old), skip ✓
+  [company] JAGAJITIND — fresh (0d old), skip ✓
+  [company] PICCADIL — fresh (0d old), skip ✓
+  [company] RADICO — fresh (0d old), skip ✓
+  [company] SDBL — fresh (0d old), skip ✓
+  [company] TI — searching …
+  [company] TI → https://www.screener.in/company/TI/consolidated/
+  [company] TI — parsed HTML
+  [company] TI — fetched quick ratios + peers
+  [company] TI — fetched announcements
+  [company] TI — score: 38/100 (Avoid)
+  [company] UBL — fresh (0d old), skip ✓
+  [company] UNITDSPR — fresh (0d old), skip ✓
+  [company] TI — saved to DB
+[sector] Spirits & Beverages — saved to DB
+
+[sector] Sugar & Distilleries (10 companies)
+  [company] BAJAJHIND — fresh (0d old), skip ✓
+  [company] BALRAMCHIN — fresh (0d old), skip ✓
+  [company] DALMIASUG — fresh (0d old), skip ✓
+  [company] DHAMPURSUG — fresh (0d old), skip ✓
+  [company] DWARKESH — fresh (0d old), skip ✓
+  [company] EIDPARRY — fresh (0d old), skip ✓
+  [company] RENUKA — fresh (0d old), skip ✓
+  [company] TRIVENI — fresh (0d old), skip ✓
+  [company] UGARSUGAR — fresh (0d old), skip ✓
+  [company] UTTAMSUGAR — fresh (0d old), skip ✓
+[sector] Sugar & Distilleries — saved to DB
+
+[sector] Telecom (9 companies)
+  [company] BHARTIARTL — fresh (0d old), skip ✓
+  [company] HFCL — fresh (0d old), skip ✓
+  [company] IDEA — searching …
+  [company] IDEA → https://www.screener.in/company/IDEA/consolidated/
+  [company] IDEA — parsed HTML
+  [company] IDEA — fetched quick ratios + peers
+  [company] IDEA — fetched announcements
+  [company] IDEA — score: 28.8/100 (Avoid)
+  [company] ROUTE — fresh (0d old), skip ✓
+  [company] STLTECH — fresh (0d old), skip ✓
+  [company] TATACOMM — fresh (0d old), skip ✓
+  [company] TEJASNET — fresh (0d old), skip ✓
+  [company] TTML — fresh (0d old), skip ✓
+  [company] VINDHYATEL — fresh (0d old), skip ✓
+  [company] IDEA — saved to DB
+[sector] Telecom — saved to DB
+
+[sector] Textiles & Apparel (12 companies)
+  [company] ALOKINDS — fresh (0d old), skip ✓
+  [company] ARVIND — fresh (0d old), skip ✓
+  [company] GRASIM — fresh (0d old), skip ✓
+  [company] HIMATSEIDE — fresh (0d old), skip ✓
+  [company] KPRMILL — fresh (0d old), skip ✓
+  [company] NAHARSPING — fresh (0d old), skip ✓
+  [company] PAGEIND — fresh (0d old), skip ✓
+  [company] RAYMOND — searching …
+  [company] RAYMOND → https://www.screener.in/company/RAYMOND/consolidated/
+  [company] RAYMOND — parsed HTML
+  [company] RAYMOND — fetched quick ratios + peers
+  [company] RAYMOND — fetched announcements
+  [company] RAYMOND — score: 44.6/100 (Watchlist)
+  [company] SIYSIL — fresh (0d old), skip ✓
+  [company] TRIDENT — fresh (0d old), skip ✓
+  [company] VTL — fresh (0d old), skip ✓
+  [company] WELSPUNLIV — fresh (0d old), skip ✓
+  [company] RAYMOND — saved to DB
+[sector] Textiles & Apparel — saved to DB
+
+[sector] Water & Waste Management (7 companies)
+  [company] AWHCL — fresh (0d old), skip ✓
+  [company] EMSLIMITED — fresh (0d old), skip ✓
+  [company] IONEXCHANG — fresh (0d old), skip ✓
+  [company] RAMKY — fresh (0d old), skip ✓
+  [company] RSWM — fresh (0d old), skip ✓
+  [company] SSWL — fresh (0d old), skip ✓
+  [company] WABAG — fresh (0d old), skip ✓
+[sector] Water & Waste Management — saved to DB
+
+────────────────────────────────────────────────────
+DEFAULTERS REPORT
+────────────────────────────────────────────────────
+Sector: Asset Management
+  ✗ ISEC                         missing: currentRatio
+  ✗ NAM-INDIA                    missing: currentRatio
+Sector: Automobile
+  ✗ BAJAJ-AUTO                   missing: currentRatio
+Sector: Aviation
+  ✗ INDIGO                       missing: pe, currentRatio
+Sector: Banking
+  ✗ CUB                          missing: pe, roe, roce, currentRatio
+  ✗ PNB                          missing: currentRatio
+Sector: Capital Goods
+  ✗ ABB                          missing: currentRatio
+  ✗ LT                           missing: currentRatio
+Sector: Chemicals
+  ✗ CLEAN                        missing: currentRatio
+Sector: Defence
+  ✗ BEL                          missing: currentRatio
+  ✗ HAL                          missing: currentRatio
+  ✗ IDEAFORGE                    missing: pe, currentRatio
+Sector: Healthcare & Hospitals
+  ✗ NH                           missing: currentRatio
+Sector: Jewellery & Luxury
+  ✗ TITAN                        missing: currentRatio
+Sector: Logistics
+  ✗ CONCOR                       missing: currentRatio
+  ✗ TCI                          missing: currentRatio
+Sector: Marine & Fisheries
+  ✗ ZEAL                         missing: currentRatio
+Sector: NBFC & Finance
+  ✗ LTF                          missing: currentRatio
+Sector: Paper & Packaging
+  ✗ AGI                          missing: currentRatio
+Sector: Spirits & Beverages
+  ✗ TI                           missing: currentRatio
+Sector: Telecom
+  ✗ IDEA                         missing: pe, roe, currentRatio
+Sector: Textiles & Apparel
+  ✗ RAYMOND                      missing: currentRatio
+────────────────────────────────────────────────────
+Total defaulters: 22 of 493 (4.5%)
+Log: /Users/adityaagrawal/Desktop/stockscore/logs/refresh-defaulters-2026-06-04T11-42-50-333Z.json
+
+[pipeline] Done ✓
+{"ts":"2026-06-04T11:42:50.337Z","level":"info","msg":"script.end","script":"refresh","duration_ms":439795}

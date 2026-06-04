@@ -23,6 +23,16 @@ npm run refresh:all:force     # full pipeline, force
 # Config sync
 npm run sync:config           # sync sectors_config.json → sector_config DB table
 npm run sync:config:force     # force re-sync
+
+# Config standardization & integrity (see docs/sectors-config-cleanup-plan.md)
+npm run standardize:config        # resolve every symbol vs screener.in, collapse aliases,
+                                  #   enforce one-symbol-one-sector → sectors_config.proposed.json
+npm run standardize:config:force  # ignore data/symbol-resolution.json cache
+npm run standardize:config:write  # overwrite sectors_config.json after review
+npm run validate:config           # offline GATE: fail on any dup / unresolved / non-canonical symbol
+npm run reconcile:db              # report companies/sectors rows that disagree with config
+npm run reconcile:db:apply        # delete orphan company rows / fix sector_slug
+# scripts/rebuild-sectors-from-db.ts --apply  # rebuild sectors table from stored scores (no scrape)
 ```
 
 Scripts run with `npx tsx` — no separate compile step needed.
@@ -39,6 +49,7 @@ Required in `.env.local`:
 | `REFRESH_PASSWORD` | optional — gates the `/api/refresh` endpoint |
 | `NEXT_PUBLIC_ENABLE_REFRESH` | if set, shows refresh buttons in the UI |
 | `MAINTENANCE_MODE` | set to `1` to return 503 on all routes |
+| `ADMIN_EMAIL` | comma-separated admin emails; gates `/profile/refresh` and `POST /api/admin/refresh` |
 
 ## Architecture overview
 
@@ -109,6 +120,8 @@ Tables created/migrated by `lib/db.ts → ensureTables()` (call via `POST /api/m
 | `sessions` | Auth — opaque 32-byte token in httpOnly cookie `ss_session`, 30-day TTL |
 | `bookmarks` | Per-user saved companies |
 | `feedback` | User feedback submissions |
+| `refresh_runs` | One row per admin refresh run — request, summary, ok flag |
+| `refresh_errors` | Per-item errors for each run (FK → `refresh_runs`) |
 
 ### Key type boundaries
 
@@ -123,6 +136,12 @@ Tables created/migrated by `lib/db.ts → ensureTables()` (call via `POST /api/m
 
 `sectors_config.json` at the project root is the **single source of truth** for which sectors and companies exist. The pipeline reads this file; the UI's `loadSectorsConfig()` also reads it directly to show sectors that haven't been scraped yet. To add a sector/company, edit this file and re-run `npm run refresh:sector`.
 
+**Invariants (enforced — see `docs/sectors-config-cleanup-plan.md`):**
+- Every company symbol must be the **canonical screener.in ticker** and appear in **exactly one sector**. This is the fix for the "company shown in 2–3 sectors" bug: the `sectors.companies` JSONB array is what the UI renders, so a symbol listed under N sectors shows up N times.
+- `lib/config-validate.ts` (`npm run validate:config`) is the gate; `runPipeline` calls it first and **refuses to scrape an invalid config**.
+- Symbols are verified/canonicalised against screener.in by `scripts/standardize-config.ts`, cached in `data/symbol-resolution.json`. Taxonomy/symbol decisions (primary sector per shared ticker, sector merges, manual renamed-code map, drops) live in `sector_overrides.json`. The standardizer **never guesses** a fuzzy search match — only exact-ticker / direct-page / manual resolutions are accepted; everything else is reported unresolved.
+- After editing the config, run `npm run validate:config`, then `npm run refresh:sector` (or `scripts/rebuild-sectors-from-db.ts --apply` to rebuild from existing scores without scraping), then `npm run reconcile:db:apply`.
+
 ### Auth system
 
 Cookie-based session auth (`lib/auth.ts`). Cookie name: `ss_session` (httpOnly, secure, sameSite=lax). Routes: `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout`, `/api/auth/me`, `/api/auth/change-password`, `/api/auth/forgot-password`.
@@ -130,6 +149,7 @@ Cookie-based session auth (`lib/auth.ts`). Cookie name: `ss_session` (httpOnly, 
 ### API routes
 
 - `POST /api/refresh?sector=<slug>` — triggers `runPipeline` via SSE stream; password-gated
+- `POST /api/admin/refresh` — admin-only SSE endpoint; body `{ phases, sectors?, force? }`; session-based admin auth (`ADMIN_EMAIL`)
 - `GET /api/company/[symbol]` — returns full `CompanyDetail` from DB
 - `GET /api/charts/[symbol]` — returns `ChartPayload` from DB
 - `GET /api/bookmarks` / `POST /api/bookmarks` — user bookmark CRUD

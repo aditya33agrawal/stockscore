@@ -17,7 +17,13 @@
     "refresh:all": "npx tsx scripts/refresh-all.ts",
     "refresh:all:force": "npx tsx scripts/refresh-all.ts --force",
     "sync:config": "npx tsx scripts/sync-config.ts",
-    "sync:config:force": "npx tsx scripts/sync-config.ts --force"
+    "sync:config:force": "npx tsx scripts/sync-config.ts --force",
+    "validate:config": "npx tsx scripts/validate-config.ts",
+    "standardize:config": "npx tsx scripts/standardize-config.ts",
+    "standardize:config:force": "npx tsx scripts/standardize-config.ts --force",
+    "standardize:config:write": "npx tsx scripts/standardize-config.ts --write",
+    "reconcile:db": "npx tsx scripts/reconcile-db.ts",
+    "reconcile:db:apply": "npx tsx scripts/reconcile-db.ts --apply"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

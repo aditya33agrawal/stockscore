@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Bookmark, LogIn, LogOut, User } from "lucide-react";
+import { Bookmark, LogIn, LogOut, User, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface SessionUser {
@@ -21,6 +21,7 @@ export function UserMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<SessionUser | null | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,7 +32,7 @@ export function UserMenu() {
     let cancelled = false;
     fetch("/api/auth/me", { cache: "no-store", credentials: "same-origin" })
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) setUser(d?.user ?? null); })
+      .then((d) => { if (!cancelled) { setUser(d?.user ?? null); setIsAdmin(d?.isAdmin ?? false); } })
       .catch(() => { if (!cancelled) setUser(null); });
     return () => { cancelled = true; };
   }, [pathname]);
@@ -122,6 +123,16 @@ export function UserMenu() {
             >
               <Bookmark className="h-4 w-4 text-chalk-300/70" /> My Bookmarks
             </Link>
+            {isAdmin && (
+              <Link
+                href="/profile/refresh"
+                onClick={() => setOpen(false)}
+                role="menuitem"
+                className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-chalk-200 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4 text-chalk-300/70" /> Refresh Console
+              </Link>
+            )}
             <button
               onClick={logout}
               role="menuitem"

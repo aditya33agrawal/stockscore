@@ -58,7 +58,9 @@ export function SectorSearch({
       <div
         className="flex items-center gap-3 rounded-2xl border px-5 py-1 transition-all duration-200"
         style={{
-          background: "#fff",
+          background: "rgb(var(--ink-900) / 0.78)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
           borderColor: focused ? "rgb(var(--accent)/0.4)" : "rgb(var(--ink-700))",
         }}
       >
@@ -79,7 +81,9 @@ export function SectorSearch({
         <div
           className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[420px] overflow-auto scrollbar-thin rounded-2xl border"
           style={{
-            background: "#fff",
+            background: "rgb(var(--ink-900) / 0.92)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
             borderColor: "rgb(var(--ink-700))",
             boxShadow: "0 20px 60px rgba(74,74,74,0.15)",
           }}

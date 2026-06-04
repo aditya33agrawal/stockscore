@@ -16,11 +16,11 @@
   --ink-600: 168 168 160;   /* stronger border / disabled     */
   --ink-500: 122 128 130;   /* icon / muted chrome            */
 
-  /* Text scale: Ink → muted */
+  /* Text scale: Ink → muted (darkened for stronger body contrast) */
   --chalk-50:  20 20 20;     /* near-black headings            */
   --chalk-100: 47 47 47;     /* Ink — body text                */
-  --chalk-200: 74 74 74;     /* secondary text                 */
-  --chalk-300: 105 110 118;  /* muted / captions               */
+  --chalk-200: 58 58 58;     /* secondary text                 */
+  --chalk-300: 82 86 92;     /* muted / captions               */
 
   /* Brand — Slate (chrome / interactive, NOT a verdict color) */
   --accent:        109 129 150;   /* #6D8196 */
@@ -41,6 +41,45 @@
   --scrollbar-track: rgb(255 255 227);
   --scrollbar-thumb: rgb(203 203 203);
   --scrollbar-thumb-hover: rgb(168 168 160);
+}
+
+/* ── Ink Wash Night — matched dark variant (toggled via `.dark` on <html>) ── */
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces: warm charcoal → mid */
+  --ink-950: 24 24 22;      /* page background                */
+  --ink-900: 32 32 30;      /* card / surface                 */
+  --ink-800: 42 42 39;      /* raised surface                 */
+  --ink-700: 64 64 60;      /* borders                        */
+  --ink-600: 88 88 83;      /* stronger border / disabled     */
+  --ink-500: 130 132 130;   /* icon / muted chrome            */
+
+  /* Text: near-white → muted (lightened for stronger contrast on charcoal) */
+  --chalk-50:  248 248 244;
+  --chalk-100: 236 236 231;
+  --chalk-200: 210 210 204;
+  --chalk-300: 182 184 184;
+
+  /* Slate accent — brightened to read on charcoal */
+  --accent:        138 158 180;
+  --accent-soft:   160 178 198;
+  --accent-deep:   110 130 152;
+
+  /* Semantic verdict colors — brightened for dark surfaces */
+  --good:      90 170 116;
+  --good-deep: 70 140 95;
+  --warn:      212 162 70;
+  --bad:       208 112 106;
+  --bad-deep:  176 82 78;
+
+  --panel-bg:      rgba(255, 255, 255, 0.03);
+  --panel-border:  rgba(255, 255, 255, 0.10);
+  --page-bg:       rgb(24 24 22);
+  --page-fg:       rgb(224 224 218);
+  --scrollbar-track: rgb(24 24 22);
+  --scrollbar-thumb: rgb(64 64 60);
+  --scrollbar-thumb-hover: rgb(88 88 83);
 }
 
 
@@ -113,7 +152,7 @@ html, body {
 /* Horizontal section divider */
 .section-rule {
   border: none;
-  border-top: 1px solid rgba(74, 74, 74, 0.12);
+  border-top: 1px solid rgb(var(--ink-700) / 0.6);
   margin: 0;
 }
 

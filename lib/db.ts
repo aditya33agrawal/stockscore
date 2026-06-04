@@ -153,4 +153,31 @@ export async function ensureTables() {
   await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS request_id  TEXT`;
   await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS country     TEXT`;
   await sql`ALTER TABLE feedback ADD COLUMN IF NOT EXISTS user_id     BIGINT REFERENCES users(id) ON DELETE SET NULL`;
+
+  // Admin refresh audit log
+  await sql`
+    CREATE TABLE IF NOT EXISTS refresh_runs (
+      id           BIGSERIAL PRIMARY KEY,
+      started_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+      finished_at  TIMESTAMPTZ,
+      requested_by TEXT,
+      request      JSONB NOT NULL,
+      summary      JSONB,
+      ok           BOOLEAN
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS refresh_errors (
+      id        BIGSERIAL PRIMARY KEY,
+      run_id    BIGINT REFERENCES refresh_runs(id) ON DELETE CASCADE,
+      ts        TIMESTAMPTZ NOT NULL DEFAULT now(),
+      phase     TEXT NOT NULL,
+      scope     TEXT,
+      item      TEXT,
+      reason    TEXT,
+      message   TEXT NOT NULL,
+      stack     TEXT
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS refresh_errors_run_idx ON refresh_errors(run_id)`;
 }

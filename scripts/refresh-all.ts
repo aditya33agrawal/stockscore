@@ -79,8 +79,8 @@ async function main() {
   // Phase 3 — price chart candles per ticker
   phases.push(
     await runPhase("charts", async () => {
-      const { runChartsRefresh } = await tryImportChartsRunner();
-      await runChartsRefresh(force);
+      const { runChartsRefresh } = await import("../lib/charts/runner");
+      await runChartsRefresh((msg) => console.log(msg), { force });
     }),
   );
 
@@ -104,32 +104,6 @@ async function main() {
   process.exit(ok ? 0 : 1);
 }
 
-/**
- * The existing scripts/refresh-charts.ts has its inline `main()` and its
- * runner logic isn't exported from lib/. To avoid duplicating logic, we
- * spawn `npm run refresh:charts` as a child process when called from the
- * orchestrator. This keeps each phase isolated.
- */
-async function tryImportChartsRunner() {
-  return {
-    runChartsRefresh: async (forceFlag: boolean) => {
-      const { spawn } = await import("node:child_process");
-      await new Promise<void>((resolve, reject) => {
-        const args = ["tsx", "scripts/refresh-charts.ts"];
-        if (forceFlag) args.push("--force");
-        const child = spawn("npx", args, {
-          stdio: "inherit",
-          env: process.env,
-        });
-        child.on("close", (code) => {
-          if (code === 0) resolve();
-          else reject(new Error(`refresh-charts.ts exited with code ${code}`));
-        });
-        child.on("error", reject);
-      });
-    },
-  };
-}
 
 main().catch((err) => {
   log.error("refresh.crashed", { error: err instanceof Error ? err.message : String(err) });

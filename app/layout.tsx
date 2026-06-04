@@ -60,7 +60,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('ss_theme')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();",
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-ink-950 text-chalk-100 font-sans antialiased">
         <a href="#main" className="skip-link">Skip to content</a>
         <Suspense fallback={null}>
@@ -71,7 +79,7 @@ export default function RootLayout({
         <Footer />
         <ScrollToTop />
         <Toaster
-          theme="light"
+          theme="system"
           richColors
           position="top-center"
           closeButton
