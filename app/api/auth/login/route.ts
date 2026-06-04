@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import sql from "@/lib/db";
 import { ensureTables } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/admin";
 import { compose } from "@/lib/api/compose";
 import { withErrorHandler } from "@/lib/api/with-error-handler";
 import { withMethods } from "@/lib/api/with-methods";
@@ -42,5 +43,6 @@ export const POST = compose(
   return NextResponse.json({
     ok: true,
     user: { id: rows[0].id, email: rows[0].email, name: rows[0].name },
+    isAdmin: isAdminEmail(rows[0].email),
   });
 });

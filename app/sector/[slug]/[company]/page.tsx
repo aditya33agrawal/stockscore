@@ -1,23 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ThumbsUp,
-  ThumbsDown,
-  ExternalLink,
-  ChevronDown,
-  Star,
-} from "lucide-react";
-import clsx from "clsx";
-import { loadSector, pointsColor, loadCompanyDetail } from "@/lib/data";
+import { ChevronDown } from "lucide-react";
+import { loadSector, loadCompanyDetail } from "@/lib/data";
 import { extractChartData, parseFinancialCSV, toNum } from "@/lib/company-data";
-import { ScoreBadge } from "@/components/ScoreBadge";
-import { CategoryCard } from "@/components/CategoryCard";
-import { FinancialCharts } from "@/components/FinancialCharts";
-import { FinancialTable } from "@/components/FinancialTable";
-import { MetricCard } from "@/components/MetricCard";
+import { CompanyHero } from "@/components/CompanyHero";
+import { StoryPanel } from "@/components/StoryPanel";
+import { ScoreBars } from "@/components/ScoreBars";
+import { MetricsGlance } from "@/components/MetricsGlance";
+import { PriceSnapshot } from "@/components/PriceSnapshot";
+import { DeepDive } from "@/components/DeepDive";
+import { StickyVerdict } from "@/components/StickyVerdict";
+import { PeerComparisonTable } from "@/components/PeerComparisonTable";
 import { AnnouncementList } from "@/components/AnnouncementList";
-import { PriceChart } from "@/components/PriceChart";
+import { CompanySideNav } from "@/components/CompanySideNav";
 import {
   evaluatePE,
   evaluateROE,
@@ -31,11 +26,6 @@ import {
   evaluateCurrentRatio,
 } from "@/lib/evaluators";
 import type { MetricCardProps } from "@/components/MetricCard";
-import { PeerComparisonTable } from "@/components/PeerComparisonTable";
-import { PriceRuler } from "@/components/PriceRuler";
-import { RadarCompare } from "@/components/RadarCompare";
-import { CompanySideNav } from "@/components/CompanySideNav";
-import { BookmarkButton } from "@/components/BookmarkButton";
 
 export const dynamic = "force-dynamic";
 
@@ -52,71 +42,6 @@ export async function generateMetadata({
     description: `${co.name} fundamental score breakdown across 10 categories. Ranked ${co.rank} in ${sector?.name}.`,
   };
 }
-
-const ITEM_LEARN_MAP: Record<string, string> = {
-  "Current Ratio":          "/learn#current-ratio",
-  "Promoter Holding Level": "/learn#promoter-holding",
-  "Promoter Trend (8Q)":    "/learn#promoter-holding",
-  "P/E vs Industry":        "/learn#pe",
-  "Debt / Equity":          "/learn#de",
-  "Return on Equity":       "/learn#roe",
-  "ROCE Consistency":       "/learn#roce",
-  "OPM vs Sector":          "/learn#opm",
-  "Dividend Yield":         "/learn#dividend-yield",
-  "CFO / PAT":              "/learn#cfo-pat",
-  "Sales CAGR 5Y":          "/learn#sales-growth",
-};
-
-// Ordered groups for All Key Ratios
-const RATIO_GROUPS: { label: string; keys: string[] }[] = [
-  {
-    label: "Valuation",
-    keys: [
-      "Current Price",
-      "Market Cap",
-      "High / Low",
-      "Stock P/E",
-      "Industry PE",
-      "PEG Ratio",
-      "Price to book value",
-      "Book Value",
-      "Intrinsic Value",
-      "Face Value",
-    ],
-  },
-  {
-    label: "Returns & Margins",
-    keys: [
-      "ROE",
-      "ROCE",
-      "ROCE 5Yr",
-      "Dividend Yield",
-      "Profit Var 10Yrs",
-      "Sales Var 10Yrs",
-    ],
-  },
-  {
-    label: "Leverage & Debt",
-    keys: [
-      "Debt to equity",
-      "Pledged percentage",
-      "Debt",
-      "Secured loan",
-      "Unsecured loan",
-      "Debt 5Years back",
-      "Debt 10Years back",
-    ],
-  },
-  {
-    label: "Technicals",
-    keys: [
-      "DMA 50",
-      "DMA 200",
-      "Down from 52w high",
-      "Up from 52w low",
-    ],
-  },
-];
 
 export default async function CompanyPage({
   params,
@@ -136,6 +61,35 @@ export default async function CompanyPage({
 
   // Build MetricCard data
   const metricCards: MetricCardProps[] = [];
+
+  // currentRatioVal is hoisted so it can be used both inside the metric-card block
+  // and later in the Balance Sheet category patch.
+  let currentRatioVal: number | null = co.raw.current_ratio != null
+    ? co.raw.current_ratio
+    : (() => {
+        if (detail?.ratios) {
+          const key = Object.keys(detail.ratios).find(
+            (k) => k.toLowerCase() === "current ratio"
+          );
+          const stripRaw = key ? detail.ratios[key] : undefined;
+          if (stripRaw) {
+            const n = parseFloat(stripRaw.replace(/[^0-9.]/g, ""));
+            if (!isNaN(n)) return n;
+          }
+        }
+        const ratTable = parseFinancialCSV(detail?.financial_tables.ratios ?? null);
+        const rowKey = Object.keys(ratTable.rowMap).find(
+          (k) => k.toLowerCase() === "current ratio"
+        );
+        if (rowKey) {
+          const vals = ratTable.rowMap[rowKey] ?? [];
+          for (let i = vals.length - 1; i >= 0; i--) {
+            const n = toNum(vals[i]);
+            if (n !== null) return n;
+          }
+        }
+        return null;
+      })();
 
   if (chartData) {
     const evPE = evaluatePE(co.raw);
@@ -278,35 +232,6 @@ export default async function CompanyPage({
         : undefined,
     });
 
-    // Fall back to raw ratios table when the scored snapshot is missing current_ratio
-    const currentRatioVal: number | null = co.raw.current_ratio != null
-      ? co.raw.current_ratio
-      : (() => {
-          // 1) Top-ratios strip — case-insensitive lookup ("Current Ratio" / "Current ratio")
-          if (detail?.ratios) {
-            const key = Object.keys(detail.ratios).find(
-              (k) => k.toLowerCase() === "current ratio"
-            );
-            const stripRaw = key ? detail.ratios[key] : undefined;
-            if (stripRaw) {
-              const n = parseFloat(stripRaw.replace(/[^0-9.]/g, ""));
-              if (!isNaN(n)) return n;
-            }
-          }
-          // 2) Ratios financial table — row "Current Ratio" (latest non-empty cell)
-          const ratTable = parseFinancialCSV(detail?.financial_tables.ratios ?? null);
-          const rowKey = Object.keys(ratTable.rowMap).find(
-            (k) => k.toLowerCase() === "current ratio"
-          );
-          if (rowKey) {
-            const vals = ratTable.rowMap[rowKey] ?? [];
-            for (let i = vals.length - 1; i >= 0; i--) {
-              const n = toNum(vals[i]);
-              if (n !== null) return n;
-            }
-          }
-          return null;
-        })();
     const evCR = evaluateCurrentRatio({ ...co.raw, current_ratio: currentRatioVal ?? undefined });
     metricCards.push({
       title: "Current Ratio",
@@ -370,7 +295,6 @@ export default async function CompanyPage({
       sentenceTone: evDiv.tone,
     });
 
-    // Cash Conversion Quality
     const evCC = evaluateCashConversion(chartData.cfCfo, chartData.annualNetProfit);
     if (evCC.ratio !== null) {
       metricCards.push({
@@ -403,10 +327,8 @@ export default async function CompanyPage({
       });
     }
 
-    // Promoter Holding — use last non-null value so a missing most-recent quarter doesn't show N/A
     const nonNullPromoter = chartData.shPromoter.filter((v): v is number => v != null);
     let latestPromoter: number | null = nonNullPromoter.length > 0 ? nonNullPromoter[nonNullPromoter.length - 1] : null;
-    // If no Promoter row exists but other shareholding rows do (FII/DII/Public), promoters = 0 (e.g. ITC, HDFC Bank widely-held)
     if (latestPromoter == null) {
       const hasOtherShareholders =
         chartData.shFii.some((v) => v != null) ||
@@ -460,10 +382,29 @@ export default async function CompanyPage({
     });
   }
 
-  // Compute trend info
   const trendInfo = evaluateTrend(co.cmp, co.raw);
 
-  // Parse 52-week high/low from ratios
+  // Patch Balance Sheet category — update the "Current Ratio" item detail with the
+  // actual fetched value (the scorer may have stored 0 / "unavailable" if the scraper
+  // didn't capture it at scoring time, but detail.ratios always has it).
+  const patchedCategories = co.categories.map((cat) => {
+    if (cat.name !== "Balance Sheet") return cat;
+    return {
+      ...cat,
+      items: cat.items.map((item) => {
+        if (item.label !== "Current Ratio") return item;
+        // Use the already-computed currentRatioVal which has the full fallback chain
+        if (currentRatioVal != null && (!item.detail || item.detail.includes("unavailable") || item.detail.includes("0.00"))) {
+          return {
+            ...item,
+            detail: `Current ratio ${currentRatioVal.toFixed(2)}`,
+          };
+        }
+        return item;
+      }),
+    };
+  });
+
   function parse52wHL(value: string | undefined): { high: number | null; low: number | null } {
     if (!value) return { high: null, low: null };
     const parts = value.split("/").map((p) => parseFloat(p.replace(/[₹,\s]/g, "")));
@@ -474,114 +415,53 @@ export default async function CompanyPage({
   }
   const { high: high52w, low: low52w } = parse52wHL(detail?.ratios["High / Low"]);
 
-  // Build ordered ratios
-  const ratiosMap = detail?.ratios ?? {};
-  const allKeys = Object.keys(ratiosMap);
-  const usedKeys = new Set<string>();
+  const hasAnnouncements =
+    detail && (detail.announcements.important.length > 0 || detail.announcements.recent.length > 0);
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 scroll-smooth">
+      {/* Sticky verdict mini-bar (appears when hero scrolls off) */}
+      <StickyVerdict
+        name={co.name}
+        score={co.final_score}
+        classification={co.classification}
+      />
+
+      {/* Fixed side navigation */}
       <CompanySideNav />
-      <Link
-        href={`/sector/${sector.slug}`}
-        className="inline-flex items-center gap-1.5 text-sm text-chalk-300/40 hover:text-accent transition-colors mb-8"
-      >
-        <ArrowLeft className="h-4 w-4" /> {sector.name}
-      </Link>
 
-      {/* HEADER */}
-      <header id="overview" className="glass border-subtle rounded-2xl p-6 sm:p-8 mb-8 scroll-mt-24">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-2">
-              Rank {co.rank} of {sector.companies.length} in {sector.name}
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50 mb-3">
-              {co.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-chalk-300/50 num">
-              <span className="font-semibold text-chalk-100">{co.ticker}</span>
-              <span>CMP ₹{co.cmp.toLocaleString("en-IN")}</span>
-              {co.raw.pe && <span>P/E {co.raw.pe.toFixed(1)}</span>}
-              {co.raw.industry_pe && (
-                <span>Industry P/E {co.raw.industry_pe.toFixed(1)}</span>
-              )}
-              {co.classification && (
-                <span className="rounded-md border border-accent/20 bg-accent/8 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-accent">
-                  {co.classification}
-                </span>
-              )}
-              {/* Trend Tag */}
-              <span
-                title={trendInfo.sentence}
-                className={clsx(
-                  "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider cursor-help",
-                  trendInfo.trend === "up" && trendInfo.strength === "strong" && "border-accent bg-accent/20 text-accent",
-                  trendInfo.trend === "up" && trendInfo.strength !== "strong" && "border-accent/40 bg-accent/10 text-accent",
-                  trendInfo.trend === "down" && trendInfo.strength === "strong" && "border-bad bg-bad/20 text-bad",
-                  trendInfo.trend === "down" && trendInfo.strength !== "strong" && "border-bad/40 bg-bad/10 text-bad",
-                  trendInfo.trend === "sideways" && "border-warn/40 bg-warn/10 text-warn"
-                )}
-              >
-                {trendInfo.label}
-              </span>
-              {/* Peer percentile */}
-              {co.peer_percentile != null && (
-                <span
-                  title={`Scores at the ${Math.round(co.peer_percentile * 100)}th percentile among sector peers across P/E, ROCE, OPM, growth and leverage`}
-                  className="inline-flex items-center gap-1 rounded-md border border-ink-600/60 bg-ink-800/60 px-2 py-0.5 text-xs text-chalk-300 cursor-help"
-                >
-                  Peer rank {Math.round(co.peer_percentile * 100)}th %ile
-                </span>
-              )}
-            </div>
-          </div>
-          <ScoreBadge score={co.final_score} classification={co.classification} raw={co.raw_total} size="lg" />
-        </div>
+      {/* ── LAYER 1: VERDICT ──────────────────────────────────── */}
+      <CompanyHero
+        co={co}
+        sector={sector}
+        trendInfo={trendInfo}
+        refreshedAt={detail?.refreshed_at ?? sector.refreshed_at}
+      />
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          <a
-            href={`https://www.screener.in/company/${co.ticker}/consolidated/`}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--chalk-100)_/_0.08)] px-3 py-1.5 text-xs font-medium text-chalk-300/50 hover:border-[rgb(var(--chalk-100)_/_0.15)] hover:text-chalk-50 transition-all"
-          >
-            View on Screener <ExternalLink className="h-3 w-3" />
-          </a>
-          <BookmarkButton
-            sectorSlug={sector.slug}
-            companySlug={co.slug}
-            companyTicker={co.ticker}
-            companyName={co.name}
-          />
-        </div>
-      </header>
-
-      {/* LEARN NUDGE — quiet one-liner above score breakdown */}
-      <p className="mb-5 text-xs text-chalk-300/35">
-        Not sure what Balance Sheet or Shareholding mean?{" "}
+      {/* Learn nudge */}
+      <p className="mb-8 text-xs text-chalk-300/35">
+        Not sure what these metrics mean?{" "}
         <Link href="/learn" className="hover:text-accent transition-colors underline underline-offset-2">
-          Learn the metrics →
+          Learn the fundamentals →
         </Link>
       </p>
 
-      {/* CATEGORY BREAKDOWN */}
+      {/* ── LAYER 2: THE STORY ───────────────────────────────────── */}
+      <div className="mb-2">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1">The Story</p>
+        <h2 className="text-xl font-bold text-chalk-50 mb-1">What&apos;s strong · What to watch</h2>
+        <p className="text-xs text-chalk-300/50 mb-5">
+          Top factors that shaped the score. Points in green helped; red/amber are risks.
+        </p>
+      </div>
+      <StoryPanel co={co} />
+
+      {/* ── LAYER 3: SCORE BREAKDOWN ─────────────────────────────── */}
       <section id="breakdown" className="mb-10 scroll-mt-24">
         <div className="flex items-baseline justify-between mb-3">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1">Score Breakdown</p>
-            <h2 className="text-xl font-bold text-chalk-50 flex items-center gap-2">
-              10 categories · every point explained
-              <span className="group/why relative inline-flex items-center">
-                <span
-                  aria-label="Why these categories"
-                  className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-chalk-300/30 text-[10px] text-chalk-300/60 cursor-help"
-                >i</span>
-                <span className="pointer-events-none absolute left-6 top-0 z-50 w-72 rounded-xl glass border-subtle px-3.5 py-2.5 text-xs text-chalk-200 leading-relaxed opacity-0 group-hover/why:opacity-100 transition-opacity shadow-xl">
-                  These 10 categories cover the questions a fundamental analyst actually asks: profitability, growth, leverage, cash quality, who owns the stock, and how it&apos;s priced. Each one is independently scored so you can see where the company is strong and where it isn&apos;t.
-                </span>
-              </span>
-            </h2>
+            <h2 className="text-xl font-bold text-chalk-50">10 categories · every point explained</h2>
           </div>
           <Link
             href="/methodology"
@@ -590,403 +470,138 @@ export default async function CompanyPage({
             Methodology →
           </Link>
         </div>
-        {/* Source / disclaimer */}
-        <p className="mb-5 text-[12px] text-chalk-300/50 leading-relaxed">
-          <span className="font-semibold text-chalk-300/80">Source:</span> based on my own research,
-          parameters, and judgement — <span className="text-chalk-100">not investment advice.</span> Use it as one
-          input alongside annual reports and your own due diligence.
+        <p className="mb-4 text-[12px] text-chalk-300/50 leading-relaxed">
+          <span className="font-semibold text-chalk-300/80">Source:</span> based on my own research, parameters, and judgement —{" "}
+          <span className="text-chalk-100">not investment advice.</span>
         </p>
-        {/* Radar chart — visual fingerprint of the company's score profile */}
-        <div className="grid gap-3">
-          {co.categories.map((cat) => (
-            <CategoryCard key={cat.name} category={cat} />
-          ))}
-        </div>
-        <div className="mb-5">
-          <RadarCompare companies={[co]} />
-        </div>
-        <p className="mt-3 text-xs text-chalk-300/70">
-          Click any category to expand the per-rule breakdown. Green rows added
-          points; red rows deducted.
-        </p>
+        <ScoreBars categories={patchedCategories} />
       </section>
 
-      {/* BONUSES */}
-      {co.bonuses && co.bonuses.length > 0 && (
-        <section id="bonuses" className="mb-6 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">
-            Bonus points
-          </h2>
-          <ul className="glass rounded-2xl border border-accent/20 bg-accent/[0.04] divide-y divide-accent/[0.08]">
-            {co.bonuses.map((b, i) => (
-              <li key={i} className="flex items-center justify-between px-5 py-3">
-                <div className="flex items-center gap-2">
-                  <Star className="h-3.5 w-3.5 text-accent shrink-0" />
-                  <div>
-                    <p className="text-sm text-chalk-50">{b.label}</p>
-                    <p className="text-xs text-chalk-300/80">{b.detail}</p>
-                  </div>
-                </div>
-                <span className="num font-semibold text-accent">+{b.points}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* ── LAYER 4: EVIDENCE ────────────────────────────────────── */}
+      <section id="evidence" className="mb-10 scroll-mt-24 space-y-8">
+        {/* Financials at a Glance */}
+        {metricCards.length > 0 && <MetricsGlance cards={metricCards} />}
 
-      {/* PENALTIES */}
-      {co.penalties.length > 0 && (
-        <section id="penalties" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-bad mb-3">
-            Penalty deductions
-          </h2>
-          <ul className="glass rounded-2xl border border-bad/20 bg-bad/[0.04] divide-y divide-bad/[0.08]">
-            {co.penalties.map((p, i) => (
-              <li
-                key={i}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <div>
-                  <p className="text-sm text-chalk-50">{p.label}</p>
-                  <p className="text-xs text-chalk-300/80">{p.detail}</p>
-                </div>
-                <span className="num font-semibold text-bad">{p.points}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* STRENGTHS / WEAKNESSES */}
-      <section id="strengths" className="mb-10 grid gap-4 md:grid-cols-2 scroll-mt-24">
-        <div className="glass rounded-2xl border border-accent/15 bg-accent/[0.04] p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <ThumbsUp className="h-4 w-4 text-accent" />
-            <h3 className="font-semibold text-chalk-50">Key Strengths</h3>
-          </div>
-          <ul className="space-y-2">
-            {co.strengths.map((s, i) => (
-              <li key={i} className="flex items-start justify-between gap-3 text-sm">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-chalk-100">{s.label}</p>
-                    {ITEM_LEARN_MAP[s.label] && (
-                      <Link href={ITEM_LEARN_MAP[s.label]} className="text-[10px] text-chalk-300/30 hover:text-accent transition-colors">
-                        Learn →
-                      </Link>
-                    )}
-                  </div>
-                  <p className="text-xs text-chalk-300/70">{s.category}</p>
-                </div>
-                <span className={clsx("num font-semibold shrink-0", pointsColor(s.points))}>
-                  +{s.points}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="glass rounded-2xl border border-bad/15 bg-bad/[0.04] p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <ThumbsDown className="h-4 w-4 text-bad" />
-            <h3 className="font-semibold text-chalk-50">Key Risks</h3>
-          </div>
-          <ul className="space-y-2">
-            {co.weaknesses.map((w, i) => (
-              <li key={i} className="flex items-start justify-between gap-3 text-sm">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-chalk-100">{w.label}</p>
-                    {ITEM_LEARN_MAP[w.label] && (
-                      <Link href={ITEM_LEARN_MAP[w.label]} className="text-[10px] text-chalk-300/30 hover:text-accent transition-colors">
-                        Learn →
-                      </Link>
-                    )}
-                  </div>
-                  <p className="text-xs text-chalk-300/70">{w.category}</p>
-                </div>
-                <span className={clsx("num font-semibold shrink-0", pointsColor(w.points))}>
-                  {w.points}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* FINANCIALS AT A GLANCE — replaces raw snapshot */}
-      {metricCards.length > 0 && (
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between mb-4">
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-              Financials at a Glance
-            </h2>
-            <Link href="/learn" className="text-xs text-chalk-300 hover:text-accent">
-              Learn what these mean →
-            </Link>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {metricCards.map((card) => (
-              <MetricCard key={card.title} {...card} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* PEER COMPARISON */}
-      {sector.companies.length > 1 && (
-        <section id="peers" className="mb-10 scroll-mt-24">
-          <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-              How Does It Compare?
-            </h2>
-            <span className="text-xs text-chalk-300/50">{sector.name} · {sector.companies.length} companies</span>
-          </div>
-          <PeerComparisonTable
-            companies={sector.companies}
-            currentSlug={co.slug}
-            sectorSlug={sector.slug}
-          />
-        </section>
-      )}
-
-      {/* COMPANY PROFILE */}
-      {detail && (detail.about || detail.key_points) && (
-        <section id="about-company" className="mb-10 grid gap-6 md:grid-cols-2 scroll-mt-24">
-          {detail.about && (
-            <div className="glass border-subtle rounded-2xl p-5">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">About</h3>
-              <p className="text-sm text-chalk-300 leading-relaxed">{detail.about.replace(/\[\d+\]/g, "")}</p>
-            </div>
-          )}
-          {detail.key_points && (
-            <div className="glass border-subtle rounded-2xl p-5">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Key Points</h3>
-              <p className="text-sm text-chalk-300 leading-relaxed whitespace-pre-line">{detail.key_points.replace(/\[\d+\]/g, "").trim()}</p>
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* ALL KEY RATIOS — grouped */}
-      {detail && Object.keys(detail.ratios).length > 0 && (
-        <section id="ratios" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">All Key Ratios</h2>
-          <div className="rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 space-y-6">
-            {RATIO_GROUPS.map((group) => {
-              const groupEntries = group.keys
-                .filter((k) => ratiosMap[k] != null)
-                .map((k) => { usedKeys.add(k); return [k, ratiosMap[k]] as [string, string]; });
-              if (groupEntries.length === 0) return null;
-              return (
-                <div key={group.label}>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">{group.label}</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
-                    {groupEntries.map(([k, v]) => (
-                      <div key={k}>
-                        <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
-                        <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{v}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-            {/* Tail: any keys not in any group */}
-            {(() => {
-              const remaining = allKeys.filter((k) => !usedKeys.has(k));
-              if (remaining.length === 0) return null;
-              return (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">Other</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
-                    {remaining.map((k) => (
-                      <div key={k}>
-                        <p className="text-xs text-chalk-300/70 leading-tight">{k}</p>
-                        <p className="num text-sm font-semibold text-chalk-100 mt-0.5">{ratiosMap[k]}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-        </section>
-      )}
-
-      {/* GROWTH & CAGR */}
-      {detail && (
-        <section id="growth" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Growth & CAGR</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {Object.entries(detail.growth_tables).map(([title, rows]) => (
-              <div key={title} className="glass border-subtle rounded-2xl p-4">
-                <p className="text-xs font-semibold text-chalk-300 mb-2">{title}</p>
-                <div className="space-y-1">
-                  {Object.entries(rows).map(([period, value]) => (
-                    <div key={period} className="flex justify-between text-xs">
-                      <span className="text-chalk-300/70">{period}</span>
-                      <span className={`num font-semibold ${parseFloat(value) >= 0 ? "text-accent" : "text-bad"}`}>{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* PRICE CHART (technicals) */}
-      <section id="technicals" className="mb-10 scroll-mt-24">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Price & Technicals</h2>
-        <PriceChart symbol={co.ticker} />
-      </section>
-
-      {/* PRICE RULER — 52w range + DMA positions */}
-      {(co.raw.dma50 || co.raw.dma200 || high52w || low52w) && (
-        <section className="mb-8">
-          <PriceRuler
+        {/* Price snapshot */}
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-3">
+            Price &amp; Technicals
+          </p>
+          <PriceSnapshot
+            symbol={co.ticker}
             cmp={co.cmp}
             dma50={co.raw.dma50}
             dma200={co.raw.dma200}
             high52w={high52w}
             low52w={low52w}
           />
-        </section>
-      )}
+        </div>
 
-      {/* FINANCIAL CHARTS */}
-      {chartData && (
-        <section id="charts" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Financial Charts</h2>
-          <FinancialCharts primaryData={chartData} primaryName={co.name} peers={peers} />
-        </section>
-      )}
-
-      {/* FACTOR BREAKDOWN — v2 detail tab */}
-      {co.factor_breakdown && co.factor_breakdown.length > 0 && (
-        <section className="mb-10">
+        {/* Peer comparison — collapsed by default */}
+        {sector.companies.length > 1 && (
           <details className="group glass border-subtle rounded-2xl">
-            <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
+            <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">
               <div>
-                <span className="text-sm font-semibold text-chalk-100">Factor Breakdown</span>
-                <span className="ml-2 text-xs text-chalk-300/60">{co.factor_breakdown.length} factors · raw score {co.raw_total.toFixed(1)}/100</span>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-0.5">Context</p>
+                <p className="text-sm font-semibold text-chalk-50">
+                  How does it compare to its sector?
+                </p>
+                <p className="text-xs text-chalk-300/50 mt-0.5">
+                  {sector.name} · {sector.companies.length} companies
+                </p>
               </div>
-              <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
+              <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180 shrink-0" />
             </summary>
-            <div className="border-t border-ink-700/40 overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead className="text-chalk-300/50 uppercase tracking-wider">
-                  <tr className="border-b border-ink-700/40">
-                    <th className="text-left px-4 py-2">Factor</th>
-                    <th className="text-left px-4 py-2 hidden sm:table-cell">Category</th>
-                    <th className="text-right px-4 py-2">Score 0–1</th>
-                    <th className="text-right px-4 py-2">Wt</th>
-                    <th className="text-right px-4 py-2">Pts</th>
-                    <th className="text-left px-4 py-2 hidden md:table-cell">Source</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-ink-700/30">
-                  {co.factor_breakdown.map((row, i) => (
-                    <tr key={i} className="hover:bg-ink-800/20">
-                      <td className="px-4 py-2">
-                        <p className="text-chalk-100">{row.factor}</p>
-                        {row.notes && (
-                          <p className="text-chalk-300/50 mt-0.5 leading-tight max-w-xs hidden lg:block">{row.notes}</p>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 text-chalk-300/70 hidden sm:table-cell">{row.category}</td>
-                      <td className="px-4 py-2 text-right num">
-                        <span className={clsx(
-                          row.score_01 >= 0.7 ? "text-accent" : row.score_01 >= 0.4 ? "text-warn" : "text-bad"
-                        )}>
-                          {row.score_01.toFixed(2)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2 text-right num text-chalk-300">{row.weight}</td>
-                      <td className={clsx(
-                        "px-4 py-2 text-right num font-semibold",
-                        row.points > row.weight * 0.7 ? "text-accent" : row.points > row.weight * 0.35 ? "text-warn" : "text-bad"
-                      )}>
-                        {row.points.toFixed(1)}
-                      </td>
-                      <td className="px-4 py-2 hidden md:table-cell">
-                        <span className={clsx(
-                          "rounded px-1.5 py-0.5 text-xs",
-                          row.source === "absolute" && "bg-ink-800 text-chalk-300/70",
-                          row.source === "relative" && "bg-accent/10 text-accent/70",
-                          row.source === "trend"    && "bg-warn/10 text-warn/70",
-                        )}>
-                          {row.source}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="border-t border-[rgb(var(--chalk-100)_/_0.06)] px-5 py-5">
+              <PeerComparisonTable
+                companies={sector.companies}
+                currentSlug={co.slug}
+                sectorSlug={sector.slug}
+              />
             </div>
-            {co.assumptions && co.assumptions.length > 0 && (
-              <div className="border-t border-ink-700/40 px-5 py-3">
-                <p className="text-xs font-semibold text-chalk-300/50 mb-2 uppercase tracking-wider">Assumptions &amp; fallbacks</p>
-                <ul className="space-y-1">
-                  {co.assumptions.map((a, i) => (
-                    <li key={i} className="text-xs text-chalk-300/60">· {a}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </details>
-        </section>
-      )}
+        )}
 
-      {/* FINANCIAL TABLES */}
-      {detail && (
-        <section id="tables" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Financial Tables</h2>
-          <div className="space-y-2">
-            {(
-              [
-                ["Quarterly Results", detail.financial_tables.quarters],
-                ["Profit & Loss", detail.financial_tables.profit_loss],
-                ["Balance Sheet", detail.financial_tables.balance_sheet],
-                ["Cash Flow", detail.financial_tables.cash_flow],
-                ["Annual Ratios", detail.financial_tables.ratios],
-                ["Shareholding Pattern", detail.financial_tables.shareholding],
-                ["Peer Comparison", detail.financial_tables.peers],
-              ] as [string, string | null][]
-            ).map(([title, csv]) => (
-              <details key={title} className="group glass border-subtle rounded-2xl">
-                <summary className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none select-none">
-                  <span className="text-sm font-medium text-chalk-100">{title}</span>
-                  <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180" />
-                </summary>
-                <div className="border-t border-ink-700/40">
-                  <FinancialTable csv={csv} title={title} />
+        {/* About company — collapsed by default */}
+        {detail && (detail.about || detail.key_points) && (
+          <details className="group glass border-subtle rounded-2xl">
+            <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">
+              <div>
+                <p className="text-sm font-semibold text-chalk-50">About the company</p>
+                {detail.about && (
+                  <p className="text-xs text-chalk-300/50 mt-0.5 line-clamp-1 max-w-sm">
+                    {detail.about.replace(/\[\d+\]/g, "").slice(0, 100)}…
+                  </p>
+                )}
+              </div>
+              <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180 shrink-0" />
+            </summary>
+            <div className="border-t border-[rgb(var(--chalk-100)_/_0.06)] px-5 py-5 grid gap-5 md:grid-cols-2">
+              {detail.about && (
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">About</h3>
+                  <p className="text-sm text-chalk-300 leading-relaxed">{detail.about.replace(/\[\d+\]/g, "")}</p>
                 </div>
-              </details>
-            ))}
-          </div>
-        </section>
-      )}
+              )}
+              {detail.key_points && (
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">Key Points</h3>
+                  <p className="text-sm text-chalk-300 leading-relaxed whitespace-pre-line">
+                    {detail.key_points.replace(/\[\d+\]/g, "").trim()}
+                  </p>
+                </div>
+              )}
+            </div>
+          </details>
+        )}
+      </section>
 
-      {/* ANNOUNCEMENTS — compressed to 1 each with "View all" */}
-      {detail && (detail.announcements.important.length > 0 || detail.announcements.recent.length > 0) && (
-        <section id="announcements" className="mb-10 scroll-mt-24">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-accent mb-3">Announcements</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {detail.announcements.important.length > 0 && (
-              <AnnouncementList
-                announcements={detail.announcements.important}
-                heading="Important"
-              />
-            )}
-            {detail.announcements.recent.length > 0 && (
-              <AnnouncementList
-                announcements={detail.announcements.recent}
-                heading="Recent"
-              />
-            )}
+      {/* ── LAYER 5: DEEP DIVE ───────────────────────────────────── */}
+      <div className="mb-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1">Deep Dive</p>
+        <h2 className="text-xl font-bold text-chalk-50 mb-1">Charts, tables & raw data</h2>
+        <p className="text-xs text-chalk-300/50 mb-5">
+          Switch tabs to explore financials, ratios, and factor-level scoring detail.
+        </p>
+      </div>
+      <DeepDive
+        chartData={chartData}
+        companyName={co.name}
+        ticker={co.ticker}
+        peers={peers}
+        tables={detail?.financial_tables}
+        growthTables={detail?.growth_tables}
+        ratiosMap={detail?.ratios}
+        factorBreakdown={co.factor_breakdown}
+        assumptions={co.assumptions}
+        rawTotal={co.raw_total}
+      />
+
+      {/* Announcements — collapsed */}
+      {hasAnnouncements && (
+        <details className="group glass border-subtle rounded-2xl mb-10">
+          <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">
+            <div>
+              <p className="text-sm font-semibold text-chalk-50">Announcements</p>
+              <p className="text-xs text-chalk-300/50 mt-0.5">
+                {detail!.announcements.important.length > 0 && `${detail!.announcements.important.length} important`}
+                {detail!.announcements.important.length > 0 && detail!.announcements.recent.length > 0 && " · "}
+                {detail!.announcements.recent.length > 0 && `${detail!.announcements.recent.length} recent`}
+              </p>
+            </div>
+            <ChevronDown className="h-4 w-4 text-chalk-300 transition-transform group-open:rotate-180 shrink-0" />
+          </summary>
+          <div className="border-t border-[rgb(var(--chalk-100)_/_0.06)] px-5 py-5">
+            <div className="grid gap-6 md:grid-cols-2">
+              {detail!.announcements.important.length > 0 && (
+                <AnnouncementList announcements={detail!.announcements.important} heading="Important" />
+              )}
+              {detail!.announcements.recent.length > 0 && (
+                <AnnouncementList announcements={detail!.announcements.recent} heading="Recent" />
+              )}
+            </div>
           </div>
-        </section>
+        </details>
       )}
     </div>
   );

@@ -274,14 +274,6 @@ export default async function Home() {
             This project is my answer to that gap — and a way to put my fundamental-analysis approach in
             front of anyone who wants to see it.
           </p>
-          <p>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-1.5 text-accent hover:text-accent-soft text-sm font-semibold transition-colors"
-            >
-              Read more about me <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </p>
         </div>
       </section>
     </div>

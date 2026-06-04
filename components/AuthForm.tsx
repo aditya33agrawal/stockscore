@@ -56,7 +56,11 @@ export function AuthForm({ mode }: Props) {
         return;
       }
       toast.success(isSignup ? "Welcome to Stockscore" : "Welcome back");
-      router.push(next);
+      // Admins land on the admin dashboard unless an explicit non-default
+      // destination was requested via ?next=.
+      const explicitNext = search?.get("next");
+      const dest = data?.isAdmin && !explicitNext ? "/admin" : next;
+      router.push(dest);
       router.refresh();
     } catch {
       setError("Network error — check your connection and try again.");

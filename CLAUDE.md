@@ -49,7 +49,7 @@ Required in `.env.local`:
 | `REFRESH_PASSWORD` | optional — gates the `/api/refresh` endpoint |
 | `NEXT_PUBLIC_ENABLE_REFRESH` | if set, shows refresh buttons in the UI |
 | `MAINTENANCE_MODE` | set to `1` to return 503 on all routes |
-| `ADMIN_EMAIL` | comma-separated admin emails; gates `/profile/refresh` and `POST /api/admin/refresh` |
+| `ADMIN_EMAIL` | comma-separated admin emails; gates the `/admin` area and `POST /api/admin/refresh`. Admins are redirected to `/admin` on login. |
 
 ## Architecture overview
 
@@ -150,6 +150,7 @@ Cookie-based session auth (`lib/auth.ts`). Cookie name: `ss_session` (httpOnly, 
 
 - `POST /api/refresh?sector=<slug>` — triggers `runPipeline` via SSE stream; password-gated
 - `POST /api/admin/refresh` — admin-only SSE endpoint; body `{ phases, sectors?, force? }`; session-based admin auth (`ADMIN_EMAIL`)
+- `GET /api/admin/runs` — admin-only; recent `refresh_runs` (with error counts); `?id=<n>` returns one run + its full `refresh_errors[]`
 - `GET /api/company/[symbol]` — returns full `CompanyDetail` from DB
 - `GET /api/charts/[symbol]` — returns `ChartPayload` from DB
 - `GET /api/bookmarks` / `POST /api/bookmarks` — user bookmark CRUD

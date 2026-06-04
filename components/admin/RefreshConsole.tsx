@@ -46,6 +46,16 @@ export function RefreshConsole({ sectors }: Props) {
   const logRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  // Pre-select phases from a ?phases=sectors,market,charts deep link
+  // (used by the dashboard "Quick actions").
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("phases");
+    if (!raw) return;
+    const valid = new Set<Phase>(["sectors", "market", "charts"]);
+    const picked = raw.split(",").map((s) => s.trim()).filter((s): s is Phase => valid.has(s as Phase));
+    if (picked.length) setSelectedPhases(picked);
+  }, []);
+
   // Auto-scroll log
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;

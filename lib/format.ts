@@ -58,3 +58,31 @@ export function formatDate(iso: string): string {
     year: "numeric",
   });
 }
+
+/** Human-readable elapsed duration from milliseconds, e.g. "820ms", "12.3s", "1m 04s". */
+export function formatDuration(ms: number | null | undefined): string {
+  if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
+  if (ms < 1000) return `${Math.round(ms)}ms`;
+  const totalSec = ms / 1000;
+  if (totalSec < 60) return `${totalSec.toFixed(1)}s`;
+  const mins = Math.floor(totalSec / 60);
+  const secs = Math.round(totalSec % 60);
+  return `${mins}m ${String(secs).padStart(2, "0")}s`;
+}
+
+/** Compact relative time, e.g. "just now", "5m ago", "3h ago", "2d ago", else a date. */
+export function formatRelative(iso: string | null | undefined): string {
+  if (!iso) return "never";
+  const then = new Date(iso).getTime();
+  if (!Number.isFinite(then)) return "—";
+  const diff = Date.now() - then;
+  const sec = Math.round(diff / 1000);
+  if (sec < 45) return "just now";
+  const min = Math.round(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.round(hr / 24);
+  if (day < 7) return `${day}d ago`;
+  return formatDate(iso);
+}

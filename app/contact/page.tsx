@@ -1,4 +1,4 @@
-import { Copy, Linkedin, Mail, MapPin, Briefcase } from "lucide-react";
+import { Copy, Linkedin, Mail, MapPin, Briefcase, FileText } from "lucide-react";
 import { FeedbackForm } from "@/components/FeedbackForm";
 
 export const metadata = { title: "Contact & Feedback" };
@@ -71,6 +71,23 @@ export default function ContactPage() {
               LinkedIn
             </p>
             <p className="text-chalk-50 font-medium">/in/adi33</p>
+          </div>
+        </a>
+
+        <a
+          href="https://aditya33agrawal.github.io/resume.pdf"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="group flex items-center gap-4 rounded-xl border border-ink-700/60 bg-ink-900/40 p-5 hover:border-accent/40 hover:bg-ink-900 transition-colors"
+        >
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent ring-1 ring-accent/30">
+            <FileText className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs text-chalk-300/70 uppercase tracking-wider">
+              Resume
+            </p>
+            <p className="text-chalk-50 font-medium">View resume</p>
           </div>
         </a>
 

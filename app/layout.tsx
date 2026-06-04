@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getCurrentUser } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/admin";
 import { NavProgress } from "@/components/NavProgress";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Toaster } from "sonner";
@@ -54,11 +56,13 @@ export const viewport: Viewport = {
   themeColor: "#FFFFE3",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getCurrentUser();
+  const isAdmin = user ? isAdminEmail(user.email) : false;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -74,7 +78,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <NavProgress />
         </Suspense>
-        <Navbar />
+        <Navbar initialUser={user} initialIsAdmin={isAdmin} />
         <main id="main" className="min-h-[calc(100vh-4rem)]">{children}</main>
         <Footer />
         <ScrollToTop />

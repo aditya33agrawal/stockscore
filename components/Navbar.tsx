@@ -9,13 +9,23 @@ import { UserMenu } from "@/components/UserMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { GlobalSearch } from "@/components/GlobalSearch";
 
+interface SessionUser {
+  id: number;
+  email: string;
+  name: string | null;
+}
+
+interface NavbarProps {
+  initialUser?: SessionUser | null;
+  initialIsAdmin?: boolean;
+}
+
 const NAV_LINKS = [
   { href: "/sectors",          label: "Sectors" },
   { href: "/learn",            label: "Learn" },
   { href: "/methodology",      label: "Methodology" },
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
-  { href: "/about",            label: "About" },
   { href: "/contact",          label: "Contact" },
 ];
 
@@ -37,7 +47,7 @@ function WaveformIcon() {
   );
 }
 
-export function Navbar() {
+export function Navbar({ initialUser = null, initialIsAdmin = false }: NavbarProps) {
   const [open, setOpen]           = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled]   = useState(false);
@@ -118,7 +128,7 @@ export function Navbar() {
             <Search className="h-4 w-4" />
           </button>
           <ThemeToggle />
-          <UserMenu />
+          <UserMenu initialUser={initialUser} initialIsAdmin={initialIsAdmin} />
         </div>
 
         {/* Mobile: search + hamburger */}

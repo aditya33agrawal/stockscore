@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Bookmark, Mail, User as UserIcon } from "lucide-react";
 import sql from "@/lib/db";
-import { ensureTables } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 
@@ -14,12 +13,13 @@ export default async function ProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  await ensureTables();
-  const [{ count: bookmarkCount }] = await sql<{ count: number }[]>`
-    SELECT COUNT(*)::int AS count FROM bookmarks WHERE user_id = ${user.id}
-  `;
-  const [{ count: sectorCount }] = await sql<{ count: number }[]>`
-    SELECT COUNT(DISTINCT sector_slug)::int AS count FROM bookmarks WHERE user_id = ${user.id}
+  const [{ bookmarkCount, sectorCount }] = await sql<
+    { bookmarkCount: number; sectorCount: number }[]
+  >`
+    SELECT
+      COUNT(*)::int                          AS "bookmarkCount",
+      COUNT(DISTINCT sector_slug)::int       AS "sectorCount"
+    FROM bookmarks WHERE user_id = ${user.id}
   `;
 
   const displayName = user.name?.trim() || user.email.split("@")[0];

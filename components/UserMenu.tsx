@@ -12,28 +12,34 @@ interface SessionUser {
   name: string | null;
 }
 
+interface Props {
+  initialUser?: SessionUser | null;
+  initialIsAdmin?: boolean;
+}
+
 function initialFor(u: SessionUser): string {
   const src = (u.name ?? u.email ?? "?").trim();
   return src.charAt(0).toUpperCase();
 }
 
-export function UserMenu() {
+export function UserMenu({ initialUser = null, initialIsAdmin = false }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<SessionUser | null | undefined>(undefined);
-  const [isAdmin, setIsAdmin] = useState(false);
+  // Seed from the server-rendered session so the correct avatar / Sign-in
+  // button paints on first render — no empty-circle flicker, no late pop-in.
+  const [user, setUser] = useState<SessionUser | null>(initialUser);
+  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // Re-fetch session whenever the route changes — fixes the "signed in but
-  // UI still shows Sign in" case after login redirect, because the navbar
-  // stays mounted across the client-side transition.
+  // Background reconcile on route change — keeps the menu correct after a
+  // client-side login/logout transition (the navbar stays mounted across it).
   useEffect(() => {
     let cancelled = false;
     fetch("/api/auth/me", { cache: "no-store", credentials: "same-origin" })
       .then((r) => r.json())
       .then((d) => { if (!cancelled) { setUser(d?.user ?? null); setIsAdmin(d?.isAdmin ?? false); } })
-      .catch(() => { if (!cancelled) setUser(null); });
+      .catch(() => { /* keep current state on transient error */ });
     return () => { cancelled = true; };
   }, [pathname]);
 
@@ -66,10 +72,6 @@ export function UserMenu() {
     setOpen(false);
     router.push("/");
     router.refresh();
-  }
-
-  if (user === undefined) {
-    return <div className="h-9 w-9 rounded-full bg-ink-800/40 animate-pulse" />;
   }
 
   if (!user) {
@@ -125,12 +127,12 @@ export function UserMenu() {
             </Link>
             {isAdmin && (
               <Link
-                href="/profile/refresh"
+                href="/admin"
                 onClick={() => setOpen(false)}
                 role="menuitem"
                 className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-chalk-200 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
               >
-                <RefreshCw className="h-4 w-4 text-chalk-300/70" /> Refresh Console
+                <RefreshCw className="h-4 w-4 text-chalk-300/70" /> Admin Dashboard
               </Link>
             )}
             <button

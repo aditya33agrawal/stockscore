@@ -9,23 +9,13 @@ interface NavItem {
   label: string;
 }
 
-// Order must match the actual section order in
-// app/sector/[slug]/[company]/page.tsx so the active highlight tracks
-// linearly as the user scrolls.
+// 5 narrative layers — maps to the redesigned page structure.
 const ITEMS: NavItem[] = [
-  { id: "overview",      label: "Overview" },
-  { id: "breakdown",     label: "Score Breakdown" },
-  { id: "bonuses",       label: "Bonuses" },
-  { id: "penalties",     label: "Penalties" },
-  { id: "strengths",     label: "Strengths & Risks" },
-  { id: "peers",         label: "Peers" },
-  { id: "about-company", label: "About Company" },
-  { id: "ratios",        label: "Key Ratios" },
-  { id: "growth",        label: "Growth & CAGR" },
-  { id: "technicals",    label: "Price & Technicals" },
-  { id: "charts",        label: "Financial Charts" },
-  { id: "tables",        label: "Financial Tables" },
-  { id: "announcements", label: "Announcements" },
+  { id: "overview",  label: "Verdict" },
+  { id: "story",     label: "Story" },
+  { id: "breakdown", label: "Score" },
+  { id: "evidence",  label: "Evidence" },
+  { id: "deep-dive", label: "Deep Dive" },
 ];
 
 export function CompanySideNav() {
