@@ -14,6 +14,9 @@ interface TooltipProps {
   /** ARIA label for the trigger if no children are passed. */
   triggerLabel?: string;
   className?: string;
+  /** Horizontal anchor of the popover. "start" pins it to the left edge
+   *  (so it expands rightward), "end" to the right edge. Default centered. */
+  align?: "start" | "center" | "end";
 }
 
 /**
@@ -22,7 +25,7 @@ interface TooltipProps {
  * devices. Content is delivered through a single shared shape so we can keep
  * every label's explanation consistent.
  */
-export function Tooltip({ content, children, triggerLabel, className }: TooltipProps) {
+export function Tooltip({ content, children, triggerLabel, className, align = "center" }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const id = useId();
   const c: TooltipContent =
@@ -32,6 +35,7 @@ export function Tooltip({ content, children, triggerLabel, className }: TooltipP
     <span
       role="tooltip"
       id={id}
+      data-align={align}
       className="tooltip-pop"
     >
       {c.title && <span className="tooltip-title">{c.title}</span>}

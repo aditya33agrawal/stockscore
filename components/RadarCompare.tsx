@@ -55,14 +55,16 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
     <div className="glass border-subtle rounded-2xl p-6">
       <div className="flex items-baseline justify-between mb-4">
         <h3 className="font-semibold text-chalk-50">Category Profile <span className="text-chalk-300/40 font-normal text-sm">% of max</span></h3>
-        <p className="text-xs text-chalk-300/30">click name to toggle</p>
+        <p className="text-xs text-chalk-300/50">Click any company name to deselect it &amp; re-sort the list</p>
       </div>
 
-      {/* Company toggle pills */}
+      {/* Company toggle pills — selected first, deselected sink to the end.
+          Color stays keyed to each company's original index so it never shifts. */}
       <div className="flex flex-wrap gap-2 mb-5">
-        {companies.map((co, i) => {
-          const color = PALETTE[i % PALETTE.length];
-          const isOn  = enabled[co.slug];
+        {companies
+          .map((co, i) => ({ co, color: PALETTE[i % PALETTE.length], isOn: enabled[co.slug] }))
+          .sort((a, b) => Number(b.isOn) - Number(a.isOn))
+          .map(({ co, color, isOn }) => {
           return (
             <button
               key={co.slug}
@@ -83,13 +85,13 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
       </div>
 
       {/* Chart */}
-      <div className="h-[420px] w-full overflow-hidden">
+      <div className="h-[520px] sm:h-[580px] w-full overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={data} outerRadius="68%" margin={{ top: 16, right: 32, bottom: 16, left: 32 }}>
+          <RadarChart data={data} outerRadius="80%" margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
             <PolarGrid stroke="rgba(120,120,120,0.2)" />
             <PolarAngleAxis
               dataKey="category"
-              tick={{ fill: "#84909C", fontSize: 10 }}
+              tick={{ fill: "#84909C", fontSize: 11 }}
             />
             <PolarRadiusAxis
               angle={90}

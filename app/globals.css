@@ -56,10 +56,10 @@
   --ink-500: 130 132 130;   /* icon / muted chrome            */
 
   /* Text: near-white → muted (lightened for stronger contrast on charcoal) */
-  --chalk-50:  248 248 244;
-  --chalk-100: 236 236 231;
-  --chalk-200: 210 210 204;
-  --chalk-300: 182 184 184;
+  --chalk-50:  253 253 251;
+  --chalk-100: 245 245 241;
+  --chalk-200: 226 226 220;
+  --chalk-300: 200 202 202;
 
   /* Slate accent — brightened to read on charcoal */
   --accent:        138 158 180;
@@ -344,6 +344,16 @@ html, body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;
+}
+/* Horizontal placement overrides (default is centered) */
+.tooltip-pop[data-align="start"] {
+  left: 0;
+  transform: translateX(0);
+}
+.tooltip-pop[data-align="end"] {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
 }
 .tooltip-wrap:hover .tooltip-pop,
 .tooltip-wrap:focus-within .tooltip-pop,

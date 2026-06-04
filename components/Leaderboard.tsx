@@ -8,48 +8,48 @@ import type { Company } from "@/lib/types";
 import { pointsColor, scoreColor, classificationStyle, classificationLabel } from "@/lib/format";
 
 const CATEGORY_ORDER = [
-  "Valuation",
-  "Profitability",
+  "Quality of Business",
   "Growth",
-  "Quarterly Momentum",
+  "Valuation",
   "Balance Sheet",
   "Cash Flow",
+  "Quarterly Momentum",
   "Shareholding",
-  "Dividend",
-  "Operational Efficiency",
+  "Peer Composite",
   "Price & Technical",
+  "Size & Liquidity",
 ];
 
 const ABBREV: Record<string, string> = {
-  Valuation:               "Val",
-  Profitability:           "Prof",
+  "Quality of Business":   "Qual",
   Growth:                  "Grw",
-  "Quarterly Momentum":    "Qtr",
+  Valuation:               "Val",
   "Balance Sheet":         "BS",
   "Cash Flow":             "CF",
+  "Quarterly Momentum":    "Qtr",
   Shareholding:            "SH",
-  Dividend:                "Div",
-  "Operational Efficiency":"OpEff",
+  "Peer Composite":        "Peer",
   "Price & Technical":     "Tech",
+  "Size & Liquidity":      "Size",
 };
 
 const COL_HINT: Record<string, string> = {
   rank:                    "Position in this sector by final score (1 = highest).",
   score:                   "Final score out of 100, after bonuses and penalties.",
-  Valuation:               "P/E, P/B, PEG, intrinsic value gap and dividend yield.",
-  Profitability:           "ROCE, ROE, operating margins and capital efficiency.",
+  "Quality of Business":   "ROCE, ROE, operating margins, capital efficiency and dividend quality.",
   Growth:                  "Sales & profit CAGR (10/5/3yr) plus recent acceleration.",
-  "Quarterly Momentum":    "Latest quarter vs year-ago and prior quarter.",
+  Valuation:               "P/E, P/B, PEG, intrinsic value gap and dividend yield.",
   "Balance Sheet":         "Leverage, debt trajectory, pledge risk, liquidity.",
   "Cash Flow":             "CFO/PAT conversion, FCF consistency, WC discipline.",
+  "Quarterly Momentum":    "Latest quarter vs year-ago and prior quarter.",
   Shareholding:            "Promoter, FII, DII conviction over 8 quarters.",
-  Dividend:                "Yield, payout ratio sustainability and consistency.",
-  "Operational Efficiency":"Debtor days, inventory turnover, cash conversion cycle.",
+  "Peer Composite":        "Relative standing vs sector peers across key ratios.",
   "Price & Technical":     "DMA stack (50/200) + 52-week price position.",
+  "Size & Liquidity":      "Market-cap scale and trading liquidity.",
 };
 
 function SortIcon({ active, dir }: { active: boolean; dir: 1 | -1 }) {
-  if (!active) return <ChevronDown className="h-3 w-3 opacity-25" />;
+  if (!active) return <ChevronDown className="h-3 w-3 opacity-50" />;
   return dir === 1
     ? <ChevronUp   className="h-3 w-3 text-accent" />
     : <ChevronDown className="h-3 w-3 text-accent" />;
@@ -99,7 +99,7 @@ export function Leaderboard({
         "cursor-pointer select-none px-4 py-3 transition-colors",
         "text-[10px] font-semibold uppercase tracking-[0.1em]",
         right ? "text-right" : "text-left",
-        sortKey === k ? "text-accent" : "text-chalk-300/35 hover:text-chalk-300/70",
+        sortKey === k ? "text-accent" : "text-chalk-300/70 hover:text-chalk-200",
       )}
     >
       <span className="inline-flex items-center gap-1">
@@ -118,7 +118,7 @@ export function Leaderboard({
           <thead>
             <tr className="border-b border-[rgb(var(--chalk-100)_/_0.05)] bg-[rgb(var(--accent)_/_0.03)]">
               <Th k="rank" title={COL_HINT.rank}>#</Th>
-              <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35" title="Company name and ticker. Click a row to see the full +/− breakdown.">
+              <th className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/70" title="Company name and ticker. Click a row to see the full +/− breakdown.">
                 Company
               </th>
               <Th k="score" right title={COL_HINT.score}>Score</Th>
@@ -141,7 +141,7 @@ export function Leaderboard({
               return (
                 <tr key={co.slug} className="group hover:bg-[rgb(var(--accent)_/_0.03)] transition-colors">
                   {/* Rank */}
-                  <td className="px-4 py-3.5 num text-[13px] font-medium text-chalk-300/25 w-10">
+                  <td className="px-4 py-3.5 num text-[13px] font-medium text-chalk-300/70 w-10">
                     {co.rank}
                   </td>
 
@@ -151,7 +151,7 @@ export function Leaderboard({
                       <p className="font-semibold text-chalk-50 group-hover:text-accent transition-colors text-[14px]">
                         {co.name}
                       </p>
-                      <p className="num text-[11px] text-chalk-300/35 mt-0.5">
+                      <p className="num text-[11px] text-chalk-300/65 mt-0.5">
                         {co.ticker} · ₹{co.cmp.toLocaleString("en-IN")}
                       </p>
                     </Link>
