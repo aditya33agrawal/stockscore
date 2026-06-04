@@ -3764,5 +3764,929 @@
     "name": null,
     "url": "/company/SDBL/",
     "resolvedAt": "2026-06-04T08:27:51.165Z"
+  },
+  "ANANDRATHI": {
+    "raw": "ANANDRATHI",
+    "canonical": "ANANDRATHI",
+    "name": "Anand Rathi Wealth Ltd",
+    "url": "/company/ANANDRATHI/",
+    "resolvedAt": "2026-06-04T19:38:14.801Z"
+  },
+  "BOSCHLTD": {
+    "raw": "BOSCHLTD",
+    "canonical": "BOSCHLTD",
+    "name": "Bosch Ltd",
+    "url": "/company/BOSCHLTD/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:17.374Z"
+  },
+  "CEATLTD": {
+    "raw": "CEATLTD",
+    "canonical": "CEATLTD",
+    "name": "CEAT Ltd",
+    "url": "/company/CEATLTD/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:19.923Z"
+  },
+  "CRAFTSMAN": {
+    "raw": "CRAFTSMAN",
+    "canonical": "CRAFTSMAN",
+    "name": "Craftsman Automation Ltd",
+    "url": "/company/CRAFTSMAN/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:22.470Z"
+  },
+  "ENDURANCE": {
+    "raw": "ENDURANCE",
+    "canonical": "ENDURANCE",
+    "name": "Endurance Technologies Ltd",
+    "url": "/company/ENDURANCE/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:25.047Z"
+  },
+  "EXIDEIND": {
+    "raw": "EXIDEIND",
+    "canonical": "EXIDEIND",
+    "name": "Exide Industries Ltd",
+    "url": "/company/EXIDEIND/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:27.625Z"
+  },
+  "FORCEMOT": {
+    "raw": "FORCEMOT",
+    "canonical": "FORCEMOT",
+    "name": "Force Motors Ltd",
+    "url": "/company/FORCEMOT/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:30.201Z"
+  },
+  "RKFORGE": {
+    "raw": "RKFORGE",
+    "canonical": "RKFORGE",
+    "name": "Ramkrishna Forgings Ltd",
+    "url": "/company/RKFORGE/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:32.748Z"
+  },
+  "SONACOMS": {
+    "raw": "SONACOMS",
+    "canonical": "SONACOMS",
+    "name": "Sona BLW Precision Forgings Ltd",
+    "url": "/company/SONACOMS/",
+    "resolvedAt": "2026-06-04T19:38:35.328Z"
+  },
+  "SUNDRMFAST": {
+    "raw": "SUNDRMFAST",
+    "canonical": "SUNDRMFAST",
+    "name": "Sundram Fasteners Ltd",
+    "url": "/company/SUNDRMFAST/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:37.879Z"
+  },
+  "UNOMINDA": {
+    "raw": "UNOMINDA",
+    "canonical": "UNOMINDA",
+    "name": "Uno Minda Ltd",
+    "url": "/company/UNOMINDA/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:40.452Z"
+  },
+  "CANBK": {
+    "raw": "CANBK",
+    "canonical": "CANBK",
+    "name": "Canara Bank",
+    "url": "/company/CANBK/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:43.019Z"
+  },
+  "CSBBANK": {
+    "raw": "CSBBANK",
+    "canonical": "CSBBANK",
+    "name": "CSB Bank Ltd",
+    "url": "/company/CSBBANK/",
+    "resolvedAt": "2026-06-04T19:38:45.570Z"
+  },
+  "EQUITASBNK": {
+    "raw": "EQUITASBNK",
+    "canonical": "EQUITASBNK",
+    "name": "Equitas Small Finance Bank Ltd",
+    "url": "/company/EQUITASBNK/",
+    "resolvedAt": "2026-06-04T19:38:48.118Z"
+  },
+  "J&KBANK": {
+    "raw": "J&KBANK",
+    "canonical": "J&KBANK",
+    "name": "Jammu and Kashmir Bank Ltd",
+    "url": "/company/J&KBANK/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:50.687Z"
+  },
+  "TMB": {
+    "raw": "TMB",
+    "canonical": "TMB",
+    "name": "Tamilnad Mercantile Bank Ltd",
+    "url": "/company/TMB/",
+    "resolvedAt": "2026-06-04T19:38:53.229Z"
+  },
+  "UJJIVANSFB": {
+    "raw": "UJJIVANSFB",
+    "canonical": "UJJIVANSFB",
+    "name": "Ujjivan Small Finance Bank Ltd",
+    "url": "/company/UJJIVANSFB/",
+    "resolvedAt": "2026-06-04T19:38:55.771Z"
+  },
+  "CENTURYPLY": {
+    "raw": "CENTURYPLY",
+    "canonical": "CENTURYPLY",
+    "name": "Century Plyboards (India) Ltd",
+    "url": "/company/CENTURYPLY/consolidated/",
+    "resolvedAt": "2026-06-04T19:38:58.319Z"
+  },
+  "CERA": {
+    "raw": "CERA",
+    "canonical": "CERA",
+    "name": "Cera Sanitaryware Ltd",
+    "url": "/company/CERA/",
+    "resolvedAt": "2026-06-04T19:39:00.869Z"
+  },
+  "GREENPLY": {
+    "raw": "GREENPLY",
+    "canonical": "GREENPLY",
+    "name": "Greenply Industries Ltd",
+    "url": "/company/GREENPLY/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:03.423Z"
+  },
+  "HSIL": {
+    "raw": "HSIL",
+    "canonical": null,
+    "name": null,
+    "url": null,
+    "resolvedAt": "2026-06-04T19:39:06.046Z"
+  },
+  "KAJARIACER": {
+    "raw": "KAJARIACER",
+    "canonical": "KAJARIACER",
+    "name": "Kajaria Ceramics Ltd",
+    "url": "/company/KAJARIACER/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:08.619Z"
+  },
+  "NITCO": {
+    "raw": "NITCO",
+    "canonical": "NITCO",
+    "name": "Nitco Ltd",
+    "url": "/company/NITCO/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:11.169Z"
+  },
+  "ORIENTBELL": {
+    "raw": "ORIENTBELL",
+    "canonical": "ORIENTBELL",
+    "name": "Orient Bell Ltd",
+    "url": "/company/ORIENTBELL/",
+    "resolvedAt": "2026-06-04T19:39:13.712Z"
+  },
+  "SOMANYCERA": {
+    "raw": "SOMANYCERA",
+    "canonical": "SOMANYCERA",
+    "name": "Somany Ceramics Ltd",
+    "url": "/company/SOMANYCERA/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:16.271Z"
+  },
+  "FINCABLES": {
+    "raw": "FINCABLES",
+    "canonical": "FINCABLES",
+    "name": "Finolex Cables Ltd",
+    "url": "/company/FINCABLES/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:18.816Z"
+  },
+  "BSE": {
+    "raw": "BSE",
+    "canonical": "BSE",
+    "name": "BSE Ltd",
+    "url": "/company/BSE/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:21.370Z"
+  },
+  "CAMS": {
+    "raw": "CAMS",
+    "canonical": "CAMS",
+    "name": "Computer Age Management Services Ltd",
+    "url": "/company/CAMS/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:23.925Z"
+  },
+  "CARERATING": {
+    "raw": "CARERATING",
+    "canonical": "CARERATING",
+    "name": "CARE Ratings Ltd",
+    "url": "/company/CARERATING/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:26.475Z"
+  },
+  "CDSL": {
+    "raw": "CDSL",
+    "canonical": "CDSL",
+    "name": "Central Depository Services (India) Ltd",
+    "url": "/company/CDSL/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:29.021Z"
+  },
+  "CRISIL": {
+    "raw": "CRISIL",
+    "canonical": "CRISIL",
+    "name": "CRISIL Ltd",
+    "url": "/company/CRISIL/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:31.573Z"
+  },
+  "ICRA": {
+    "raw": "ICRA",
+    "canonical": "ICRA",
+    "name": "ICRA Ltd",
+    "url": "/company/ICRA/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:34.123Z"
+  },
+  "IEX": {
+    "raw": "IEX",
+    "canonical": "IEX",
+    "name": "Indian Energy Exchange Ltd",
+    "url": "/company/IEX/",
+    "resolvedAt": "2026-06-04T19:39:36.672Z"
+  },
+  "KFINTECH": {
+    "raw": "KFINTECH",
+    "canonical": "KFINTECH",
+    "name": "KFin Technologies Ltd",
+    "url": "/company/KFINTECH/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:39.241Z"
+  },
+  "MCX": {
+    "raw": "MCX",
+    "canonical": "MCX",
+    "name": "Multi Commodity Exchange of India Ltd",
+    "url": "/company/MCX/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:41.791Z"
+  },
+  "BALAMINES": {
+    "raw": "BALAMINES",
+    "canonical": "BALAMINES",
+    "name": "Balaji Amines Ltd",
+    "url": "/company/BALAMINES/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:44.343Z"
+  },
+  "BASF": {
+    "raw": "BASF",
+    "canonical": "BASF",
+    "name": "BASF India Ltd",
+    "url": "/company/BASF/",
+    "resolvedAt": "2026-06-04T19:39:46.894Z"
+  },
+  "CLEAN": {
+    "raw": "CLEAN",
+    "canonical": "CLEAN",
+    "name": "Clean Science & Technology Ltd",
+    "url": "/company/CLEAN/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:49.453Z"
+  },
+  "FLUOROCHEM": {
+    "raw": "FLUOROCHEM",
+    "canonical": "FLUOROCHEM",
+    "name": "Gujarat Fluorochemicals Ltd",
+    "url": "/company/FLUOROCHEM/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:51.995Z"
+  },
+  "JUBLINGREA": {
+    "raw": "JUBLINGREA",
+    "canonical": "JUBLINGREA",
+    "name": "Jubilant Ingrevia Ltd",
+    "url": "/company/JUBLINGREA/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:54.542Z"
+  },
+  "LINDEINDIA": {
+    "raw": "LINDEINDIA",
+    "canonical": "LINDEINDIA",
+    "name": "Linde India Ltd",
+    "url": "/company/LINDEINDIA/",
+    "resolvedAt": "2026-06-04T19:39:57.091Z"
+  },
+  "AHLUCONT": {
+    "raw": "AHLUCONT",
+    "canonical": "AHLUCONT",
+    "name": "Ahluwalia Contracts (India) Ltd",
+    "url": "/company/AHLUCONT/consolidated/",
+    "resolvedAt": "2026-06-04T19:39:59.643Z"
+  },
+  "DBL": {
+    "raw": "DBL",
+    "canonical": "DBL",
+    "name": "Dilip Buildcon Ltd",
+    "url": "/company/DBL/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:02.212Z"
+  },
+  "PSPPROJECT": {
+    "raw": "PSPPROJECT",
+    "canonical": "PSPPROJECT",
+    "name": "PSP Projects Ltd",
+    "url": "/company/PSPPROJECT/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:04.760Z"
+  },
+  "ORIENTELEC": {
+    "raw": "ORIENTELEC",
+    "canonical": "ORIENTELEC",
+    "name": "Orient Electric Ltd",
+    "url": "/company/ORIENTELEC/",
+    "resolvedAt": "2026-06-04T19:40:07.310Z"
+  },
+  "BBOX": {
+    "raw": "BBOX",
+    "canonical": "BBOX",
+    "name": "Black Box Ltd",
+    "url": "/company/BBOX/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:09.859Z"
+  },
+  "DATAPATTNS": {
+    "raw": "DATAPATTNS",
+    "canonical": "DATAPATTNS",
+    "name": "Data Patterns (India) Ltd",
+    "url": "/company/DATAPATTNS/",
+    "resolvedAt": "2026-06-04T19:40:12.399Z"
+  },
+  "DCXINDIA": {
+    "raw": "DCXINDIA",
+    "canonical": "DCXINDIA",
+    "name": "DCX Systems Ltd",
+    "url": "/company/DCXINDIA/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:14.948Z"
+  },
+  "ZENTEC": {
+    "raw": "ZENTEC",
+    "canonical": "ZENTEC",
+    "name": "Zen Technologies Ltd",
+    "url": "/company/ZENTEC/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:17.497Z"
+  },
+  "CPEDU": {
+    "raw": "CPEDU",
+    "canonical": "CPEDU",
+    "name": "Career Point Edutech Ltd",
+    "url": "/company/CPEDU/",
+    "resolvedAt": "2026-06-04T19:40:20.041Z"
+  },
+  "BAYERCROP": {
+    "raw": "BAYERCROP",
+    "canonical": "BAYERCROP",
+    "name": "Bayer CropScience Ltd",
+    "url": "/company/BAYERCROP/",
+    "resolvedAt": "2026-06-04T19:40:22.585Z"
+  },
+  "DEEPAKFERT": {
+    "raw": "DEEPAKFERT",
+    "canonical": "DEEPAKFERT",
+    "name": "Deepak Fertilisers & Petrochemicals Corp Ltd",
+    "url": "/company/DEEPAKFERT/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:25.137Z"
+  },
+  "INSECTICID": {
+    "raw": "INSECTICID",
+    "canonical": "INSECTICID",
+    "name": "Insecticides India Ltd",
+    "url": "/company/INSECTICID/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:27.678Z"
+  },
+  "AWL": {
+    "raw": "AWL",
+    "canonical": "AWL",
+    "name": "AWL Agri Business Ltd",
+    "url": "/company/AWL/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:30.223Z"
+  },
+  "BIKAJI": {
+    "raw": "BIKAJI",
+    "canonical": "BIKAJI",
+    "name": "Bikaji Foods International Ltd",
+    "url": "/company/BIKAJI/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:32.774Z"
+  },
+  "GOPAL": {
+    "raw": "GOPAL",
+    "canonical": "GOPAL",
+    "name": "Gopal Snacks Ltd",
+    "url": "/company/GOPAL/",
+    "resolvedAt": "2026-06-04T19:40:35.327Z"
+  },
+  "HONASA": {
+    "raw": "HONASA",
+    "canonical": "HONASA",
+    "name": "Honasa Consumer Ltd",
+    "url": "/company/HONASA/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:37.872Z"
+  },
+  "ZYDUSWELL": {
+    "raw": "ZYDUSWELL",
+    "canonical": "ZYDUSWELL",
+    "name": "Zydus Wellness Ltd",
+    "url": "/company/ZYDUSWELL/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:40.418Z"
+  },
+  "ASTERDM": {
+    "raw": "ASTERDM",
+    "canonical": "ASTERDM",
+    "name": "Aster DM Healthcare Ltd",
+    "url": "/company/ASTERDM/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:42.968Z"
+  },
+  "NH": {
+    "raw": "NH",
+    "canonical": "NH",
+    "name": "Narayana Hrudayalaya Ltd",
+    "url": "/company/NH/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:45.511Z"
+  },
+  "KAMATHOTEL": {
+    "raw": "KAMATHOTEL",
+    "canonical": "KAMATHOTEL",
+    "name": "Kamat Hotels (India) Ltd",
+    "url": "/company/KAMATHOTEL/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:48.053Z"
+  },
+  "SINCLAIR": {
+    "raw": "SINCLAIR",
+    "canonical": "SINCLAIR",
+    "name": "Sinclairs Hotels Ltd",
+    "url": "/company/SINCLAIR/",
+    "resolvedAt": "2026-06-04T19:40:50.599Z"
+  },
+  "TBOTEK": {
+    "raw": "TBOTEK",
+    "canonical": "TBOTEK",
+    "name": "TBO Tek Ltd",
+    "url": "/company/TBOTEK/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:53.142Z"
+  },
+  "HAPPSTMNDS": {
+    "raw": "HAPPSTMNDS",
+    "canonical": "HAPPSTMNDS",
+    "name": "Happiest Minds Technologies Ltd",
+    "url": "/company/HAPPSTMNDS/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:55.692Z"
+  },
+  "HEXT": {
+    "raw": "HEXT",
+    "canonical": "HEXT",
+    "name": "Hexaware Technologies Ltd",
+    "url": "/company/HEXT/consolidated/",
+    "resolvedAt": "2026-06-04T19:40:58.238Z"
+  },
+  "INTELLECT": {
+    "raw": "INTELLECT",
+    "canonical": "INTELLECT",
+    "name": "Intellect Design Arena Ltd",
+    "url": "/company/INTELLECT/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:00.784Z"
+  },
+  "LATENTVIEW": {
+    "raw": "LATENTVIEW",
+    "canonical": "LATENTVIEW",
+    "name": "Latent View Analytics Ltd",
+    "url": "/company/LATENTVIEW/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:03.415Z"
+  },
+  "MINDTREE": {
+    "raw": "MINDTREE",
+    "canonical": "MINDTREE",
+    "name": "Mindtree Ltd(Merged)",
+    "url": "/company/MINDTREE/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:05.962Z"
+  },
+  "NEWGEN": {
+    "raw": "NEWGEN",
+    "canonical": "NEWGEN",
+    "name": "Newgen Software Technologies Ltd",
+    "url": "/company/NEWGEN/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:08.510Z"
+  },
+  "OFSS": {
+    "raw": "OFSS",
+    "canonical": "OFSS",
+    "name": "Oracle Financial Services Software Ltd",
+    "url": "/company/OFSS/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:11.087Z"
+  },
+  "SONATSOFTW": {
+    "raw": "SONATSOFTW",
+    "canonical": "SONATSOFTW",
+    "name": "Sonata Software Ltd",
+    "url": "/company/SONATSOFTW/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:13.638Z"
+  },
+  "TANLA": {
+    "raw": "TANLA",
+    "canonical": "TANLA",
+    "name": "Tanla Platforms Ltd",
+    "url": "/company/TANLA/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:16.186Z"
+  },
+  "ZENSARTECH": {
+    "raw": "ZENSARTECH",
+    "canonical": "ZENSARTECH",
+    "name": "Zensar Technologies Ltd",
+    "url": "/company/ZENSARTECH/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:18.736Z"
+  },
+  "MFSL": {
+    "raw": "MFSL",
+    "canonical": "MFSL",
+    "name": "Max Financial Services Ltd",
+    "url": "/company/MFSL/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:21.288Z"
+  },
+  "ETERNAL": {
+    "raw": "ETERNAL",
+    "canonical": "ETERNAL",
+    "name": "Eternal Ltd",
+    "url": "/company/ETERNAL/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:23.857Z"
+  },
+  "RGL": {
+    "raw": "RGL",
+    "canonical": "RGL",
+    "name": "Renaissance Global Ltd",
+    "url": "/company/RGL/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:26.398Z"
+  },
+  "NECLIFE": {
+    "raw": "NECLIFE",
+    "canonical": "NECLIFE",
+    "name": "Nectar Lifescience Ltd",
+    "url": "/company/NECLIFE/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:28.947Z"
+  },
+  "TIPSMUSIC": {
+    "raw": "TIPSMUSIC",
+    "canonical": "TIPSMUSIC",
+    "name": "Tips Music Ltd",
+    "url": "/company/TIPSMUSIC/",
+    "resolvedAt": "2026-06-04T19:41:31.491Z"
+  },
+  "ARMANFIN": {
+    "raw": "ARMANFIN",
+    "canonical": "ARMANFIN",
+    "name": "Arman Financial Services Ltd",
+    "url": "/company/ARMANFIN/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:34.042Z"
+  },
+  "BAJAJHFL": {
+    "raw": "BAJAJHFL",
+    "canonical": "BAJAJHFL",
+    "name": "Bajaj Housing Finance Ltd",
+    "url": "/company/BAJAJHFL/",
+    "resolvedAt": "2026-06-04T19:41:36.591Z"
+  },
+  "CANFINHOME": {
+    "raw": "CANFINHOME",
+    "canonical": "CANFINHOME",
+    "name": "Can Fin Homes Ltd",
+    "url": "/company/CANFINHOME/",
+    "resolvedAt": "2026-06-04T19:41:39.131Z"
+  },
+  "FIVESTAR": {
+    "raw": "FIVESTAR",
+    "canonical": "FIVESTAR",
+    "name": "Five-Star Business Finance Ltd",
+    "url": "/company/FIVESTAR/",
+    "resolvedAt": "2026-06-04T19:41:41.670Z"
+  },
+  "IIFLFIN": {
+    "raw": "IIFLFIN",
+    "canonical": null,
+    "name": null,
+    "url": null,
+    "resolvedAt": "2026-06-04T19:41:44.365Z"
+  },
+  "LTF": {
+    "raw": "LTF",
+    "canonical": "LTF",
+    "name": "L&T Finance Ltd",
+    "url": "/company/LTF/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:46.917Z"
+  },
+  "PNBHOUSING": {
+    "raw": "PNBHOUSING",
+    "canonical": "PNBHOUSING",
+    "name": "PNB Housing Finance Ltd",
+    "url": "/company/PNBHOUSING/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:49.488Z"
+  },
+  "SBICARD": {
+    "raw": "SBICARD",
+    "canonical": "SBICARD",
+    "name": "SBI Cards & Payment Services Ltd",
+    "url": "/company/SBICARD/",
+    "resolvedAt": "2026-06-04T19:41:52.067Z"
+  },
+  "CASTROLIND": {
+    "raw": "CASTROLIND",
+    "canonical": "CASTROLIND",
+    "name": "Castrol India Ltd",
+    "url": "/company/CASTROLIND/",
+    "resolvedAt": "2026-06-04T19:41:54.645Z"
+  },
+  "ANDHRAPAP": {
+    "raw": "ANDHRAPAP",
+    "canonical": "ANDHRAPAP",
+    "name": "Andhra Paper Ltd",
+    "url": "/company/ANDHRAPAP/",
+    "resolvedAt": "2026-06-04T19:41:57.189Z"
+  },
+  "EPL": {
+    "raw": "EPL",
+    "canonical": "EPL",
+    "name": "EPL Ltd",
+    "url": "/company/EPL/consolidated/",
+    "resolvedAt": "2026-06-04T19:41:59.745Z"
+  },
+  "MIRCELECTR": {
+    "raw": "MIRCELECTR",
+    "canonical": "MIRCELECTR",
+    "name": "MIRC Electronics Ltd",
+    "url": "/company/MIRCELECTR/",
+    "resolvedAt": "2026-06-04T19:42:02.295Z"
+  },
+  "ORIENTPPR": {
+    "raw": "ORIENTPPR",
+    "canonical": "ORIENTPPR",
+    "name": "Orient Paper & Industries Ltd",
+    "url": "/company/ORIENTPPR/",
+    "resolvedAt": "2026-06-04T19:42:04.837Z"
+  },
+  "AJANTPHARM": {
+    "raw": "AJANTPHARM",
+    "canonical": "AJANTPHARM",
+    "name": "Ajanta Pharma Ltd",
+    "url": "/company/AJANTPHARM/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:07.408Z"
+  },
+  "CAPLIPOINT": {
+    "raw": "CAPLIPOINT",
+    "canonical": "CAPLIPOINT",
+    "name": "Caplin Point Laboratories Ltd",
+    "url": "/company/CAPLIPOINT/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:09.957Z"
+  },
+  "ERIS": {
+    "raw": "ERIS",
+    "canonical": "ERIS",
+    "name": "ERIS Lifesciences Ltd",
+    "url": "/company/ERIS/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:12.506Z"
+  },
+  "FDC": {
+    "raw": "FDC",
+    "canonical": "FDC",
+    "name": "FDC Ltd",
+    "url": "/company/FDC/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:15.055Z"
+  },
+  "GLAND": {
+    "raw": "GLAND",
+    "canonical": "GLAND",
+    "name": "Gland Pharma Ltd",
+    "url": "/company/GLAND/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:17.623Z"
+  },
+  "JBCHEPHARM": {
+    "raw": "JBCHEPHARM",
+    "canonical": "JBCHEPHARM",
+    "name": "J B Chemicals & Pharmaceuticals Ltd",
+    "url": "/company/JBCHEPHARM/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:20.175Z"
+  },
+  "MANKIND": {
+    "raw": "MANKIND",
+    "canonical": "MANKIND",
+    "name": "Mankind Pharma Ltd",
+    "url": "/company/MANKIND/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:22.751Z"
+  },
+  "ZYDUSLIFE": {
+    "raw": "ZYDUSLIFE",
+    "canonical": "ZYDUSLIFE",
+    "name": "Zydus Lifesciences Ltd",
+    "url": "/company/ZYDUSLIFE/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:25.399Z"
+  },
+  "APOLLOPIPE": {
+    "raw": "APOLLOPIPE",
+    "canonical": "APOLLOPIPE",
+    "name": "Apollo Pipes Ltd",
+    "url": "/company/APOLLOPIPE/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:27.941Z"
+  },
+  "ASTRAL": {
+    "raw": "ASTRAL",
+    "canonical": "ASTRAL",
+    "name": "Astral Ltd",
+    "url": "/company/ASTRAL/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:30.517Z"
+  },
+  "FINPIPE": {
+    "raw": "FINPIPE",
+    "canonical": "FINPIPE",
+    "name": "Finolex Industries Ltd",
+    "url": "/company/FINPIPE/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:33.066Z"
+  },
+  "NILKAMAL": {
+    "raw": "NILKAMAL",
+    "canonical": "NILKAMAL",
+    "name": "Nilkamal Ltd",
+    "url": "/company/NILKAMAL/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:35.615Z"
+  },
+  "PRINCEPIPE": {
+    "raw": "PRINCEPIPE",
+    "canonical": "PRINCEPIPE",
+    "name": "Prince Pipes & Fittings Ltd",
+    "url": "/company/PRINCEPIPE/",
+    "resolvedAt": "2026-06-04T19:42:38.169Z"
+  },
+  "SUPREMEIND": {
+    "raw": "SUPREMEIND",
+    "canonical": "SUPREMEIND",
+    "name": "Supreme Industries Ltd",
+    "url": "/company/SUPREMEIND/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:40.743Z"
+  },
+  "TIMETECHNO": {
+    "raw": "TIMETECHNO",
+    "canonical": "TIMETECHNO",
+    "name": "Time Technoplast Ltd",
+    "url": "/company/TIMETECHNO/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:43.286Z"
+  },
+  "RBA": {
+    "raw": "RBA",
+    "canonical": "RBA",
+    "name": "Restaurant Brands Asia Ltd",
+    "url": "/company/RBA/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:45.833Z"
+  },
+  "UFBL": {
+    "raw": "UFBL",
+    "canonical": "UFBL",
+    "name": "United Foodbrands Ltd",
+    "url": "/company/UFBL/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:48.380Z"
+  },
+  "HBLENGINE": {
+    "raw": "HBLENGINE",
+    "canonical": "HBLENGINE",
+    "name": "HBL Engineering Ltd",
+    "url": "/company/HBLENGINE/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:50.929Z"
+  },
+  "TEXRAIL": {
+    "raw": "TEXRAIL",
+    "canonical": "TEXRAIL",
+    "name": "Texmaco Rail & Engineering Ltd",
+    "url": "/company/TEXRAIL/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:53.481Z"
+  },
+  "SIGNATURE": {
+    "raw": "SIGNATURE",
+    "canonical": "SIGNATURE",
+    "name": "SignatureGlobal India Ltd",
+    "url": "/company/SIGNATURE/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:56.030Z"
+  },
+  "GENSOL": {
+    "raw": "GENSOL",
+    "canonical": "GENSOL",
+    "name": "Gensol Engineering Ltd",
+    "url": "/company/GENSOL/consolidated/",
+    "resolvedAt": "2026-06-04T19:42:58.582Z"
+  },
+  "GREENPOWER": {
+    "raw": "GREENPOWER",
+    "canonical": "GREENPOWER",
+    "name": "Orient Green Power Company Ltd",
+    "url": "/company/GREENPOWER/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:01.131Z"
+  },
+  "KPIGREEN": {
+    "raw": "KPIGREEN",
+    "canonical": "KPIGREEN",
+    "name": "KPI Green Energy Ltd",
+    "url": "/company/KPIGREEN/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:03.682Z"
+  },
+  "PREMIERENE": {
+    "raw": "PREMIERENE",
+    "canonical": "PREMIERENE",
+    "name": "Premier Energies Ltd",
+    "url": "/company/PREMIERENE/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:06.252Z"
+  },
+  "SWSOLAR": {
+    "raw": "SWSOLAR",
+    "canonical": "SWSOLAR",
+    "name": "Sterling & Wilson Renewable Energy Ltd",
+    "url": "/company/SWSOLAR/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:08.800Z"
+  },
+  "WAAREEENER": {
+    "raw": "WAAREEENER",
+    "canonical": "WAAREEENER",
+    "name": "Waaree Energies Ltd",
+    "url": "/company/WAAREEENER/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:11.372Z"
+  },
+  "WEBELSOLAR": {
+    "raw": "WEBELSOLAR",
+    "canonical": "WEBELSOLAR",
+    "name": "Websol Energy System Ltd",
+    "url": "/company/WEBELSOLAR/",
+    "resolvedAt": "2026-06-04T19:43:13.921Z"
+  },
+  "BATAINDIA": {
+    "raw": "BATAINDIA",
+    "canonical": "BATAINDIA",
+    "name": "Bata India Ltd",
+    "url": "/company/BATAINDIA/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:16.491Z"
+  },
+  "SPICELEC": {
+    "raw": "SPICELEC",
+    "canonical": "SPICELEC",
+    "name": "Spel Semiconductor Ltd",
+    "url": "/company/SPICELEC/",
+    "resolvedAt": "2026-06-04T19:43:19.035Z"
+  },
+  "SICALLOG": {
+    "raw": "SICALLOG",
+    "canonical": "SICALLOG",
+    "name": "Sical Logistics Ltd",
+    "url": "/company/SICALLOG/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:21.583Z"
+  },
+  "JAGAJITIND": {
+    "raw": "JAGAJITIND",
+    "canonical": "JAGAJITIND",
+    "name": "Jagatjit Industries Ltd",
+    "url": "/company/JAGAJITIND/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:24.128Z"
+  },
+  "SDBL": {
+    "raw": "SDBL",
+    "canonical": "SDBL",
+    "name": "Som Distilleries & Breweries Ltd",
+    "url": "/company/SDBL/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:26.675Z"
+  },
+  "TI": {
+    "raw": "TI",
+    "canonical": "TI",
+    "name": "Tilaknagar Industries Ltd",
+    "url": "/company/TI/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:29.221Z"
+  },
+  "DWARKESH": {
+    "raw": "DWARKESH",
+    "canonical": "DWARKESH",
+    "name": "Dwarikesh Sugar Industries Ltd",
+    "url": "/company/DWARKESH/",
+    "resolvedAt": "2026-06-04T19:43:31.772Z"
+  },
+  "UGARSUGAR": {
+    "raw": "UGARSUGAR",
+    "canonical": "UGARSUGAR",
+    "name": "Ugar Sugar Works Ltd",
+    "url": "/company/UGARSUGAR/",
+    "resolvedAt": "2026-06-04T19:43:34.323Z"
+  },
+  "ALOKINDS": {
+    "raw": "ALOKINDS",
+    "canonical": "ALOKINDS",
+    "name": "Alok Industries Ltd",
+    "url": "/company/ALOKINDS/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:36.876Z"
+  },
+  "NAHARSPING": {
+    "raw": "NAHARSPING",
+    "canonical": "NAHARSPING",
+    "name": "Nahar Spinning Mills Ltd",
+    "url": "/company/NAHARSPING/",
+    "resolvedAt": "2026-06-04T19:43:39.420Z"
+  },
+  "SIYSIL": {
+    "raw": "SIYSIL",
+    "canonical": "SIYSIL",
+    "name": "Siyaram Silk Mills Ltd",
+    "url": "/company/SIYSIL/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:41.972Z"
+  },
+  "VTL": {
+    "raw": "VTL",
+    "canonical": "VTL",
+    "name": "Vardhman Textiles Ltd",
+    "url": "/company/VTL/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:44.517Z"
+  },
+  "AWHCL": {
+    "raw": "AWHCL",
+    "canonical": "AWHCL",
+    "name": "Antony Waste Handling Cell Ltd",
+    "url": "/company/AWHCL/consolidated/",
+    "resolvedAt": "2026-06-04T19:43:47.070Z"
+  },
+  "HINDWAREAP": {
+    "raw": "HINDWAREAP",
+    "canonical": "HINDWAREAP",
+    "name": "Hindware Home Innovation Ltd",
+    "url": "/company/HINDWAREAP/consolidated/",
+    "resolvedAt": "2026-06-04T19:45:15.135Z"
   }
 }
