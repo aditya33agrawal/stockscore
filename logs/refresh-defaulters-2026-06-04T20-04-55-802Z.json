@@ -1,0 +1,627 @@
+{
+  "generated_at": "2026-06-04T20:04:55.802Z",
+  "total_companies": 567,
+  "defaulter_count": 74,
+  "defaulters": [
+    {
+      "sector": "Automobile",
+      "company": "BOSCHLTD",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "CRAFTSMAN",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "ENDURANCE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "EXIDEIND",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "RKFORGE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "SONACOMS",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "SUNDRMFAST",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Automobile",
+      "company": "UNOMINDA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "CSBBANK",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "EQUITASBNK",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "J&KBANK",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "TMB",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Banking",
+      "company": "UJJIVANSFB",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "CENTURYPLY",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "CERA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "GREENPLY",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "HINDWAREAP",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "KAJARIACER",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "NITCO",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "ORIENTBELL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Building Materials",
+      "company": "SOMANYCERA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "BSE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "CAMS",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "CARERATING",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "CDSL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "CRISIL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "ICRA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "IEX",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "KFINTECH",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Capital Market Infrastructure",
+      "company": "MCX",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "BALAMINES",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "BASF",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "FLUOROCHEM",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "JUBLINGREA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Chemicals",
+      "company": "LINDEINDIA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Defence",
+      "company": "DCXINDIA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Defence",
+      "company": "ZENTEC",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Fertilizers & Agrochemicals",
+      "company": "DEEPAKFERT",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "FMCG",
+      "company": "AWL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "FMCG",
+      "company": "BIKAJI",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "FMCG",
+      "company": "GOPAL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "FMCG",
+      "company": "HONASA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "FMCG",
+      "company": "ZYDUSWELL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "HAPPSTMNDS",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "INTELLECT",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "LATENTVIEW",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "NEWGEN",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "OFSS",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "SONATSOFTW",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Information Technology",
+      "company": "TANLA",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "BAJAJHFL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "CANFINHOME",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "FIVESTAR",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "PNBHOUSING",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "NBFC & Finance",
+      "company": "SBICARD",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Paper & Packaging",
+      "company": "EPL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "AJANTPHARM",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "CAPLIPOINT",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "ERIS",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "FDC",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "GLAND",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "MANKIND",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Pharmaceuticals",
+      "company": "ZYDUSLIFE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "APOLLOPIPE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "ASTRAL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "FINPIPE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "NILKAMAL",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "PRINCEPIPE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "pe",
+        "roe",
+        "roce",
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "SUPREMEIND",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Plastics & Pipes",
+      "company": "TIMETECHNO",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Renewable Energy",
+      "company": "KPIGREEN",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Renewable Energy",
+      "company": "PREMIERENE",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Renewable Energy",
+      "company": "SWSOLAR",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    },
+    {
+      "sector": "Renewable Energy",
+      "company": "WAAREEENER",
+      "reason": "missing_critical_fields",
+      "missing": [
+        "currentRatio"
+      ]
+    }
+  ]
+}

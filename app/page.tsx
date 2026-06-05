@@ -1,22 +1,33 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
-import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
+import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex, loadHeroData } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
-import { HeroChart } from "@/components/HeroChart";
+import { HeroRadar } from "@/components/HeroRadar";
+import { ScoreTicker } from "@/components/ScoreTicker";
 import { scoreGradient, scoreColor } from "@/lib/format";
 import clsx from "clsx";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [sectorsConfig, scrapedIndex, companies] = await Promise.all([
+  const [sectorsConfig, scrapedIndex, companies, hero] = await Promise.all([
     loadSectorsConfig(),
     loadSectorIndex(),
     loadCompaniesIndex(),
+    loadHeroData(),
   ]);
 
   const scrapedMap   = new Map(scrapedIndex.map((s) => [s.slug, s]));
   const totalScraped = scrapedIndex.reduce((a, s) => a + s.companies_count, 0);
+
+  const tierTotal = hero.tiers.reduce((a, t) => a + t.count, 0);
+  const tierStyle: Record<string, string> = {
+    Exceptional:    "rgb(var(--good))",
+    "Invest-grade": "rgb(var(--good) / 0.72)",
+    Accumulate:     "rgb(var(--accent))",
+    Watchlist:      "rgb(var(--warn))",
+    Avoid:          "rgb(var(--bad))",
+  };
 
   const sectors = sectorsConfig
     .map((cfg) => ({ ...cfg, scraped: scrapedMap.get(cfg.slug) ?? null }))
@@ -27,8 +38,7 @@ export default async function Home() {
     <div>
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 hero-grid" />
-        <HeroChart />
+        <HeroRadar companies={hero.companies} labels={hero.labels} />
 
         {/* Bottom fade so chart dissolves into page */}
         <div
@@ -77,71 +87,58 @@ export default async function Home() {
         </div>
       </section>
 
-      <hr className="section-rule mx-auto max-w-7xl" />
+      {/* ── MOVING SCORE TAPE (Nifty 50) ──────────────── */}
+      <ScoreTicker companies={hero.companies} />
 
-      {/* ── HOW IT WORKS ─────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent mb-3">How it works</p>
-        <h2 className="text-2xl font-bold tracking-tight text-chalk-50 mb-3">
-          From raw filings to a score you can trust.
-        </h2>
-        <p className="max-w-2xl text-[15px] text-chalk-200 leading-relaxed mb-10">
-          Three purpose-built engines — each transparent by design. Every input, rule, and adjustment is traceable; nothing is hidden behind a black box.
-        </p>
-
-        <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
-          {[
-            {
-              icon: Database,
-              title: "Scraping Engine",
-              body: "Pulls 5 years of annual financials, 12 quarters of results, shareholding patterns, and key ratios for every company — sourced directly from screener.in.",
-            },
-            {
-              icon: BarChart3,
-              title: "Scoring Engine",
-              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — maps to a specific, documented rule.",
-            },
-            {
-              icon: Sparkles,
-              title: "Intelligence Layer",
-              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score — so you know exactly why a company ranks where it does.",
-            },
-          ].map((s, i) => (
-            <div
-              key={i}
-              className="glass border-subtle rounded-2xl p-6 hover:border-accent/25 hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 text-accent mb-4">
-                <s.icon className="h-5 w-5" />
-              </span>
-              <h3 className="font-bold text-[15px] text-chalk-50 mb-2">
-                {i + 1}. {s.title}
-              </h3>
-              <p className="text-sm text-chalk-200 leading-relaxed">{s.body}</p>
+      {/* ── LIVE TIER DISTRIBUTION ────────────────────── */}
+      {tierTotal > 0 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 mt-10 sm:mt-14">
+          <div className="glass border-subtle rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="live-dot h-1.5 w-1.5 rounded-full bg-good" />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-chalk-200">
+                  How {tierTotal} scored companies stack up
+                </p>
+              </div>
+              <p className="text-[11px] text-chalk-300/60">By classification tier</p>
             </div>
-          ))}
-        </div>
-      </section>
 
-      <hr className="section-rule mx-auto max-w-7xl" />
+            {/* Proportional stacked bar */}
+            <div className="flex h-2 w-full overflow-hidden rounded-full bg-ink-700/50">
+              {hero.tiers.map((t) =>
+                t.count > 0 ? (
+                  <div
+                    key={t.tier}
+                    style={{ width: `${(t.count / tierTotal) * 100}%`, background: tierStyle[t.tier] }}
+                    title={`${t.tier}: ${t.count}`}
+                  />
+                ) : null,
+              )}
+            </div>
 
-      {/* ── LEARN NUDGE ──────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
-        <div className="glass border-subtle rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-sm text-chalk-200">
-            <span className="text-chalk-100 font-semibold">New to these metrics?</span>
-            {" "}The Learn page explains every ratio — P/E, ROCE, D/E, promoter holding and more — from first principles.
-          </p>
-          <Link
-            href="/learn"
-            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-accent/30 bg-accent/10 px-3.5 py-1.5 text-xs font-semibold text-accent hover:bg-accent/15 transition-colors"
-          >
-            Explore the Glossary <ArrowRight className="h-3 w-3" />
-          </Link>
-        </div>
-      </section>
+            {/* Tier counters */}
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-5 gap-3">
+              {hero.tiers.map((t) => (
+                <div key={t.tier} className="flex flex-col gap-1.5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ background: tierStyle[t.tier] }} />
+                    <span className="num text-2xl font-bold leading-none text-chalk-50">{t.count}</span>
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-semibold text-chalk-100 leading-tight">{t.tier}</p>
+                    <p className="text-[10px] text-chalk-300/55 num">
+                      {t.min === 0 ? "< 40" : `${t.min}+`} · {Math.round((t.count / tierTotal) * 100)}%
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-      <hr className="section-rule mx-auto max-w-7xl" />
+      <hr className="section-rule mx-auto max-w-7xl mt-12 sm:mt-16" />
 
       {/* ── SECTORS GRID ─────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16">
@@ -253,6 +250,70 @@ export default async function Home() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      <hr className="section-rule mx-auto max-w-7xl" />
+
+            {/* ── HOW IT WORKS ─────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent mb-3">How it works</p>
+        <h2 className="text-2xl font-bold tracking-tight text-chalk-50 mb-3">
+          From raw filings to a score you can trust.
+        </h2>
+        <p className="max-w-2xl text-[15px] text-chalk-200 leading-relaxed mb-10">
+          Three purpose-built engines — each transparent by design. Every input, rule, and adjustment is traceable; nothing is hidden behind a black box.
+        </p>
+
+        <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
+          {[
+            {
+              icon: Database,
+              title: "Scraping Engine",
+              body: "Pulls 5 years of annual financials, 12 quarters of results, shareholding patterns, and key ratios for every company — sourced directly from screener.in.",
+            },
+            {
+              icon: BarChart3,
+              title: "Scoring Engine",
+              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — maps to a specific, documented rule.",
+            },
+            {
+              icon: Sparkles,
+              title: "Intelligence Layer",
+              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score — so you know exactly why a company ranks where it does.",
+            },
+          ].map((s, i) => (
+            <div
+              key={i}
+              className="glass border-subtle rounded-2xl p-6 hover:border-accent/25 hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 text-accent mb-4">
+                <s.icon className="h-5 w-5" />
+              </span>
+              <h3 className="font-bold text-[15px] text-chalk-50 mb-2">
+                {i + 1}. {s.title}
+              </h3>
+              <p className="text-sm text-chalk-200 leading-relaxed">{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <hr className="section-rule mx-auto max-w-7xl" />
+
+      {/* ── LEARN NUDGE ──────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
+        <div className="glass border-subtle rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <p className="text-sm text-chalk-200">
+            <span className="text-chalk-100 font-semibold">New to these metrics?</span>
+            {" "}The Learn page explains every ratio — P/E, ROCE, D/E, promoter holding and more — from first principles.
+          </p>
+          <Link
+            href="/learn"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-accent/30 bg-accent/10 px-3.5 py-1.5 text-xs font-semibold text-accent hover:bg-accent/15 transition-colors"
+          >
+            Explore the Glossary <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
       </section>
 

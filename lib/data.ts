@@ -1,6 +1,7 @@
 import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
+import { unstable_cache } from "next/cache";
 import type { SectorData, SectorIndexEntry } from "./types";
 import type { CompanyDetail } from "./company-data";
 import sql from "./db";
@@ -192,6 +193,133 @@ export async function loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
     return [];
   }
 }
+
+// ── Hero radar + tier distribution ──────────────────────────────────────────
+// Short axis labels keyed to the scorer's category names (lib/scorer.ts).
+const HERO_AXIS_LABELS: Record<string, string> = {
+  "Quality of Business": "Quality",
+  "Growth":              "Growth",
+  "Valuation":           "Value",
+  "Balance Sheet":       "Balance",
+  "Cash Flow":           "Cash",
+  "Quarterly Momentum":  "Momentum",
+  "Shareholding":        "Holders",
+  "Peer Composite":      "Peers",
+  "Price & Technical":   "Technical",
+  "Size & Liquidity":    "Size",
+};
+
+export interface HeroCompany {
+  ticker: string;
+  name: string;
+  score: number;
+  classification: string;
+  /** % of max per category, aligned to the returned `labels` order. */
+  axes: number[];
+}
+
+export type Tier = "Exceptional" | "Invest-grade" | "Accumulate" | "Watchlist" | "Avoid";
+export interface TierCount { tier: Tier; min: number; count: number; }
+
+/** Maps a final score to its classification tier (cutoffs from lib/scorer.ts). */
+export function scoreTier(score: number): Tier {
+  if (score < 40) return "Avoid";
+  if (score < 55) return "Watchlist";
+  if (score < 70) return "Accumulate";
+  if (score < 85) return "Invest-grade";
+  return "Exceptional";
+}
+
+// Nifty 50 constituents — screener.in canonical tickers. Anything not present in
+// the DB is simply skipped, so an occasional index reshuffle degrades gracefully.
+const NIFTY_50 = [
+  "ADANIENT", "ADANIPORTS", "APOLLOHOSP", "ASIANPAINT", "AXISBANK", "BAJAJ-AUTO",
+  "BAJFINANCE", "BAJAJFINSV", "BEL", "BHARTIARTL", "BPCL", "BRITANNIA", "CIPLA",
+  "COALINDIA", "DRREDDY", "EICHERMOT", "GRASIM", "HCLTECH", "HDFCBANK", "HDFCLIFE",
+  "HEROMOTOCO", "HINDALCO", "HINDUNILVR", "ICICIBANK", "ITC", "INDUSINDBK", "INFY",
+  "JSWSTEEL", "KOTAKBANK", "LT", "LTIM", "M&M", "MARUTI", "NESTLEIND", "NTPC",
+  "ONGC", "POWERGRID", "RELIANCE", "SBILIFE", "SBIN", "SHRIRAMFIN", "SUNPHARMA",
+  "TCS", "TATACONSUM", "TATAMOTORS", "TATASTEEL", "TECHM", "TITAN", "TRENT",
+  "ULTRACEMCO", "WIPRO",
+];
+
+const TIER_ORDER: Tier[] = ["Exceptional", "Invest-grade", "Accumulate", "Watchlist", "Avoid"];
+const TIER_MIN: Record<Tier, number> = { Exceptional: 85, "Invest-grade": 70, Accumulate: 55, Watchlist: 40, Avoid: 0 };
+
+interface HeroData { companies: HeroCompany[]; labels: string[]; tiers: TierCount[]; }
+
+async function _loadHeroData(): Promise<HeroData> {
+  const counts: Record<Tier, number> = { Exceptional: 0, "Invest-grade": 0, Accumulate: 0, Watchlist: 0, Avoid: 0 };
+  const emptyTiers = TIER_ORDER.map((tier) => ({ tier, min: TIER_MIN[tier], count: 0 }));
+
+  try {
+    // 1) Tier distribution over ALL companies — Postgres extracts just the score,
+    //    so we never transfer the heavy per-company JSONB blobs over the wire.
+    const scoreRows = await withTimeout(
+      sql<{ score: number }[]>`
+        SELECT (c->>'final_score')::float AS score
+        FROM sectors s, jsonb_array_elements(s.companies) AS c
+      `
+    );
+    for (const r of scoreRows) {
+      if (r.score == null || Number.isNaN(r.score)) continue;
+      counts[scoreTier(r.score)]++;
+    }
+
+    // 2) Radar data for the Nifty 50 only — filtered + projected in SQL, so we
+    //    pull ~50 rows with just their category breakdown, not every company.
+    const radarRows = await withTimeout(
+      sql<{ ticker: string; name: string; score: number; categories: { name: string; earned: number; max: number }[] }[]>`
+        SELECT c->>'ticker'        AS ticker,
+               c->>'name'          AS name,
+               (c->>'final_score')::float AS score,
+               c->'categories'     AS categories
+        FROM sectors s, jsonb_array_elements(s.companies) AS c
+        WHERE c->>'ticker' = ANY(${NIFTY_50})
+      `
+    );
+
+    let labels: string[] = [];
+    const companies: HeroCompany[] = [];
+    const seen = new Set<string>();
+
+    for (const r of radarRows) {
+      const ticker = r.ticker ?? "";
+      if (!ticker || seen.has(ticker)) continue;
+      const cats = r.categories ?? [];
+      if (cats.length < 6) continue; // need a real profile to draw a radar
+      seen.add(ticker);
+      if (labels.length === 0) labels = cats.map((cat) => HERO_AXIS_LABELS[cat.name] ?? cat.name);
+
+      companies.push({
+        ticker,
+        name: r.name,
+        score: r.score ?? 0,
+        classification: scoreTier(r.score ?? 0),
+        axes: cats.map((cat) => (cat.max > 0 ? Math.round((cat.earned / cat.max) * 100) : 0)),
+      });
+    }
+
+    // Keep only companies whose axis count matches the canonical label set, and
+    // sort best-first so reduced-motion / first frame shows a strong profile.
+    const aligned = companies
+      .filter((c) => c.axes.length === labels.length)
+      .sort((a, b) => b.score - a.score);
+
+    return {
+      companies: aligned,
+      labels,
+      tiers: TIER_ORDER.map((tier) => ({ tier, min: TIER_MIN[tier], count: counts[tier] })),
+    };
+  } catch (err) {
+    console.error("[data] loadHeroData failed:", err);
+    return { companies: [], labels: [], tiers: emptyTiers };
+  }
+}
+
+// Fetched once, then served from cache (revalidated every 6h). Data only changes
+// on the weekly refresh, so the hero never re-hits the DB on ordinary requests.
+export const loadHeroData = unstable_cache(_loadHeroData, ["hero-data-v2"], { revalidate: 21600 });
 
 export async function allSectorSlugs(): Promise<string[]> {
   const idx = await loadSectorIndex();

@@ -188,6 +188,22 @@ html, body {
   animation: live-pulse 2s ease-in-out infinite;
 }
 
+/* ── Score ticker tape ── */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.score-ticker-track {
+  animation: ticker-scroll 70s linear infinite;
+  will-change: transform;
+}
+.score-ticker:hover .score-ticker-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .score-ticker-track { animation: none; }
+}
+
 /* ── Score bar fill animations ── */
 @keyframes score-fill {
   from { width: 0%; }

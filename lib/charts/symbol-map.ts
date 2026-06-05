@@ -5,6 +5,12 @@ const YAHOO_OVERRIDES: Record<string, string> = {
   "BAJAJ-AUTO": "BAJAJ-AUTO.NS",
   "NAM-INDIA": "NAM-INDIA.NS",
   "VA TECH": "VATECHWAB.NS",
+  // Live LTIMindtree; screener serves it under MINDTREE, Yahoo only via BSE 540005.
+  MINDTREE: "540005.BO",
+  // BSE-only / unreliable-NSE listings — no usable NSE feed on Yahoo.
+  JAGAJITIND: "JAGAJITIND.BO",
+  SPICEJET: "SPICEJET.BO",
+  SPICELEC: "517385.BO",
 };
 
 export function toYahooSymbol(ticker: string): string {

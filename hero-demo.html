@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero Canvas Demos</title>
+<style>
+  :root{
+    --ink:#4A4A4A; --mist:#CBCBCB; --paper:#FFFFE3; --slate:#6D8196;
+    --good:#3F7A52; --bad:#B0524E; --warn:#B8862B; --violet:#7C3AED;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:22px;margin-bottom:4px}
+  .sub{color:#7a7a72;margin-bottom:28px;font-size:13px}
+  .demo{margin-bottom:40px}
+  .label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+  .stage{position:relative;height:340px;border:1px solid var(--mist);border-radius:16px;overflow:hidden;background:#fffef0}
+  .stage canvas{position:absolute;inset:0;width:100%;height:100%}
+  .text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;z-index:2}
+  .text h2{font-size:clamp(26px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.05;color:var(--ink)}
+  .text h2 em{font-style:italic;color:var(--slate)}
+  .text p{margin-top:10px;font-size:13px;color:#6a6a62;max-width:340px}
+  .fade{position:absolute;bottom:0;left:0;right:0;height:70px;pointer-events:none;z-index:1;
+    background:linear-gradient(to top,#fffef0,transparent)}
+  .note{font-size:12px;color:#8a8a80;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Hero canvas concepts</h1>
+  <p class="sub">Three lightweight 2D-canvas options to replace the price chart. Each loops; headline overlaid as it would appear.</p>
+
+  <div class="demo">
+    <div class="label">1 · Score assembly</div>
+    <div class="stage">
+      <canvas id="c1"></canvas>
+      <div class="fade"></div>
+      <div class="text"><h2>See exactly <em>why</em><br>a stock scores high.</h2><p>Every +/− traces to a rule.</p></div>
+    </div>
+    <p class="note">Teaches how a composite score is built — 10 weighted categories + bonus/penalty → classification.</p>
+  </div>
+
+  <div class="demo">
+    <div class="label">2 · Archetype radar</div>
+    <div class="stage">
+      <canvas id="c2"></canvas>
+      <div class="fade"></div>
+      <div class="text"><h2>Read the <em>shape</em><br>of a company.</h2><p>Balance beats any single number.</p></div>
+    </div>
+    <p class="note">Teaches profile literacy — morphs between Compounder / Value trap / Cyclical silhouettes.</p>
+  </div>
+
+  <div class="demo">
+    <div class="label">3 · Verdict ladder</div>
+    <div class="stage">
+      <canvas id="c3"></canvas>
+      <div class="fade"></div>
+      <div class="text"><h2>From <em>Avoid</em><br>to Exceptional.</h2><p>Five tiers. The top is rare.</p></div>
+    </div>
+    <p class="note">Teaches the verdict vocabulary and how few reach the top band.</p>
+  </div>
+</div>
+
+<script>
+const SLATE="#6D8196",GOOD="#3F7A52",BAD="#B0524E",WARN="#B8862B",VIOLET="#7C3AED",INK="#4A4A4A";
+function setup(id){
+  const cv=document.getElementById(id),g=cv.getContext("2d"),dpr=Math.min(devicePixelRatio||1,2);
+  function fit(){const r=cv.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;}
+  new ResizeObserver(fit).observe(cv);fit();
+  return {g,cv,dpr,W:()=>cv.width/dpr,H:()=>cv.height/dpr};
+}
+const lerp=(a,b,t)=>a+(b-a)*t, ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+
+/* ---------- 1. SCORE ASSEMBLY ---------- */
+(function(){
+  const {g,cv,dpr,W,H}=setup("c1"),op=.5;
+  const cats=[["Valuation",8,10],["Profitability",17,20],["Growth",12,15],["Momentum",7,10],
+    ["Balance Sheet",13,15],["Cash Flow",8,10],["Shareholding",6,8],["Dividend",3,4],
+    ["Op. Efficiency",4,5],["Price & Tech",2,3]];
+  const sets=[cats, cats.map(([n,v,m])=>[n,Math.max(0,Math.round(v*(.4+Math.random()*.7))),m])];
+  let t=0,si=0;
+  function frame(){
+    g.clearRect(0,0,cv.width,cv.height);g.save();g.scale(dpr,dpr);g.globalAlpha=op;
+    const w=W(),h=H(),PL=w*0.06,top=34,rowH=(h-70)/cats.length,barW=w*0.42;
+    const cur=sets[si],total=cur.reduce((s,c)=>s+c[1],0);
+    const prog=Math.min(1,t/(cats.length+3));
+    let running=0;
+    cur.forEach((c,i)=>{
+      const rp=Math.max(0,Math.min(1,(t-i)));const e=ease(rp);
+      const y=top+i*rowH;
+      g.font="600 11px Inter,sans-serif";g.textAlign="left";g.fillStyle="rgba(74,74,74,.7)";
+      g.fillText(c[0],PL,y+9);
+      const bx=PL+w*0.30,bw=barW;
+      g.fillStyle="rgba(74,74,74,.08)";g.fillRect(bx,y,bw,7);
+      const frac=c[1]/c[2],col=frac>.75?GOOD:frac>.5?SLATE:WARN;
+      g.fillStyle=col;g.fillRect(bx,y,bw*frac*e,7);
+      g.font="600 10px 'JetBrains Mono',monospace";g.textAlign="left";g.fillStyle="rgba(74,74,74,.55)";
+      if(e>.3)g.fillText((c[1]).toFixed(0)+"/"+c[2],bx+bw+8,y+8);
+      if(rp>=1)running+=c[1];
+    });
+    // bonus chip
+    if(t>cats.length+0.5){const a=Math.min(1,t-cats.length-0.5);
+      g.globalAlpha=op*a;g.fillStyle="rgba(63,122,82,.15)";
+      const cw=92,cx=PL,cy=top+cats.length*rowH+6;g.fillRect(cx,cy,cw,18);
+      g.fillStyle=GOOD;g.font="700 10px Inter,sans-serif";g.textAlign="left";
+      g.fillText("+3 moat bonus",cx+8,cy+13);g.globalAlpha=op;}
+    // total + verdict
+    const shown=Math.round(lerp(0,total+3,ease(prog)));
+    g.textAlign="right";g.fillStyle=INK;g.font="700 30px 'JetBrains Mono',monospace";
+    g.fillText(shown.toFixed(0)+".6",w-PL,top+34);
+    g.font="600 11px Inter,sans-serif";g.fillStyle=GOOD;
+    g.fillText(shown>=75?"Invest-grade":"Accumulate",w-PL,top+52);
+    g.restore();
+    t+=0.045;
+    if(t>cats.length+5){t=0;si=(si+1)%sets.length;
+      if(si===1)sets[1]=cats.map(([n,v,m])=>[n,Math.max(0,Math.round(v*(.4+Math.random()*.7))),m]);}
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ---------- 2. ARCHETYPE RADAR ---------- */
+(function(){
+  const {g,cv,dpr,W,H}=setup("c2"),op=.55,N=10;
+  const labels=["Val","Prof","Grw","Mom","Bal","Cash","Shr","Div","Eff","Tech"];
+  const archetypes=[
+    {name:"Compounder",v:[6,9,8,7,9,8,8,5,7,6]},
+    {name:"Value trap",v:[9,3,2,3,4,3,5,7,3,2]},
+    {name:"Cyclical",v:[7,6,9,8,4,5,6,3,6,8]},
+    {name:"Dividend cow",v:[5,7,3,4,8,9,7,9,6,4]},
+  ];
+  let ai=0,from=archetypes[0].v.slice(),to=archetypes[0].v.slice(),t=1;
+  function frame(){
+    g.clearRect(0,0,cv.width,cv.height);g.save();g.scale(dpr,dpr);g.globalAlpha=op;
+    const w=W(),h=H(),cx=w/2,cy=h/2,R=Math.min(w,h)*0.34;
+    const e=ease(Math.min(1,t)),cur=from.map((f,i)=>lerp(f,to[i],e));
+    // rings
+    for(let r=1;r<=4;r++){g.beginPath();
+      for(let i=0;i<=N;i++){const a=-Math.PI/2+i/N*2*Math.PI,rr=R*r/4;
+        const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;i?g.lineTo(x,y):g.moveTo(x,y);}
+      g.strokeStyle="rgba(74,74,74,.10)";g.lineWidth=1;g.stroke();}
+    // spokes + labels
+    for(let i=0;i<N;i++){const a=-Math.PI/2+i/N*2*Math.PI;
+      g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
+      g.strokeStyle="rgba(74,74,74,.10)";g.stroke();
+      g.fillStyle="rgba(74,74,74,.45)";g.font="600 9px Inter,sans-serif";g.textAlign="center";
+      g.fillText(labels[i],cx+Math.cos(a)*(R+12),cy+Math.sin(a)*(R+12)+3);}
+    // shape
+    g.beginPath();
+    cur.forEach((vv,i)=>{const a=-Math.PI/2+i/N*2*Math.PI,rr=R*vv/10;
+      const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;i?g.lineTo(x,y):g.moveTo(x,y);});
+    g.closePath();
+    g.fillStyle="rgba(109,129,150,.18)";g.fill();
+    g.strokeStyle=SLATE;g.lineWidth=2;g.stroke();
+    cur.forEach((vv,i)=>{const a=-Math.PI/2+i/N*2*Math.PI,rr=R*vv/10;
+      g.beginPath();g.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,2.5,0,7);g.fillStyle=SLATE;g.fill();});
+    // name
+    g.fillStyle=VIOLET;g.font="700 13px Inter,sans-serif";g.textAlign="center";
+    g.fillText(archetypes[ai].name,cx,h-18);
+    g.restore();
+    t+=0.012;
+    if(t>=2.2){ai=(ai+1)%archetypes.length;from=to.slice();to=archetypes[ai].v.slice();t=0;}
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ---------- 3. VERDICT LADDER ---------- */
+(function(){
+  const {g,cv,dpr,W,H}=setup("c3"),op=.55;
+  const bands=[["Exceptional",90,100,GOOD],["Invest-grade",75,90,GOOD],
+    ["Accumulate",60,75,SLATE],["Watchlist",45,60,WARN],["Avoid",0,45,BAD]];
+  // weighted scores: most mid, few top
+  function rnd(){const r=Math.random();return r<.05?90+Math.random()*9:r<.25?75+Math.random()*15
+    :r<.6?60+Math.random()*15:r<.85?45+Math.random()*15:15+Math.random()*30;}
+  let dots=[];let spawn=0;
+  function frame(){
+    g.clearRect(0,0,cv.width,cv.height);g.save();g.scale(dpr,dpr);g.globalAlpha=op;
+    const w=W(),h=H(),PL=w*0.06,bw=w-PL*2,bh=(h-40)/bands.length,top=20;
+    bands.forEach((b,i)=>{const y=top+i*bh;
+      g.fillStyle="rgba(74,74,74,.04)";g.fillRect(PL,y,bw,bh-4);
+      g.fillStyle="rgba(74,74,74,.6)";g.font="700 11px Inter,sans-serif";g.textAlign="left";
+      g.fillText(b[0],PL+10,y+bh/2+1);
+      g.fillStyle="rgba(74,74,74,.35)";g.font="500 10px 'JetBrains Mono',monospace";g.textAlign="right";
+      g.fillText(b[1]+"–"+b[2],PL+bw-10,y+bh/2+1);});
+    spawn++;if(spawn%14===0&&dots.length<70){const s=rnd();
+      const bi=bands.findIndex(b=>s>=b[1]&&s<=b[2]),by=top+bi*bh;
+      dots.push({x:PL+bw*(.35+Math.random()*.5),y:-8,vy:0,
+        ty:by+8+Math.random()*(bh-20),col:bands[bi][3],set:false});}
+    dots.forEach(d=>{if(!d.set){d.vy+=0.35;d.y+=d.vy;
+      if(d.y>=d.ty){d.y=d.ty;if(Math.abs(d.vy)<1){d.set=true;}else{d.vy*=-0.35;}}}
+      g.beginPath();g.arc(d.x,d.y,3,0,7);g.fillStyle=d.col;g.fill();});
+    if(dots.length>=70&&dots.every(d=>d.set)){if(spawn%180===0)dots=[];}
+    g.restore();
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>

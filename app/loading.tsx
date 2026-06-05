@@ -7,7 +7,6 @@ export default function HomeLoading() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 hero-grid" />
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 pt-20 sm:pt-32 pb-16 sm:pb-24 text-center">
           <div className="skeleton h-7 w-44 rounded-full mx-auto mb-8" />
           <div className="skeleton h-14 w-3/4 rounded-2xl mx-auto mb-4" />
