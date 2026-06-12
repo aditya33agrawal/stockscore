@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const FOOTER_LINKS = [
   { href: "/sectors",          label: "Sectors" },
-  { href: "/learn",            label: "Learn" },
   { href: "/methodology",      label: "Methodology" },
   { href: "/asset-allocation", label: "Asset Allocation" },
   { href: "/blog",             label: "Blog" },
+  { href: "/about",            label: "About" },
   { href: "/contact",          label: "Feedback" },
   { href: "/terms",            label: "Terms" },
 ];
@@ -31,7 +31,7 @@ function WaveformIcon() {
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[rgb(var(--chalk-100)_/_0.05)] bg-ink-950">
+    <footer className="mt-24 border-t border-[rgba(255,255,255,0.05)] bg-ink-950">
       {/* Upper section */}
       <div className="mx-auto max-w-7xl px-6 pt-12 pb-8">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
@@ -46,7 +46,7 @@ export function Footer() {
                 Stock<span className="text-accent">score</span>
               </span>
             </Link>
-            <p className="text-sm text-chalk-300/80 leading-relaxed">
+            <p className="text-sm text-chalk-300/60 leading-relaxed">
               Transparent, rule-based fundamental analysis of Indian equities — scored sector by sector.
             </p>
 
@@ -54,19 +54,28 @@ export function Footer() {
             <div className="mt-5 flex items-center gap-3">
               <a
                 href="mailto:aditya33agrawal@gmail.com"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/70 hover:border-accent/30 hover:text-accent transition-all"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/50 hover:border-accent/30 hover:text-accent transition-all"
                 aria-label="Email"
               >
                 <Mail className="h-4 w-4" />
               </a>
               <a
-                href="https://www.linkedin.com/in/aditya33agrawal/"
+                href="https://www.linkedin.com/in/adi33/"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/70 hover:border-accent/30 hover:text-accent transition-all"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/50 hover:border-accent/30 hover:text-accent transition-all"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
+              </a>
+              <a
+                href="https://github.com/aditya33agrawal/stockscore"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-700 text-chalk-300/50 hover:border-accent/30 hover:text-accent transition-all"
+                aria-label="GitHub"
+              >
+                <Github className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -77,7 +86,7 @@ export function Footer() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-chalk-300/70 hover:text-accent transition-colors py-1"
+                className="text-sm text-chalk-300/50 hover:text-accent transition-colors py-1"
               >
                 {l.label}
               </Link>
@@ -87,12 +96,12 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[rgb(var(--chalk-100)_/_0.04)]">
+      <div className="border-t border-[rgba(255,255,255,0.04)]">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-6 py-4 md:flex-row md:items-center">
-          <p className="text-xs text-chalk-300/55">
-            © {new Date().getFullYear()} Stockscore · Built with Next.js
+          <p className="text-xs text-chalk-300/30">
+            © {new Date().getFullYear()} Aditya Agrawal · Built with Next.js
           </p>
-          <p className="text-xs text-chalk-300/55">
+          <p className="text-xs text-chalk-300/30">
             Data from{" "}
             <Link href="https://www.screener.in" className="hover:text-accent transition-colors underline underline-offset-2">
               screener.in
