@@ -5,7 +5,9 @@ import sql from "@/lib/db";
 import type { SectorRow } from "@/lib/sector-scraper/types";
 import { SectorsCompareTable } from "@/components/SectorsCompareTable";
 
-export const dynamic = "force-dynamic";
+// Data only changes on the weekly refresh pipeline — cache the rendered page
+// and revalidate hourly instead of re-querying Postgres on every request.
+export const revalidate = 3600;
 
 export const metadata = {
   title: "Compare All Sectors",

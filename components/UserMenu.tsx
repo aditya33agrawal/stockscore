@@ -12,34 +12,30 @@ interface SessionUser {
   name: string | null;
 }
 
-interface Props {
-  initialUser?: SessionUser | null;
-  initialIsAdmin?: boolean;
-}
-
 function initialFor(u: SessionUser): string {
   const src = (u.name ?? u.email ?? "?").trim();
   return src.charAt(0).toUpperCase();
 }
 
-export function UserMenu({ initialUser = null, initialIsAdmin = false }: Props) {
+export function UserMenu() {
   const router = useRouter();
   const pathname = usePathname();
-  // Seed from the server-rendered session so the correct avatar / Sign-in
-  // button paints on first render — no empty-circle flicker, no late pop-in.
-  const [user, setUser] = useState<SessionUser | null>(initialUser);
-  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
+  // Session state is fetched client-side (kept out of the server render so
+  // pages aren't forced dynamic by a per-request DB session lookup).
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // Background reconcile on route change — keeps the menu correct after a
+  // Fetch on mount and again on route change — keeps the menu correct after a
   // client-side login/logout transition (the navbar stays mounted across it).
   useEffect(() => {
     let cancelled = false;
     fetch("/api/auth/me", { cache: "no-store", credentials: "same-origin" })
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) { setUser(d?.user ?? null); setIsAdmin(d?.isAdmin ?? false); } })
-      .catch(() => { /* keep current state on transient error */ });
+      .then((d) => { if (!cancelled) { setUser(d?.user ?? null); setIsAdmin(d?.isAdmin ?? false); setLoaded(true); } })
+      .catch(() => { if (!cancelled) setLoaded(true); });
     return () => { cancelled = true; };
   }, [pathname]);
 
@@ -72,6 +68,12 @@ export function UserMenu({ initialUser = null, initialIsAdmin = false }: Props) 
     setOpen(false);
     router.push("/");
     router.refresh();
+  }
+
+  // Avoid a "Sign in" flash for already-logged-in users while the session
+  // check is in flight — render an empty placeholder of the same size.
+  if (!loaded) {
+    return <div className="h-9 w-9" aria-hidden="true" />;
   }
 
   if (!user) {

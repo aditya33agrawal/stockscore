@@ -45,8 +45,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans:  ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono:  ["JetBrains Mono", "ui-monospace", "Menlo", "monospace"],
+        sans:  ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono:  ["var(--font-mono)", "ui-monospace", "Menlo", "monospace"],
         serif: ["Georgia", "serif"],
       },
       fontVariantNumeric: {

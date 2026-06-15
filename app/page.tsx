@@ -7,7 +7,9 @@ import { ScoreTicker } from "@/components/ScoreTicker";
 import { scoreGradient, scoreColor } from "@/lib/format";
 import clsx from "clsx";
 
-export const dynamic = "force-dynamic";
+// Data only changes on the weekly refresh pipeline — cache the rendered page
+// and revalidate hourly instead of re-querying Postgres on every request.
+export const revalidate = 3600;
 
 export default async function Home() {
   const [sectorsConfig, scrapedIndex, companies, hero] = await Promise.all([

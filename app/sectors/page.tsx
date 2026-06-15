@@ -3,7 +3,9 @@ import { BarChart2 } from "lucide-react";
 import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex } from "@/lib/data";
 import { SectorsBrowser } from "@/components/SectorsBrowser";
 
-export const dynamic = "force-dynamic";
+// Data only changes on the weekly refresh pipeline — cache the rendered page
+// and revalidate hourly instead of re-querying Postgres on every request.
+export const revalidate = 3600;
 
 export const metadata = {
   title: "All Sectors",

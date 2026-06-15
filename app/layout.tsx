@@ -1,15 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { getCurrentUser } from "@/lib/auth";
-import { isAdminEmail } from "@/lib/admin";
 import { NavProgress } from "@/components/NavProgress";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+
+const inter = Inter({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-mono",
+});
 
 const SITE_URL = "https://aditya-finance.vercel.app";
 const TITLE = "Stockscore — Sector-Relative Equity Scoring";
@@ -56,15 +69,13 @@ export const viewport: Viewport = {
   themeColor: "#FFFFE3",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
-  const isAdmin = user ? isAdminEmail(user.email) : false;
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -78,7 +89,7 @@ export default async function RootLayout({
         <Suspense fallback={null}>
           <NavProgress />
         </Suspense>
-        <Navbar initialUser={user} initialIsAdmin={isAdmin} />
+        <Navbar />
         <main id="main" className="min-h-[calc(100vh-4rem)]">{children}</main>
         <Footer />
         <ScrollToTop />
@@ -90,7 +101,7 @@ export default async function RootLayout({
           toastOptions={{
             style: {
               fontSize: "13.5px",
-              fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+              fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
             },
           }}
         />

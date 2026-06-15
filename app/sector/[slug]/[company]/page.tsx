@@ -27,7 +27,10 @@ import {
 } from "@/lib/evaluators";
 import type { MetricCardProps } from "@/components/MetricCard";
 
-export const dynamic = "force-dynamic";
+// Data only changes on the weekly refresh pipeline — pages render on first
+// request and are then cached for an hour (on-demand ISR), instead of
+// re-querying Postgres on every request.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

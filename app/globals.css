@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
-
 /* Ink Wash — Palette: Ink #4A4A4A · Mist #CBCBCB · Paper #FFFFE3 · Slate #6D8196 */
 :root {
   color-scheme: light;
@@ -137,7 +135,7 @@ html, body {
 
 .num {
   font-variant-numeric: tabular-nums;
-  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono), ui-monospace, Menlo, monospace;
 }
 
 /* ── Surface panels (flat, monotone — no gradient or blur) ── */
