@@ -352,6 +352,7 @@ async function _loadHeroData(): Promise<HeroData> {
         SELECT (c->>'final_score')::float AS score
         FROM sectors s, jsonb_array_elements(s.companies) AS c
       `,
+      15000,
     );
     for (const r of scoreRows) {
       if (r.score == null || Number.isNaN(r.score)) continue;
@@ -376,30 +377,62 @@ async function _loadHeroData(): Promise<HeroData> {
         FROM sectors s, jsonb_array_elements(s.companies) AS c
         WHERE c->>'ticker' = ANY(${NIFTY_50})
       `,
+      15000,
     );
 
     let labels: string[] = [];
     const companies: HeroCompany[] = [];
     const seen = new Set<string>();
 
-    for (const r of radarRows) {
-      const ticker = r.ticker ?? "";
-      if (!ticker || seen.has(ticker)) continue;
-      const cats = r.categories ?? [];
-      if (cats.length < 6) continue; // need a real profile to draw a radar
-      seen.add(ticker);
-      if (labels.length === 0)
-        labels = cats.map((cat) => HERO_AXIS_LABELS[cat.name] ?? cat.name);
+    // Helper to parse radarRows into HeroCompany list
+    const parseRows = (
+      rows: { ticker: string; name: string; score: number; categories: { name: string; earned: number; max: number }[] }[],
+    ) => {
+      const result: HeroCompany[] = [];
+      let lbls: string[] = [];
+      for (const r of rows) {
+        const ticker = r.ticker ?? "";
+        if (!ticker || seen.has(ticker)) continue;
+        const cats = r.categories ?? [];
+        if (cats.length < 6) continue;
+        seen.add(ticker);
+        if (lbls.length === 0)
+          lbls = cats.map((cat) => HERO_AXIS_LABELS[cat.name] ?? cat.name);
+        result.push({
+          ticker,
+          name: r.name,
+          score: r.score ?? 0,
+          classification: scoreTier(r.score ?? 0),
+          axes: cats.map((cat) =>
+            cat.max > 0 ? Math.round((cat.earned / cat.max) * 100) : 0,
+          ),
+        });
+      }
+      return { companies: result, labels: lbls };
+    };
 
-      companies.push({
-        ticker,
-        name: r.name,
-        score: r.score ?? 0,
-        classification: scoreTier(r.score ?? 0),
-        axes: cats.map((cat) =>
-          cat.max > 0 ? Math.round((cat.earned / cat.max) * 100) : 0,
-        ),
-      });
+    const parsed = parseRows(radarRows);
+    companies.push(...parsed.companies);
+    if (parsed.labels.length > 0) labels = parsed.labels;
+
+    // Fallback: if no Nifty 50 companies found in DB, use top-scoring companies
+    if (companies.length === 0) {
+      const fallbackRows = await withTimeout(
+        sql<{ ticker: string; name: string; score: number; categories: { name: string; earned: number; max: number }[] }[]>`
+          SELECT c->>'ticker'        AS ticker,
+                 c->>'name'          AS name,
+                 (c->>'final_score')::float AS score,
+                 c->'categories'     AS categories
+          FROM sectors s, jsonb_array_elements(s.companies) AS c
+          WHERE (c->>'final_score')::float IS NOT NULL
+          ORDER BY (c->>'final_score')::float DESC
+          LIMIT 60
+        `,
+        15000,
+      );
+      const fb = parseRows(fallbackRows);
+      companies.push(...fb.companies);
+      if (fb.labels.length > 0) labels = fb.labels;
     }
 
     // Keep only companies whose axis count matches the canonical label set, and
