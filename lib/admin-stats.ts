@@ -37,6 +37,7 @@ export interface AdminStats {
     lastStartedAt: string | null;
     openErrors: number;
   };
+  error?: string;
 }
 
 function isStale(iso: string | null): boolean {
@@ -46,17 +47,39 @@ function isStale(iso: string | null): boolean {
   return Date.now() - t > STALE_MS;
 }
 
-export async function getAdminStats(): Promise<AdminStats> {
-  const config = await loadSectorsConfig();
+const EMPTY_STATS: AdminStats = {
+  companies: { total: 0 },
+  sectors: { configured: 0, scored: 0, list: [] },
+  charts: { symbols: 0, lastRefreshed: null },
+  market: { lastRefreshed: null },
+  runs: { total: 0, lastOk: null, lastFinishedAt: null, lastStartedAt: null, openErrors: 0 },
+};
 
-  const [
-    companiesRows,
-    sectorRows,
-    chartRows,
-    marketRows,
-    runCountRows,
-    lastRunRows,
-  ] = await withTimeout(Promise.all([
+export async function getAdminStats(): Promise<AdminStats & { error?: string }> {
+  let config: Awaited<ReturnType<typeof loadSectorsConfig>>;
+  try {
+    config = await loadSectorsConfig();
+  } catch (err) {
+    console.error("[admin-stats] loadSectorsConfig failed:", err);
+    return { ...EMPTY_STATS, error: "Could not load sector config" };
+  }
+
+  let companiesRows: { total: number }[];
+  let sectorRows: { slug: string; name: string; companies_count: number | null; refreshed_at: string | null }[];
+  let chartRows: { symbols: number; last: string | null }[];
+  let marketRows: { last: string | null }[];
+  let runCountRows: { total: number }[];
+  let lastRunRows: { id: number; ok: boolean | null; started_at: string | null; finished_at: string | null }[];
+
+  try {
+    [
+      companiesRows,
+      sectorRows,
+      chartRows,
+      marketRows,
+      runCountRows,
+      lastRunRows,
+    ] = await withTimeout(Promise.all([
     sql<{ total: number }[]>`SELECT COUNT(*)::int AS total FROM companies`,
     sql<{ slug: string; name: string; companies_count: number | null; refreshed_at: string | null }[]>`
       SELECT slug, name, companies_count, refreshed_at FROM sectors
@@ -72,15 +95,28 @@ export async function getAdminStats(): Promise<AdminStats> {
       SELECT id, ok, started_at, finished_at
       FROM refresh_runs ORDER BY started_at DESC LIMIT 1
     `,
-  ]), 10000);
+    // 25s: comfortably above the 15s connect_timeout so cold starts can establish the connection
+    ]), 25000);
+  } catch (err) {
+    console.error("[admin-stats] DB queries failed:", err);
+    return {
+      ...EMPTY_STATS,
+      sectors: { configured: config.length, scored: 0, list: [] },
+      error: err instanceof Error ? err.message : "DB unavailable",
+    };
+  }
 
   const lastRun = lastRunRows[0];
   let openErrors = 0;
   if (lastRun) {
-    const errRows = await withTimeout(sql<{ count: number }[]>`
-      SELECT COUNT(*)::int AS count FROM refresh_errors WHERE run_id = ${lastRun.id}
-    `);
-    openErrors = errRows[0]?.count ?? 0;
+    try {
+      const errRows = await withTimeout(sql<{ count: number }[]>`
+        SELECT COUNT(*)::int AS count FROM refresh_errors WHERE run_id = ${lastRun.id}
+      `, 8000);
+      openErrors = errRows[0]?.count ?? 0;
+    } catch {
+      // non-fatal — leave openErrors = 0
+    }
   }
 
   const scoredBySlug = new Map(sectorRows.map((r) => [r.slug, r]));

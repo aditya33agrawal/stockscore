@@ -16,6 +16,11 @@ export default async function AdminOverviewPage() {
           Data coverage, freshness, and the most recent refresh run at a glance.
         </p>
       </header>
+      {stats.error && (
+        <div className="mb-6 rounded-xl border border-bad/30 bg-bad/10 px-4 py-3 text-sm text-bad">
+          DB unavailable — {stats.error}. Retry in a moment.
+        </div>
+      )}
       <AdminDashboard stats={stats} />
     </div>
   );
