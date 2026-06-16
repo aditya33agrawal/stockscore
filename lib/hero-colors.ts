@@ -1,12 +1,15 @@
 // Relative-strength shading for the Nifty-50 hero widgets (score tape + radar
-// caption). The fundamental scorer is deliberately strict — no Nifty name
-// reaches the app's absolute ≥70 "Invest-grade" green — so the hero shades each
+// caption). The fundamental scorer is deliberately strict - no Nifty name
+// reaches the app's absolute ≥70 "Invest-grade" green - so the hero shades each
 // name by where it stands *within the Nifty cohort* (tertiles): top third green,
 // middle amber, bottom third red. This reads like a market gainers/losers tape
 // and guarantees green is present. The literal score is always shown alongside,
 // so nothing about the absolute number is hidden.
 
-export interface HeroBands { lo: number; hi: number }
+export interface HeroBands {
+  lo: number;
+  hi: number;
+}
 
 /** Tertile cut-points (≈33rd / 67th percentile) of the cohort's scores. */
 export function heroBands(scores: number[]): HeroBands {

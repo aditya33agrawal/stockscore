@@ -660,12 +660,12 @@ Unresolved (verify or add to sector_overrides.drop / alias):
   KHODAY  [spirits-beverages]
   DVLABRW  [spirits-beverages]
 
-⚠️  UNDECIDED — add a primary_sector entry for each:
+⚠️  UNDECIDED - add a primary_sector entry for each:
   "ZENSARTECH": "?"   // currently in: information-technology, gaming-gambling
   "IRFC": "?"   // currently in: railways, infrastructure-finance
   "ETERNAL": "?"   // currently in: internet-ecommerce, quick-commerce-food
 
 Report: /Users/adityaagrawal/Desktop/stockscore/logs/config-standardize-report.json
 
-❌ Refusing to finalize — resolve the undecided dups in sector_overrides.json.
+❌ Refusing to finalize - resolve the undecided dups in sector_overrides.json.
    Proposed (for inspection only): /Users/adityaagrawal/Desktop/stockscore/sectors_config.proposed.json

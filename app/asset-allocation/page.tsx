@@ -17,7 +17,7 @@ export default function AssetAllocationPage() {
           Build your portfolio mix
         </h1>
         <p className="mt-3 text-chalk-300 max-w-2xl">
-          Tell us your goal, age, and risk appetite — and see a recommended
+          Tell us your goal, age, and risk appetite - and see a recommended
           allocation across Indian stocks, mutual funds, US market, gold, bonds,
           and real estate. Updates live as you adjust the inputs.
         </p>

@@ -86,7 +86,7 @@ export function SpikeRevertChart() {
         </ResponsiveContainer>
       </div>
       <p className="mt-2 text-xs text-chalk-300/70">
-        Drag the slider. The bigger the spike, the harder — and faster — the
+        Drag the slider. The bigger the spike, the harder - and faster - the
         return to baseline.
       </p>
     </div>
@@ -282,11 +282,11 @@ export function SpikeVsSlopeChart() {
       <div className="mt-2 flex gap-4 text-xs text-chalk-300/80">
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-[#f87171]" />
-          Sudden rise — gives it all back
+          Sudden rise - gives it all back
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-[#3F7A52]" />
-          Slow compound — quietly overtakes
+          Slow compound - quietly overtakes
         </span>
       </div>
     </div>

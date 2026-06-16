@@ -48,7 +48,7 @@ export default async function ProfilePage() {
             <dt className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-chalk-300/60">
               <UserIcon className="h-3.5 w-3.5" /> Name
             </dt>
-            <dd className="mt-1 text-chalk-50 truncate">{user.name ?? "—"}</dd>
+            <dd className="mt-1 text-chalk-50 truncate">{user.name ?? "-"}</dd>
           </div>
           <div className="rounded-xl border border-ink-700/50 bg-ink-900/40 px-4 py-3">
             <dt className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-chalk-300/60">

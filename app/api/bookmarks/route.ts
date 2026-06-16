@@ -39,7 +39,9 @@ export const GET = compose(
   `;
 
   // Backfill snapshots for old bookmarks that have no snapshot yet
-  const backfillTargets = rows.filter((r) => !r.score_snapshot && r.current_data);
+  const backfillTargets = rows.filter(
+    (r) => !r.score_snapshot && r.current_data,
+  );
   if (backfillTargets.length > 0) {
     await Promise.allSettled(
       backfillTargets.map(async (r) => {
@@ -55,13 +57,13 @@ export const GET = compose(
               AND sector_slug  = ${r.sector_slug}
               AND company_slug = ${r.company_slug}
           `;
-          r.score_snapshot    = snapshot;
+          r.score_snapshot = snapshot;
           r.snapshot_taken_at = r.current_refreshed_at;
-          r.is_backfilled     = true;
+          r.is_backfilled = true;
         } catch {
-          // Silently ignore — backfill is best-effort
+          // Silently ignore - backfill is best-effort
         }
-      })
+      }),
     );
   }
 
@@ -71,24 +73,25 @@ export const GET = compose(
 // ─── POST /api/bookmarks ──────────────────────────────────────────────────────
 
 interface BookmarkBody {
-  sector_slug:    string;
-  company_slug:   string;
+  sector_slug: string;
+  company_slug: string;
   company_ticker: string | null;
-  company_name:   string | null;
+  company_name: string | null;
 }
 
 function validateBookmark(raw: unknown): BookmarkBody {
-  if (typeof raw !== "object" || raw === null) throw new ValidationError("body required");
+  if (typeof raw !== "object" || raw === null)
+    throw new ValidationError("body required");
   const obj = raw as Record<string, unknown>;
-  const sectorSlug  = str(obj.sector_slug);
+  const sectorSlug = str(obj.sector_slug);
   const companySlug = str(obj.company_slug);
-  if (!sectorSlug)  throw new ValidationError({ sector_slug: "required" });
+  if (!sectorSlug) throw new ValidationError({ sector_slug: "required" });
   if (!companySlug) throw new ValidationError({ company_slug: "required" });
   return {
-    sector_slug:    sectorSlug,
-    company_slug:   companySlug,
+    sector_slug: sectorSlug,
+    company_slug: companySlug,
     company_ticker: optStr(obj.company_ticker),
-    company_name:   optStr(obj.company_name),
+    company_name: optStr(obj.company_name),
   };
 }
 
@@ -96,7 +99,10 @@ export const POST = compose(
   withErrorHandler,
   withAuth,
   withSchema(validateBookmark),
-)(async (_req: NextRequest, { user, body }: { user: SessionUser; body: BookmarkBody }) => {
+)(async (
+  _req: NextRequest,
+  { user, body }: { user: SessionUser; body: BookmarkBody },
+) => {
   await ensureTables();
 
   await sql`
@@ -127,7 +133,7 @@ export const POST = compose(
         `;
       }
     } catch {
-      // Non-fatal — bookmark is saved, snapshot is best-effort
+      // Non-fatal - bookmark is saved, snapshot is best-effort
     }
   }
 
@@ -142,12 +148,14 @@ export const DELETE = compose(
 )(async (req: NextRequest, { user }: { user: SessionUser }) => {
   await ensureTables();
 
-  const url         = new URL(req.url);
-  const sectorSlug  = url.searchParams.get("sector_slug");
+  const url = new URL(req.url);
+  const sectorSlug = url.searchParams.get("sector_slug");
   const companySlug = url.searchParams.get("company_slug");
 
   if (!sectorSlug || !companySlug) {
-    throw new ValidationError({ query: "sector_slug and company_slug are required" });
+    throw new ValidationError({
+      query: "sector_slug and company_slug are required",
+    });
   }
 
   await sql`

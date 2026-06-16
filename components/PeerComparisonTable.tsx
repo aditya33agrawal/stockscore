@@ -10,7 +10,7 @@ interface Props {
 }
 
 function fmtMCap(v: number | undefined): string {
-  if (!v) return "—";
+  if (!v) return "-";
   if (v >= 100000) return `₹${(v / 100000).toFixed(1)}L Cr`;
   if (v >= 1000)   return `₹${(v / 1000).toFixed(0)}K Cr`;
   return `₹${v.toFixed(0)} Cr`;
@@ -31,7 +31,7 @@ function heatStyle(value: number | undefined | null, max: number, isGood = true)
 }
 
 function Delta({ v }: { v: number | undefined | null }) {
-  if (v == null) return <span className="text-chalk-300/30">—</span>;
+  if (v == null) return <span className="text-chalk-300/30">-</span>;
   const sign = v >= 0 ? "+" : "";
   const cls  = v >= 15 ? "text-accent" : v >= 5 ? "text-accent/60" : v < 0 ? "text-bad" : "text-chalk-300/60";
   return <span className={`num ${cls}`}>{sign}{v.toFixed(0)}%</span>;
@@ -73,7 +73,7 @@ export function PeerComparisonTable({ companies, currentSlug, sectorSlug }: Prop
               <TH title="Return on Equity">ROE %</TH>
               <TH title="Return on Capital Employed">ROCE %</TH>
               <TH title="Operating Profit Margin">OPM %</TH>
-              <TH title="Debt to Equity — lower is better">D/E</TH>
+              <TH title="Debt to Equity - lower is better">D/E</TH>
               <TH title="5-year Sales CAGR">Sales 5Y</TH>
               <TH title="5-year Profit CAGR">PAT 5Y</TH>
             </tr>
@@ -120,22 +120,22 @@ export function PeerComparisonTable({ companies, currentSlug, sectorSlug }: Prop
                     {fmtMCap(co.raw.market_cap)}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-100">
-                    {co.raw.pe ? co.raw.pe.toFixed(1) : "—"}
+                    {co.raw.pe ? co.raw.pe.toFixed(1) : "-"}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-300/70">
-                    {co.raw.pbv ? co.raw.pbv.toFixed(1) : "—"}
+                    {co.raw.pbv ? co.raw.pbv.toFixed(1) : "-"}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-100" style={heatStyle(co.raw.roe, maxROE)}>
-                    {co.raw.roe ? `${co.raw.roe.toFixed(1)}%` : "—"}
+                    {co.raw.roe ? `${co.raw.roe.toFixed(1)}%` : "-"}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-100" style={heatStyle(co.raw.roce, maxROCE)}>
-                    {co.raw.roce ? `${co.raw.roce.toFixed(1)}%` : "—"}
+                    {co.raw.roce ? `${co.raw.roce.toFixed(1)}%` : "-"}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-100" style={heatStyle(co.raw.opm, maxOPM)}>
-                    {co.raw.opm ? `${co.raw.opm.toFixed(1)}%` : "—"}
+                    {co.raw.opm ? `${co.raw.opm.toFixed(1)}%` : "-"}
                   </td>
                   <td className="px-3 py-3 text-right num text-chalk-100" style={heatStyle(co.raw.debt_to_equity, maxDE, false)}>
-                    {co.raw.debt_to_equity != null ? co.raw.debt_to_equity.toFixed(2) : "—"}
+                    {co.raw.debt_to_equity != null ? co.raw.debt_to_equity.toFixed(2) : "-"}
                   </td>
                   <td className="px-3 py-3 text-right" style={heatStyle(co.raw.sales_5y_cagr, maxSales5Y)}>
                     <Delta v={co.raw.sales_5y_cagr} />

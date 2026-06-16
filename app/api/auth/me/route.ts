@@ -7,7 +7,7 @@ import { withMethods } from "@/lib/api/with-methods";
 
 export const dynamic = "force-dynamic";
 
-// /api/auth/me is intentionally unauthenticated — it returns null when not
+// /api/auth/me is intentionally unauthenticated - it returns null when not
 // signed in so the client can determine session state without triggering a 401.
 export const GET = compose(
   withErrorHandler,

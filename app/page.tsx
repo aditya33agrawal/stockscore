@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Database, Sparkles } from "lucide-react";
-import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex, loadHeroData } from "@/lib/data";
+import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex, loadHeroData, emptyHeroData } from "@/lib/data";
 import { SectorSearch } from "@/components/SectorSearch";
 import { HeroRadar } from "@/components/HeroRadar";
 import { ScoreTicker } from "@/components/ScoreTicker";
 import { scoreGradient, scoreColor } from "@/lib/format";
 import clsx from "clsx";
 
-// Data only changes on the weekly refresh pipeline — cache the rendered page
+// Data only changes on the weekly refresh pipeline - cache the rendered page
 // and revalidate hourly instead of re-querying Postgres on every request.
 export const revalidate = 3600;
 
@@ -16,7 +16,10 @@ export default async function Home() {
     loadSectorsConfig(),
     loadSectorIndex(),
     loadCompaniesIndex(),
-    loadHeroData(),
+    loadHeroData().catch((err) => {
+      console.error("[home] loadHeroData failed:", err);
+      return emptyHeroData();
+    }),
   ]);
 
   const scrapedMap   = new Map(scrapedIndex.map((s) => [s.slug, s]));
@@ -64,7 +67,7 @@ export default async function Home() {
 
           <p className="max-w-lg mx-auto text-[17px] text-chalk-200 leading-relaxed mb-10">
             Transparent, rule-based fundamental analysis of every Indian sector
-            across 10 categories. No black boxes — every +/− is traceable to a rule.
+            across 10 categories. No black boxes - every +/− is traceable to a rule.
           </p>
 
           <SectorSearch sectors={scrapedIndex} companies={companies} />
@@ -264,7 +267,7 @@ export default async function Home() {
           From raw filings to a score you can trust.
         </h2>
         <p className="max-w-2xl text-[15px] text-chalk-200 leading-relaxed mb-10">
-          Three purpose-built engines — each transparent by design. Every input, rule, and adjustment is traceable; nothing is hidden behind a black box.
+          Three purpose-built engines - each transparent by design. Every input, rule, and adjustment is traceable; nothing is hidden behind a black box.
         </p>
 
         <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
@@ -272,17 +275,17 @@ export default async function Home() {
             {
               icon: Database,
               title: "Scraping Engine",
-              body: "Pulls 5 years of annual financials, 12 quarters of results, shareholding patterns, and key ratios for every company — sourced directly from screener.in.",
+              body: "Pulls 5 years of annual financials, 12 quarters of results, shareholding patterns, and key ratios for every company - sourced directly from screener.in.",
             },
             {
               icon: BarChart3,
               title: "Scoring Engine",
-              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution — positive or negative — maps to a specific, documented rule.",
+              body: "A 10-category rubric blends absolute thresholds with peer-relative quartiles. Every contribution - positive or negative - maps to a specific, documented rule.",
             },
             {
               icon: Sparkles,
               title: "Intelligence Layer",
-              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score — so you know exactly why a company ranks where it does.",
+              body: "Sector leaderboards, radar overlays, and per-company breakdowns surface the story behind each score - so you know exactly why a company ranks where it does.",
             },
           ].map((s, i) => (
             <div
@@ -308,7 +311,7 @@ export default async function Home() {
         <div className="glass border-subtle rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <p className="text-sm text-chalk-200">
             <span className="text-chalk-100 font-semibold">New to these metrics?</span>
-            {" "}The Learn page explains every ratio — P/E, ROCE, D/E, promoter holding and more — from first principles.
+            {" "}The Learn page explains every ratio - P/E, ROCE, D/E, promoter holding and more - from first principles.
           </p>
           <Link
             href="/learn"
@@ -327,14 +330,14 @@ export default async function Home() {
         <div className="space-y-5 text-[16px] leading-[1.8] text-chalk-200">
           <p>
             I&apos;m a full-stack developer transitioning to wealth management. I&apos;ve
-            been investing my own money since 2023 — first in direct equities,
-            then across asset classes — and I offer pro-bono consulting to
+            been investing my own money since 2023 - first in direct equities,
+            then across asset classes - and I offer pro-bono consulting to
             first-time investors who want to learn how to think about their money.
           </p>
           <p>
             Screeners exist. Reports exist. But neither shows you{" "}
             <em className="text-chalk-50 not-italic font-semibold">why</em> a company scores well.
-            This project is my answer to that gap — and a way to put my fundamental-analysis approach in
+            This project is my answer to that gap - and a way to put my fundamental-analysis approach in
             front of anyone who wants to see it.
           </p>
         </div>

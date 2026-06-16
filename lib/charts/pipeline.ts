@@ -27,8 +27,12 @@ function mergeCandles(existing: Candle[], incoming: Candle[]): Candle[] {
 
 async function fetchFresh(
   ticker: string,
-  log: Log
-): Promise<{ candles: Candle[]; source: "yahoo" | "nse"; range: string } | null> {
+  log: Log,
+): Promise<{
+  candles: Candle[];
+  source: "yahoo" | "nse";
+  range: string;
+} | null> {
   // Try Yahoo (10y) first
   try {
     const candles = await fetchYahooCandles(ticker, { range: "10y" });
@@ -37,7 +41,7 @@ async function fetchFresh(
     }
     log(`    yahoo returned no candles for ${ticker}, falling back to NSE`);
   } catch (err) {
-    log(`    yahoo failed for ${ticker}: ${String(err)} — falling back to NSE`);
+    log(`    yahoo failed for ${ticker}: ${String(err)} - falling back to NSE`);
   }
 
   // Fallback: NSE 1y only
@@ -56,14 +60,17 @@ async function fetchFresh(
 async function fetchIncremental(
   ticker: string,
   fromDate: string,
-  log: Log
+  log: Log,
 ): Promise<{ candles: Candle[]; source: "yahoo" | "nse" } | null> {
   // Yahoo supports period1 (unix seconds) for arbitrary start
   try {
     const period1 = Math.floor(new Date(fromDate).getTime() / 1000);
     const candles = await fetchYahooCandles(ticker, { period1 });
     if (candles.length) {
-      return { candles: candles.filter((c) => c.t >= fromDate), source: "yahoo" };
+      return {
+        candles: candles.filter((c) => c.t >= fromDate),
+        source: "yahoo",
+      };
     }
   } catch (err) {
     log(`    yahoo incremental failed for ${ticker}: ${String(err)}`);
@@ -83,8 +90,12 @@ async function fetchIncremental(
 export async function refreshSymbol(
   ticker: string,
   log: Log,
-  force = false
-): Promise<{ status: "saved" | "skipped" | "errored"; source?: string; candleCount?: number }> {
+  force = false,
+): Promise<{
+  status: "saved" | "skipped" | "errored";
+  source?: string;
+  candleCount?: number;
+}> {
   const existing = force ? null : await getChartRow(ticker);
   const today = todayISO();
 
@@ -103,7 +114,9 @@ export async function refreshSymbol(
     if (!delta) {
       return { status: "errored" };
     }
-    candles = trimToTenYears(mergeCandles(existing.payload.candles, delta.candles));
+    candles = trimToTenYears(
+      mergeCandles(existing.payload.candles, delta.candles),
+    );
     source = delta.source;
     range = existing.payload.range; // preserve original range label
   } else {

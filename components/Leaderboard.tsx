@@ -123,7 +123,7 @@ export function Leaderboard({
               </th>
               <Th k="score" right title={COL_HINT.score}>Score</Th>
               {CATEGORY_ORDER.map((c) => (
-                <Th key={c} k={c} right title={`${c} — ${COL_HINT[c] ?? ""}`}>{ABBREV[c]}</Th>
+                <Th key={c} k={c} right title={`${c} - ${COL_HINT[c] ?? ""}`}>{ABBREV[c]}</Th>
               ))}
             </tr>
           </thead>

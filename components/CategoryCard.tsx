@@ -22,11 +22,11 @@ const CATEGORY_TOOLTIP_KEY: Record<string, keyof typeof TOOLTIPS> = {
   "Price & Technical": "category_technical",
 };
 
-// Category bars use Ink Wash green / amber / red — easier to read at a glance
+// Category bars use Ink Wash green / amber / red - easier to read at a glance
 function categoryBarColor(pct: number): string {
-  if (pct >= 70) return "#3F7A52";   // good — green
-  if (pct >= 40) return "#B8862B";   // warn — amber
-  return "#B0524E";                  // bad — red
+  if (pct >= 70) return "#3F7A52";   // good - green
+  if (pct >= 40) return "#B8862B";   // warn - amber
+  return "#B0524E";                  // bad - red
 }
 
 function categoryTextColor(pct: number): string {
@@ -47,13 +47,13 @@ const CATEGORY_LEARN_MAP: Record<string, string> = {
 
 const CATEGORY_RATIONALE: Record<string, string> = {
   "Quality of Business":
-    "ROCE, ROE, operating margins and capital efficiency — are the economics structurally good?",
+    "ROCE, ROE, operating margins and capital efficiency - are the economics structurally good?",
   Valuation:
     "How cheap or expensive the stock is on multiple lenses: P/E, P/B, PEG, intrinsic value gap and dividend yield.",
   Growth:
     "Revenue and profit CAGR over 10/5/3 years plus whether recent momentum is accelerating.",
   "Quarterly Momentum":
-    "Most recent quarter versus year-ago and prior quarter — is the trend fresh and strengthening?",
+    "Most recent quarter versus year-ago and prior quarter - is the trend fresh and strengthening?",
   "Balance Sheet":
     "Leverage, debt trajectory over 5–10 years, pledge risk and short-term liquidity.",
   "Cash Flow":
@@ -63,13 +63,13 @@ const CATEGORY_RATIONALE: Record<string, string> = {
   Dividend:
     "Yield, payout consistency and payout ratio sustainability.",
   "Operational Efficiency":
-    "Working capital discipline — debtor days, inventory turnover, cash conversion cycle.",
+    "Working capital discipline - debtor days, inventory turnover, cash conversion cycle.",
   "Price & Technical":
     "Two-signal price regime: DMA stack (CMP vs 50/200 DMA) + 52-week position.",
   "Peer Composite":
     "Company's percentile rank among sector peers across P/E, ROCE, OPM, growth and leverage.",
   "Size & Liquidity":
-    "Market-cap tier investability adjustment — large caps get a small premium for liquidity.",
+    "Market-cap tier investability adjustment - large caps get a small premium for liquidity.",
 };
 
 function Tooltip({ text, title }: { text: string; title?: string }) {
@@ -135,7 +135,7 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
             {CATEGORY_RATIONALE[category.name] ?? ""}
           </p>
 
-          {/* Progress bar — green / amber / red */}
+          {/* Progress bar - green / amber / red */}
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-700/50">
             <div
               className="h-full rounded-full transition-all duration-500"

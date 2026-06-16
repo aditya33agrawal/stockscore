@@ -16,17 +16,17 @@ const CATEGORIES = [
       {
         label: "ROCE 5yr consistency",
         formula: "logistic on mean×(1−CV)",
-        reading: "Rewards sustained ROCE over volatile ROCE — cyclical swings penalised",
+        reading: "Rewards sustained ROCE over volatile ROCE - cyclical swings penalised",
       },
       {
         label: "ROE (latest)",
         formula: "logistic(x0=18%, hw=11pp)",
-        reading: "Wider band — ROE is noisier than ROCE; <15% is weak, >30% exceptional",
+        reading: "Wider band - ROE is noisier than ROCE; <15% is weak, >30% exceptional",
       },
       {
         label: "OPM vs Sector Median",
         formula: "logistic(Δ vs sector median, x0=0, hw=6pp)",
-        reading: "Relative factor — scored vs sector prior. Logged in assumptions.",
+        reading: "Relative factor - scored vs sector prior. Logged in assumptions.",
       },
       {
         label: "OPM Trend (3yr slope)",
@@ -41,7 +41,7 @@ const CATEGORIES = [
       {
         label: "Margin Stability",
         formula: "linUp(OPM / sales_CV, 0, 30)",
-        reading: "Rewards stable margins on stable revenue — penalises commodity-like volatility",
+        reading: "Rewards stable margins on stable revenue - penalises commodity-like volatility",
       },
     ],
   },
@@ -49,14 +49,14 @@ const CATEGORIES = [
     name: "Growth",
     weight: 16,
     rationale:
-      "Magnitude and time both matter. We never ask 'is growth > X%' — we score on a continuous logistic curve, so 3× sales growth in 3 years scores materially higher than 2× in 3 years. 10-year weight is redistributed if data is missing.",
+      "Magnitude and time both matter. We never ask 'is growth > X%' - we score on a continuous logistic curve, so 3× sales growth in 3 years scores materially higher than 2× in 3 years. 10-year weight is redistributed if data is missing.",
     factors: [
-      { label: "Sales CAGR 10yr / 5yr / 3yr", formula: "logistic(x0=10/12/15%, hw=8pp)", reading: "Higher bar for shorter windows — recent performance must exceed long-term base" },
-      { label: "PAT CAGR 10yr / 5yr / 3yr", formula: "logistic(x0=12/15/18%, hw=9pp)", reading: "Profit bar is higher than sales — operating leverage rewarded" },
-      { label: "EPS CAGR 5yr", formula: "logistic(x0=15%, hw=9pp)", reading: "Per-share earnings — dilution-aware" },
+      { label: "Sales CAGR 10yr / 5yr / 3yr", formula: "logistic(x0=10/12/15%, hw=8pp)", reading: "Higher bar for shorter windows - recent performance must exceed long-term base" },
+      { label: "PAT CAGR 10yr / 5yr / 3yr", formula: "logistic(x0=12/15/18%, hw=9pp)", reading: "Profit bar is higher than sales - operating leverage rewarded" },
+      { label: "EPS CAGR 5yr", formula: "logistic(x0=15%, hw=9pp)", reading: "Per-share earnings - dilution-aware" },
       { label: "Earnings Acceleration", formula: "logistic(TTM growth − 5yr CAGR, x0=0, hw=10pp)", reading: "Gated: no credit if 5yr PAT CAGR ≤ 0" },
-      { label: "Sales–PAT Alignment", formula: "linUp(PAT CAGR / Sales CAGR, 0, 1)", reading: "Full score if profit grows faster than sales — operating leverage" },
-      { label: "Growth Durability", formula: "linUp(fraction of +ve YoY years, 0.5, 1.0)", reading: "Anti-cyclicality — rewards consistent growers" },
+      { label: "Sales–PAT Alignment", formula: "linUp(PAT CAGR / Sales CAGR, 0, 1)", reading: "Full score if profit grows faster than sales - operating leverage" },
+      { label: "Growth Durability", formula: "linUp(fraction of +ve YoY years, 0.5, 1.0)", reading: "Anti-cyclicality - rewards consistent growers" },
     ],
   },
   {
@@ -67,18 +67,18 @@ const CATEGORIES = [
     factors: [
       { label: "P/E vs Industry", formula: "linDown(pe/industry_pe, 0.5, 1.8)", reading: "Full score at 50% of sector PE; zero at 1.8×" },
       { label: "P/E Absolute", formula: "linDown(pe, 12, 40)", reading: "Guarded: zero if PE ≤ 0" },
-      { label: "Price to Book", formula: "If CMP ≤ BV → full; else linDown(P/B, 1.0, 3.0)", reading: "Zero above 3× P/B — user's explicit rule" },
+      { label: "Price to Book", formula: "If CMP ≤ BV → full; else linDown(P/B, 1.0, 3.0)", reading: "Zero above 3× P/B - user's explicit rule" },
       { label: "PEG Ratio", formula: "linDown(peg, 0.5, 2.5)", reading: "Guarded: zero if PEG ≤ 0 or growth ≤ 0" },
       { label: "Margin of Safety (IV)", formula: "linUp(gap, −0.2, 0.5)", reading: "Graham number: √(22.5 × EPS × BV). Logged if computed." },
-      { label: "Dividend Yield", formula: "logistic(x0=2%, hw=1.5pp)", reading: "Caps gracefully at ~5% — avoids yield trap" },
-      { label: "52w Drawdown (quality-gated)", formula: "linUp(0.10, 0.40) × quality gate", reading: "Withheld if Quality score < 60% — rewards buying quality on weakness only" },
+      { label: "Dividend Yield", formula: "logistic(x0=2%, hw=1.5pp)", reading: "Caps gracefully at ~5% - avoids yield trap" },
+      { label: "52w Drawdown (quality-gated)", formula: "linUp(0.10, 0.40) × quality gate", reading: "Withheld if Quality score < 60% - rewards buying quality on weakness only" },
     ],
   },
   {
     name: "Balance Sheet",
     weight: 12,
     rationale:
-      "Solvency, leverage trajectory, and liquidity. D/E band edges are sector-aware — a utility with D/E=2.5 is judged very differently from a consumer company. The 'rising leverage' penalty was removed: it is fully captured by the debt trajectory factors.",
+      "Solvency, leverage trajectory, and liquidity. D/E band edges are sector-aware - a utility with D/E=2.5 is judged very differently from a consumer company. The 'rising leverage' penalty was removed: it is fully captured by the debt trajectory factors.",
     factors: [
       { label: "Debt to Equity", formula: "band(sector-specific edges)", reading: "Sector-aware Goldilocks band. Hard-fail on negative book value." },
       { label: "Debt Trend (5yr)", formula: "linDown(current/5yAgo, 0.8, 2.0)", reading: "Falling debt rewarded; doubling = 0 score" },
@@ -95,10 +95,10 @@ const CATEGORIES = [
     rationale:
       "Are the profits real? CFO/PAT conversion quality, FCF consistency, FCF yield, and working capital discipline via receivables and inventory trend slopes.",
     factors: [
-      { label: "Earnings Quality (CFO/PAT)", formula: "logistic(x0=0.85, hw=0.55)", reading: "Loosened half-width — range 0.30–1.40. Persistent failure (< 0.5) also penalised." },
+      { label: "Earnings Quality (CFO/PAT)", formula: "logistic(x0=0.85, hw=0.55)", reading: "Loosened half-width - range 0.30–1.40. Persistent failure (< 0.5) also penalised." },
       { label: "FCF Positive Years", formula: "(count/5) × 2", reading: "5 of 5 positive FCF years = full 2 pts" },
       { label: "FCF Yield", formula: "linUp(FCF/mcap, 1%, 7%)", reading: "7%+ FCF yield = full score" },
-      { label: "Receivable Days Trend", formula: "linDown(OLS slope, 0, 15 days/yr)", reading: "Stretching >15 days/yr = 0 score — deteriorating WC" },
+      { label: "Receivable Days Trend", formula: "linDown(OLS slope, 0, 15 days/yr)", reading: "Stretching >15 days/yr = 0 score - deteriorating WC" },
       { label: "Inventory Days Trend", formula: "linDown(OLS slope, 0, 20 days/yr)", reading: "Bloating >20 days/yr = 0 score" },
       { label: "CFO Growth Trend", formula: "logistic(norm slope, x0=0, hw=0.5)", reading: "Normalised by mean CFO" },
     ],
@@ -122,33 +122,33 @@ const CATEGORIES = [
     name: "Shareholding",
     weight: 8,
     rationale:
-      "Who is buying, and in which direction? The promoter trend carries 3 pts — the single highest factor weight in this category — because promoter selling is a leading indicator of business deterioration that rarely appears in financials first.",
+      "Who is buying, and in which direction? The promoter trend carries 3 pts - the single highest factor weight in this category - because promoter selling is a leading indicator of business deterioration that rarely appears in financials first.",
     factors: [
       { label: "Promoter Holding Level", formula: "linUp(25%, 60%)", reading: "Full score at ≥60%; zero if <25%" },
-      { label: "Promoter Trend (8Q delta)", formula: "logistic(x0=0, hw=2pp)", reading: "Highest weight (3pts) — exit ≥5pp triggers separate penalty" },
-      { label: "FII Trend (8Q delta)", formula: "logistic(x0=0, hw=3pp)", reading: "Wider band — FII flows are more volatile" },
+      { label: "Promoter Trend (8Q delta)", formula: "logistic(x0=0, hw=2pp)", reading: "Highest weight (3pts) - exit ≥5pp triggers separate penalty" },
+      { label: "FII Trend (8Q delta)", formula: "logistic(x0=0, hw=3pp)", reading: "Wider band - FII flows are more volatile" },
       { label: "DII Trend (8Q delta)", formula: "logistic(x0=0, hw=3pp)", reading: "" },
-      { label: "FII + DII Joint Buying", formula: "Binary +0.5", reading: "Smart-money confirmation — both FII and DII adding over 8Q" },
+      { label: "FII + DII Joint Buying", formula: "Binary +0.5", reading: "Smart-money confirmation - both FII and DII adding over 8Q" },
     ],
   },
   {
     name: "Peer Composite",
     weight: 6,
     rationale:
-      "Is this the best company in its sector? Purely relative — each factor is the company's percentile rank among its screener.in peer set. Skipped if fewer than 3 peers; weight is redistributed to the top 4 categories.",
+      "Is this the best company in its sector? Purely relative - each factor is the company's percentile rank among its screener.in peer set. Skipped if fewer than 3 peers; weight is redistributed to the top 4 categories.",
     factors: [
       { label: "P/E rank (lower better)", formula: "percentile × 1.0", reading: "" },
       { label: "ROCE rank", formula: "percentile × 1.0", reading: "" },
       { label: "OPM rank", formula: "percentile × 1.0", reading: "" },
       { label: "Quarterly profit growth rank", formula: "percentile × 1.0", reading: "" },
-      { label: "Sales growth + Debt/Mcap + Div yield + Mcap", formula: "percentile × 0.5 each", reading: "Log-scaled Mcap — larger = less illiquidity risk" },
+      { label: "Sales growth + Debt/Mcap + Div yield + Mcap", formula: "percentile × 0.5 each", reading: "Log-scaled Mcap - larger = less illiquidity risk" },
     ],
   },
   {
     name: "Price & Technical",
     weight: 4,
     rationale:
-      "Is the price action confirming the fundamental case? Uses a 2-signal regime detector with zero fitted parameters — interpretable and reproducible. This approach is preferred over MACD/ADX/HMM for our data-parsimony constraint (single daily price + two DMAs).",
+      "Is the price action confirming the fundamental case? Uses a 2-signal regime detector with zero fitted parameters - interpretable and reproducible. This approach is preferred over MACD/ADX/HMM for our data-parsimony constraint (single daily price + two DMAs).",
     factors: [
       { label: "DMA Stack", formula: "CMP > DMA50 > DMA200 → +1; reversed → −1", reading: "Golden/death cross structure" },
       { label: "52-week Position", formula: ">0.66 of range → +1; <0.33 → −1", reading: "Combined with DMA stack → 5-level regime" },
@@ -158,7 +158,7 @@ const CATEGORIES = [
     name: "Size & Liquidity",
     weight: 2,
     rationale:
-      "Not a quality factor — a discoverability and illiquidity tax. Large-caps get a 2pt premium; micro-caps get 0.5pt. The difference is explicitly a liquidity/institution-access adjustment, not a judgment on business quality.",
+      "Not a quality factor - a discoverability and illiquidity tax. Large-caps get a 2pt premium; micro-caps get 0.5pt. The difference is explicitly a liquidity/institution-access adjustment, not a judgment on business quality.",
     factors: [
       { label: "Market Cap Tier", formula: ">₹50k Cr=2; >₹10k=1.5; >₹1k=1; else=0.5", reading: "" },
     ],
@@ -205,7 +205,7 @@ export default function MethodologyPage() {
         </h1>
         <p className="mt-4 text-chalk-300 text-lg leading-relaxed serif">
           Every company is scored on a 100-point rubric across 10 fundamental categories using{" "}
-          <strong className="text-chalk-50">continuous logistic and linear curves</strong> — no step
+          <strong className="text-chalk-50">continuous logistic and linear curves</strong> - no step
           thresholds. A marginal improvement in any metric produces a marginal improvement in score.
         </p>
         <a
@@ -228,7 +228,7 @@ export default function MethodologyPage() {
           <li>
             <strong className="text-chalk-50">No cliff edges.</strong> A company at ROE 19.9% and
             one at ROE 20.1% get virtually the same score. We use logistic curves parameterised as{" "}
-            <code className="text-xs bg-ink-800 px-1.5 py-0.5 rounded">logistic(x₀, half_width)</code> — both
+            <code className="text-xs bg-ink-800 px-1.5 py-0.5 rounded">logistic(x₀, half_width)</code> - both
             values are economically interpretable: midpoint and saturation distance.
           </li>
           <li>
@@ -239,7 +239,7 @@ export default function MethodologyPage() {
           <li>
             <strong className="text-chalk-50">Magnitude and time encoded.</strong> Sales growing 3× in
             3 years scores materially more than 2× in 3 years because the CAGR feeds a continuous
-            logistic — not a threshold.
+            logistic - not a threshold.
           </li>
         </ol>
       </section>
@@ -367,7 +367,7 @@ export default function MethodologyPage() {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-chalk-50 mb-4">Penalties (max −14)</h2>
         <p className="text-sm text-chalk-300 mb-3 serif">
-          Penalties represent tail-risk gate events — below the threshold they don&apos;t matter;
+          Penalties represent tail-risk gate events - below the threshold they don&apos;t matter;
           above it they are a serious red flag that a continuous factor cannot fully represent.
           Each penalty has an explicit exposure-matrix justification: it does not duplicate
           what a category factor already captures.
@@ -407,7 +407,7 @@ export default function MethodologyPage() {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-chalk-50 mb-3">Factor exposure policy</h2>
         <p className="text-sm text-chalk-300 mb-4 serif">
-          Each input signal appears in at most one channel: a continuous factor <em>or</em> a penalty — never both, unless the penalty represents a qualitative state change the continuous factor cannot represent (e.g., pledge crossing 25% is a binary event).
+          Each input signal appears in at most one channel: a continuous factor <em>or</em> a penalty - never both, unless the penalty represents a qualitative state change the continuous factor cannot represent (e.g., pledge crossing 25% is a binary event).
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
@@ -420,8 +420,8 @@ export default function MethodologyPage() {
             </thead>
             <tbody className="divide-y divide-ink-700/30 text-chalk-200">
               {[
-                ["Pledge %", "§Balance Sheet (wt 2) linDown(0,10)", "§5 if ≥25% (−5) — qualitative cliff"],
-                ["Debt trajectory", "§Balance Sheet (5y + 10y, wt 3)", "None — subsumed by factor"],
+                ["Pledge %", "§Balance Sheet (wt 2) linDown(0,10)", "§5 if ≥25% (−5) - qualitative cliff"],
+                ["Debt trajectory", "§Balance Sheet (5y + 10y, wt 3)", "None - subsumed by factor"],
                 ["Other-income share", "§Quarterly (wt 1) linDown(0.10,0.30)", "§5 if >30% (−2), if >50% (−4)"],
                 ["Promoter holding", "§Shareholding level + trend", "§5 if drop ≥5pp in 8Q (−3)"],
                 ["CFO/PAT", "§Cash Flow (wt 3)", "§5 if 5yr avg <0.5 (−3)"],
@@ -461,7 +461,7 @@ export default function MethodologyPage() {
         href="/"
         className="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 px-4 py-2 text-sm font-semibold hover:bg-accent/90"
       >
-        Try it — pick a sector →
+        Try it - pick a sector →
       </Link>
     </div>
   );

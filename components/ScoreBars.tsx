@@ -24,18 +24,18 @@ function scoreTextColor(pct: number): string {
 }
 
 const CATEGORY_RATIONALE: Record<string, string> = {
-  "Quality of Business": "ROCE, ROE, operating margins and capital efficiency — are the economics structurally good?",
+  "Quality of Business": "ROCE, ROE, operating margins and capital efficiency - are the economics structurally good?",
   Valuation:             "How cheap or expensive the stock is on P/E, P/B, PEG, intrinsic value gap and dividend yield.",
   Growth:                "Revenue and profit CAGR over 10/5/3 years plus whether recent momentum is accelerating.",
-  "Quarterly Momentum":  "Most recent quarter versus year-ago and prior quarter — is the trend fresh and strengthening?",
+  "Quarterly Momentum":  "Most recent quarter versus year-ago and prior quarter - is the trend fresh and strengthening?",
   "Balance Sheet":       "Leverage, debt trajectory over 5–10 years, pledge risk and short-term liquidity.",
   "Cash Flow":           "How much reported profit converts to cash; FCF consistency and working capital discipline.",
   Shareholding:          "Promoter, FII and DII confidence over 8 quarters; pledge risk and institutional conviction.",
   Dividend:              "Yield, payout consistency and payout ratio sustainability.",
-  "Operational Efficiency": "Working capital discipline — debtor days, inventory turnover, cash conversion cycle.",
+  "Operational Efficiency": "Working capital discipline - debtor days, inventory turnover, cash conversion cycle.",
   "Price & Technical":   "Two-signal price regime: DMA stack (CMP vs 50/200 DMA) + 52-week position.",
   "Peer Composite":      "Company's percentile rank among sector peers across P/E, ROCE, OPM, growth and leverage.",
-  "Size & Liquidity":    "Market-cap tier investability adjustment — large caps get a small premium for liquidity.",
+  "Size & Liquidity":    "Market-cap tier investability adjustment - large caps get a small premium for liquidity.",
 };
 
 const CATEGORY_LEARN_MAP: Record<string, string> = {
@@ -76,7 +76,7 @@ export function ScoreBars({ categories }: Props) {
               className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[rgb(var(--accent)_/_0.03)] transition-colors text-left rounded-2xl"
               aria-expanded={isOpen}
             >
-              {/* Tooltip info button — stop propagation so click doesn't toggle the row */}
+              {/* Tooltip info button - stop propagation so click doesn't toggle the row */}
               <span onClick={(e) => e.stopPropagation()} className="shrink-0 relative z-10">
                 <Tooltip
                   align="start"
@@ -104,7 +104,7 @@ export function ScoreBars({ categories }: Props) {
                 />
               </span>
 
-              {/* Name — whitespace-nowrap + overflow hidden so it never wraps */}
+              {/* Name - whitespace-nowrap + overflow hidden so it never wraps */}
               <span className="shrink-0 w-[130px] sm:w-[180px] text-sm font-medium text-chalk-100 whitespace-nowrap overflow-hidden text-ellipsis">
                 {cat.name}
               </span>

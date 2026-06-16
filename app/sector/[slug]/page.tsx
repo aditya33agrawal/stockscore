@@ -7,7 +7,7 @@ import { RadarCompare } from "@/components/RadarCompare";
 import { ScoreBarChart } from "@/components/ScoreBar";
 import { Tooltip } from "@/components/Tooltip";
 
-// Data only changes on the weekly refresh pipeline — pages render on first
+// Data only changes on the weekly refresh pipeline - pages render on first
 // request and are then cached for an hour (on-demand ISR), instead of
 // re-querying Postgres on every request.
 export const revalidate = 3600;
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const sector = await loadSector(params.slug);
   if (!sector) return {};
   return {
-    title: `${sector.name} — Sector Scoring`,
+    title: `${sector.name} - Sector Scoring`,
     description: `${sector.companies_count} ${sector.name} companies scored across 10 fundamental categories.`,
   };
 }
@@ -74,15 +74,15 @@ export default async function SectorPage({ params }: { params: { slug: string } 
         <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-4">Sector Medians</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {[
-            ["Median P/E",        stats.median_pe?.toFixed(1) ?? "—",
-              "The middle price-to-earnings ratio across all companies in this sector. Higher means the market is paying more per rupee of earnings — usually signalling growth expectations, but also a richer (pricier) valuation."],
-            ["Median ROCE",       stats.median_roce != null ? `${stats.median_roce.toFixed(1)}%` : "—",
-              "Return on Capital Employed — how efficiently the sector's companies turn the capital they deploy into operating profit. Higher is better; consistently above ~15% is strong."],
-            ["Median OPM",        stats.median_opm  != null ? `${stats.median_opm.toFixed(1)}%`  : "—",
-              "Operating Profit Margin — operating profit as a share of revenue. Higher margins point to pricing power and tight cost control."],
-            ["Median D/E",        stats.median_de?.toFixed(2) ?? "—",
+            ["Median P/E",        stats.median_pe?.toFixed(1) ?? "-",
+              "The middle price-to-earnings ratio across all companies in this sector. Higher means the market is paying more per rupee of earnings - usually signalling growth expectations, but also a richer (pricier) valuation."],
+            ["Median ROCE",       stats.median_roce != null ? `${stats.median_roce.toFixed(1)}%` : "-",
+              "Return on Capital Employed - how efficiently the sector's companies turn the capital they deploy into operating profit. Higher is better; consistently above ~15% is strong."],
+            ["Median OPM",        stats.median_opm  != null ? `${stats.median_opm.toFixed(1)}%`  : "-",
+              "Operating Profit Margin - operating profit as a share of revenue. Higher margins point to pricing power and tight cost control."],
+            ["Median D/E",        stats.median_de?.toFixed(2) ?? "-",
               "Debt-to-Equity ratio. Lower means the sector relies less on borrowing; high leverage raises risk, especially in cyclical or rate-sensitive industries."],
-            ["Median Div Yield",  stats.median_dividend_yield != null ? `${stats.median_dividend_yield.toFixed(2)}%` : "—",
+            ["Median Div Yield",  stats.median_dividend_yield != null ? `${stats.median_dividend_yield.toFixed(2)}%` : "-",
               "Annual dividend as a percentage of share price. Higher means more income returned to shareholders, though very high yields can signal limited reinvestment or a depressed price."],
           ].map(([label, value, hint], i) => (
             <div key={label as string} className="glass border-subtle rounded-2xl p-4 hover:border-[rgb(var(--accent)_/_0.15)] transition-all">
@@ -111,7 +111,7 @@ export default async function SectorPage({ params }: { params: { slug: string } 
         <Leaderboard sectorSlug={sector.slug} companies={sector.companies} />
       </section>
 
-      {/* Radar — full width */}
+      {/* Radar - full width */}
       <section className="mb-8">
         <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-4">
           Category profile

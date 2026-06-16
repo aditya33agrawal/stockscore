@@ -1,5 +1,5 @@
 /**
- * middleware.ts  (Edge Runtime — project root)
+ * middleware.ts  (Edge Runtime - project root)
  *
  * Runs before every matched request. Responsibilities:
  *   1. Maintenance kill-switch (MAINTENANCE_MODE=1 env var → 503)
@@ -33,8 +33,16 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   // ── 1. Maintenance kill-switch ──────────────────────────────────────────────
   if (process.env.MAINTENANCE_MODE === "1") {
     return new NextResponse(
-      JSON.stringify({ error: { code: "maintenance", message: "Service is under maintenance. Check back soon." } }),
-      { status: 503, headers: { "content-type": "application/json", "retry-after": "300" } }
+      JSON.stringify({
+        error: {
+          code: "maintenance",
+          message: "Service is under maintenance. Check back soon.",
+        },
+      }),
+      {
+        status: 503,
+        headers: { "content-type": "application/json", "retry-after": "300" },
+      },
     );
   }
 
@@ -52,14 +60,19 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
       pathname.startsWith("/api/auth/") || pathname.startsWith("/api/refresh");
 
     const opts = isSensitive
-      ? { max: 10, windowMs: 60_000 }   // 10 req/min for auth & refresh
-      : { max: 60, windowMs: 60_000 };  // 60 req/min for general API
+      ? { max: 10, windowMs: 60_000 } // 10 req/min for auth & refresh
+      : { max: 60, windowMs: 60_000 }; // 60 req/min for general API
 
-    const result = rateLimit(`${ip}:${isSensitive ? "sensitive" : "api"}`, opts);
+    const result = rateLimit(
+      `${ip}:${isSensitive ? "sensitive" : "api"}`,
+      opts,
+    );
 
     if (!result.ok) {
       return new NextResponse(
-        JSON.stringify({ error: { code: "rate_limited", message: "Too many requests" } }),
+        JSON.stringify({
+          error: { code: "rate_limited", message: "Too many requests" },
+        }),
         {
           status: 429,
           headers: {
@@ -68,14 +81,13 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
             "x-ratelimit-limit": String(opts.max),
             "x-ratelimit-remaining": "0",
           },
-        }
+        },
       );
     }
   }
 
   // ── 3. Request ID ──────────────────────────────────────────────────────────
-  const requestId =
-    req.headers.get("x-request-id") ?? crypto.randomUUID();
+  const requestId = req.headers.get("x-request-id") ?? crypto.randomUUID();
 
   // ── 4 & 5. Build response with security + CORS headers ────────────────────
   const res = NextResponse.next({
@@ -97,16 +109,16 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   const durationMs = Date.now() - start;
   console.log(
     JSON.stringify({
-      ts:         new Date().toISOString(),
-      level:      "info",
-      msg:        "http",
+      ts: new Date().toISOString(),
+      level: "info",
+      msg: "http",
       requestId,
-      method:     req.method,
-      path:       pathname,
-      ip:         req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
-      ua:         req.headers.get("user-agent")?.slice(0, 100) ?? null,
+      method: req.method,
+      path: pathname,
+      ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
+      ua: req.headers.get("user-agent")?.slice(0, 100) ?? null,
       durationMs,
-    })
+    }),
   );
 
   return res;

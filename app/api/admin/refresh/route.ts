@@ -25,16 +25,27 @@ export const POST = compose(
   withAdmin,
 )(async (req: NextRequest, ctx: { user: SessionUser }) => {
   const body = await req.json().catch(() => ({}));
-  const phases: Phase[] = (Array.isArray(body.phases) ? body.phases : ["sectors"])
-    .filter((p: unknown) => VALID_PHASES.has(p as Phase));
-  const sectors: string[] | undefined = Array.isArray(body.sectors) ? body.sectors : undefined;
+  const phases: Phase[] = (
+    Array.isArray(body.phases) ? body.phases : ["sectors"]
+  ).filter((p: unknown) => VALID_PHASES.has(p as Phase));
+  const sectors: string[] | undefined = Array.isArray(body.sectors)
+    ? body.sectors
+    : undefined;
   const force: boolean = body.force === true;
 
   if (!phases.length) {
-    return new Response(JSON.stringify({ error: { code: "validation", message: "phases must be a non-empty array" } }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "validation",
+          message: "phases must be a non-empty array",
+        },
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const refreshReq = { phases, sectors, force };
@@ -50,7 +61,7 @@ export const POST = compose(
     `;
     runId = rows[0]?.id ?? null;
   } catch {
-    // Non-fatal — proceed without run record
+    // Non-fatal - proceed without run record
   }
 
   const stream = new ReadableStream({

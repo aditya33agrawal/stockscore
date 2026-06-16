@@ -27,8 +27,14 @@ export function applySecurityHeaders(res: NextResponse): void {
   res.headers.set("X-Content-Type-Options", "nosniff");
   res.headers.set("X-Frame-Options", "DENY");
   res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-  res.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-  // Report-Only initially — switch to Content-Security-Policy once violations confirmed clean
+  res.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()",
+  );
+  res.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains",
+  );
+  // Report-Only initially - switch to Content-Security-Policy once violations confirmed clean
   res.headers.set("Content-Security-Policy-Report-Only", CSP_DIRECTIVES);
 }

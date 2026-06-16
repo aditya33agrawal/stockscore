@@ -13,7 +13,7 @@ export default function ContactPage() {
         Let's talk.
       </h1>
       <p className="mt-3 text-chalk-300 serif text-lg leading-relaxed">
-        The best way to reach me is email — I read every message and respond
+        The best way to reach me is email - I read every message and respond
         within 24 hours.
       </p>
 
@@ -30,7 +30,7 @@ export default function ContactPage() {
             I am actively seeking roles in{" "}
             <span className="text-chalk-200 font-medium">investment advisory</span> and{" "}
             <span className="text-chalk-200 font-medium">equity analysis</span>.
-            If you are hiring — or know someone who is — I would be glad to connect.
+            If you are hiring - or know someone who is - I would be glad to connect.
             Use the form below or reach out directly on LinkedIn.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function ContactPage() {
           Send a message
         </h2>
         <p className="mt-2 mb-8 text-sm text-chalk-300/60">
-          Whether you have a role to discuss, product feedback, or a general enquiry — the form takes under a minute.
+          Whether you have a role to discuss, product feedback, or a general enquiry - the form takes under a minute.
         </p>
         <div className="rounded-2xl border border-ink-700/60 bg-ink-900/30 p-6">
           <FeedbackForm />

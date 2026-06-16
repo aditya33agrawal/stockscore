@@ -5,7 +5,7 @@ import sql from "@/lib/db";
 import type { SectorRow } from "@/lib/sector-scraper/types";
 import { SectorsCompareTable } from "@/components/SectorsCompareTable";
 
-// Data only changes on the weekly refresh pipeline — cache the rendered page
+// Data only changes on the weekly refresh pipeline - cache the rendered page
 // and revalidate hourly instead of re-querying Postgres on every request.
 export const revalidate = 3600;
 
@@ -47,7 +47,7 @@ export default async function SectorsComparePage() {
           Compare All Industries
         </h1>
         <p className="mt-3 text-chalk-300 max-w-2xl">
-          Screener&apos;s full industry overview — market cap, valuation, margins, returns, and capital efficiency for every Indian sector.
+          Screener&apos;s full industry overview - market cap, valuation, margins, returns, and capital efficiency for every Indian sector.
           Sort any column, filter by valuation or quality, hover headers for definitions.
         </p>
       </header>

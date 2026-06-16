@@ -5,7 +5,7 @@ import { Send, CheckCircle } from "lucide-react";
 import clsx from "clsx";
 
 const TYPES = [
-  { value: "opportunity", label: "Opportunity",  placeholder: "Tell me about the role, team, or organisation — I'd love to hear more." },
+  { value: "opportunity", label: "Opportunity",  placeholder: "Tell me about the role, team, or organisation - I'd love to hear more." },
   { value: "feedback",    label: "Feedback",     placeholder: "Any thoughts, suggestions, or general observations?" },
   { value: "feature",     label: "Feature",      placeholder: "What would make Stockscore more useful for you?" },
   { value: "bug",         label: "Bug",          placeholder: "What went wrong? Where did you see it?" },
@@ -131,7 +131,7 @@ export function FeedbackForm() {
         >
           Email{" "}
           <span className="font-normal normal-case tracking-normal text-chalk-300/30">
-            — {type === "opportunity" ? "required for follow-up" : "optional, for a reply"}
+            - {type === "opportunity" ? "required for follow-up" : "optional, for a reply"}
           </span>
         </label>
         <input

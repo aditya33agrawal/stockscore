@@ -27,7 +27,7 @@ import {
 } from "@/lib/evaluators";
 import type { MetricCardProps } from "@/components/MetricCard";
 
-// Data only changes on the weekly refresh pipeline — pages render on first
+// Data only changes on the weekly refresh pipeline - pages render on first
 // request and are then cached for an hour (on-demand ISR), instead of
 // re-querying Postgres on every request.
 export const revalidate = 3600;
@@ -41,7 +41,7 @@ export async function generateMetadata({
   const co = sector?.companies.find((c) => c.slug === params.company);
   if (!co) return {};
   return {
-    title: `${co.name} — ${co.final_score.toFixed(1)}/100`,
+    title: `${co.name} - ${co.final_score.toFixed(1)}/100`,
     description: `${co.name} fundamental score breakdown across 10 categories. Ranked ${co.rank} in ${sector?.name}.`,
   };
 }
@@ -262,7 +262,7 @@ export default async function CompanyPage({
         ? `${co.raw.profit_5y_cagr.toFixed(0)}% profit CAGR`
         : co.raw.profit_5y_cagr
         ? `${co.raw.profit_5y_cagr.toFixed(0)}% 5Y`
-        : "—",
+        : "-",
       sentence: evSP.sentence,
       sentenceTone: evSP.tone,
       spark: chartData.annualSales.some((v) => v !== null)
@@ -365,14 +365,14 @@ export default async function CompanyPage({
           }
         : undefined,
       sentence: hasNoPromoters
-        ? `No promoter holding — company is widely held (typical of PSUs or professionally-managed firms).`
+        ? `No promoter holding - company is widely held (typical of PSUs or professionally-managed firms).`
         : latestPromoter == null
         ? `Promoter holding data not available.`
         : isPledgedHigh
-        ? `${co.raw.pledged_pct!.toFixed(1)}% of promoter shares are pledged — a key risk if the stock corrects sharply.`
+        ? `${co.raw.pledged_pct!.toFixed(1)}% of promoter shares are pledged - a key risk if the stock corrects sharply.`
         : promoterDelta != null && Math.abs(promoterDelta) > 0.5
         ? `Promoters ${promoterDelta > 0 ? "increased" : "reduced"} stake by ${Math.abs(promoterDelta).toFixed(1)}pp over the last year.`
-        : `Promoters hold ${latestPromoter.toFixed(1)}% — stable ownership structure.`,
+        : `Promoters hold ${latestPromoter.toFixed(1)}% - stable ownership structure.`,
       sentenceTone: hasNoPromoters ? "neutral" : isPledgedHigh ? "warn" : promoterDelta != null && promoterDelta > 0.5 ? "good" : promoterDelta != null && promoterDelta < -0.5 ? "warn" : "neutral",
       spark: chartData.shPromoter.some((v) => v !== null)
         ? {
@@ -387,7 +387,7 @@ export default async function CompanyPage({
 
   const trendInfo = evaluateTrend(co.cmp, co.raw);
 
-  // Patch Balance Sheet category — update the "Current Ratio" item detail with the
+  // Patch Balance Sheet category - update the "Current Ratio" item detail with the
   // actual fetched value (the scorer may have stored 0 / "unavailable" if the scraper
   // didn't capture it at scoring time, but detail.ratios always has it).
   const patchedCategories = co.categories.map((cat) => {
@@ -474,7 +474,7 @@ export default async function CompanyPage({
           </Link>
         </div>
         <p className="mb-4 text-[12px] text-chalk-300/50 leading-relaxed">
-          <span className="font-semibold text-chalk-300/80">Source:</span> based on my own research, parameters, and judgement —{" "}
+          <span className="font-semibold text-chalk-300/80">Source:</span> based on my own research, parameters, and judgement -{" "}
           <span className="text-chalk-100">not investment advice.</span>
         </p>
         <ScoreBars categories={patchedCategories} />
@@ -500,7 +500,7 @@ export default async function CompanyPage({
           />
         </div>
 
-        {/* Peer comparison — collapsed by default */}
+        {/* Peer comparison - collapsed by default */}
         {sector.companies.length > 1 && (
           <details className="group glass border-subtle rounded-2xl">
             <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">
@@ -525,7 +525,7 @@ export default async function CompanyPage({
           </details>
         )}
 
-        {/* About company — collapsed by default */}
+        {/* About company - collapsed by default */}
         {detail && (detail.about || detail.key_points) && (
           <details className="group glass border-subtle rounded-2xl">
             <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">
@@ -580,7 +580,7 @@ export default async function CompanyPage({
         rawTotal={co.raw_total}
       />
 
-      {/* Announcements — collapsed */}
+      {/* Announcements - collapsed */}
       {hasAnnouncements && (
         <details className="group glass border-subtle rounded-2xl mb-10">
           <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none">

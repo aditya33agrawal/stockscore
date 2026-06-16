@@ -120,7 +120,7 @@ export default async function BlogIndex() {
           ))}
         </ul>
         <p className="mt-6 text-xs text-chalk-300/60">
-          These short notes are a public journal — process over predictions, no
+          These short notes are a public journal - process over predictions, no
           recommendations.
         </p>
       </section>

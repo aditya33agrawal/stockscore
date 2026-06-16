@@ -38,7 +38,9 @@ export async function validateConfig(): Promise<string[]> {
   const slugSeen = new Set<string>();
   for (const s of cfg.sectors) {
     if (!s.slug || !s.name || !s.description) {
-      errors.push(`Sector "${s.slug ?? s.name ?? "?"}" missing slug/name/description.`);
+      errors.push(
+        `Sector "${s.slug ?? s.name ?? "?"}" missing slug/name/description.`,
+      );
     }
     if (slugSeen.has(s.slug)) errors.push(`Duplicate sector slug: ${s.slug}`);
     slugSeen.add(s.slug);
@@ -48,7 +50,8 @@ export async function validateConfig(): Promise<string[]> {
     const seen = new Set<string>();
     for (const c of s.companies ?? []) {
       const u = c.toUpperCase();
-      if (seen.has(u)) errors.push(`Sector "${s.slug}": duplicate company ${u}.`);
+      if (seen.has(u))
+        errors.push(`Sector "${s.slug}": duplicate company ${u}.`);
       seen.add(u);
     }
   }
@@ -64,13 +67,15 @@ export async function validateConfig(): Promise<string[]> {
   }
   for (const [sym, slugs] of symbolSectors) {
     if (slugs.length > 1) {
-      errors.push(`Symbol ${sym} appears in ${slugs.length} sectors: ${slugs.join(", ")}`);
+      errors.push(
+        `Symbol ${sym} appears in ${slugs.length} sectors: ${slugs.join(", ")}`,
+      );
     }
   }
 
   if (Object.keys(cache).length === 0) {
     errors.push(
-      "No data/symbol-resolution.json — run `npm run standardize:config` first to verify symbols.",
+      "No data/symbol-resolution.json - run `npm run standardize:config` first to verify symbols.",
     );
   } else {
     // A config symbol is valid iff it is the canonical form of some resolved
@@ -81,7 +86,9 @@ export async function validateConfig(): Promise<string[]> {
     }
     for (const sym of symbolSectors.keys()) {
       if (!canonicalSet.has(sym)) {
-        errors.push(`Symbol ${sym} is not a verified canonical screener symbol (run standardize:config).`);
+        errors.push(
+          `Symbol ${sym} is not a verified canonical screener symbol (run standardize:config).`,
+        );
       }
     }
   }

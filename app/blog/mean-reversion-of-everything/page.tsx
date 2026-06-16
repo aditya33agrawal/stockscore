@@ -47,7 +47,7 @@ export default function BlogPost() {
         </h2>
         <p>
           Pull up any stock that has rallied 40% in a week. Wait. Six months
-          later — almost without exception — most of that move is gone. Not all
+          later - almost without exception - most of that move is gone. Not all
           of it; rarely all of it. But the spike comes back down to meet the
           slope it left behind.
         </p>
@@ -55,7 +55,7 @@ export default function BlogPost() {
           The textbook reasons are manipulation, news cycles, exhaustion of
           buyers. I think the real reason is simpler, and it has a name traders
           use without ceremony: <em>profit booking</em>. When fear arrives,
-          people don&apos;t sell what is losing — they sell what is winning.
+          people don&apos;t sell what is losing - they sell what is winning.
           That&apos;s where the gains are locked in. The biggest winners get
           cut down first. The boring, sideways names barely move, because
           there was nothing in them to take off the table.
@@ -71,7 +71,7 @@ export default function BlogPost() {
           This isn&apos;t really about stocks
         </h2>
         <p>
-          The same shape — rise too fast, fall back hard — shows up almost
+          The same shape - rise too fast, fall back hard - shows up almost
           anywhere I&apos;ve looked. Once you start seeing it, it becomes hard
           to unsee.
         </p>
@@ -102,7 +102,7 @@ export default function BlogPost() {
           <strong className="text-chalk-50">Empires.</strong> Rome took
           centuries to rise and centuries to fall. The Mongol empire rose in
           one generation and was gone in three. The faster the climb, the
-          steeper the cliff. The British, the Soviets, the Mughals — same
+          steeper the cliff. The British, the Soviets, the Mughals - same
           curve, different timezone.
         </p>
         <p>
@@ -118,13 +118,13 @@ export default function BlogPost() {
         </p>
         <p>
           <strong className="text-chalk-50">Companies.</strong> The meteoric
-          IPOs — WeWork, Pets.com, dozens you&apos;ve forgotten — collapsed
+          IPOs - WeWork, Pets.com, dozens you&apos;ve forgotten - collapsed
           fastest. The hundred-year-old businesses that nobody finds exciting
           are quietly compounding through wars and recessions.
         </p>
         <p>
           <strong className="text-chalk-50">Diets and fitness fads.</strong>
-          Keto, paleo, juice cleanses — each peaks and recedes. &quot;Eat less,
+          Keto, paleo, juice cleanses - each peaks and recedes. &quot;Eat less,
           move more&quot; has been right for a thousand years and will be right
           for another thousand.
         </p>
@@ -150,7 +150,7 @@ export default function BlogPost() {
           which is which.
         </p>
         <p>
-          Carpentry, forging, farming, masonry, healing, cooking, lending —
+          Carpentry, forging, farming, masonry, healing, cooking, lending -
           these have existed for five, seven, ten thousand years. Through
           plagues, empires, religions, revolutions. They survive because they
           answer permanent questions: shelter, food, tools, money, pain.
@@ -159,7 +159,7 @@ export default function BlogPost() {
           Software engineering is roughly seventy years old. It hasn&apos;t
           peaked yet. By every signal I can read, it&apos;s still climbing
           fast. But the theory says: the steeper the climb, the more there is
-          to give back. Someday — maybe in a decade, maybe in a century — a
+          to give back. Someday - maybe in a decade, maybe in a century - a
           carpenter will out-earn a software engineer again, and no one will
           find it strange.
         </p>
@@ -183,9 +183,9 @@ export default function BlogPost() {
         </h2>
         <p>
           A theory you can&apos;t poke holes in is just a belief. So here are
-          the holes. Some things genuinely don&apos;t revert — extinction is
+          the holes. Some things genuinely don&apos;t revert - extinction is
           forever, knowledge compounds, we&apos;re not going back to candles.
-          The pattern is about <em>attention, valuation, popularity</em> — not
+          The pattern is about <em>attention, valuation, popularity</em> - not
           raw capability.
         </p>
         <p>
@@ -198,8 +198,8 @@ export default function BlogPost() {
           What to do with this
         </h2>
         <p>
-          Be suspicious of anything rising too fast — including your own
-          success. Be patient with anything growing slowly — including
+          Be suspicious of anything rising too fast - including your own
+          success. Be patient with anything growing slowly - including
           yourself. When choosing a career, a craft, a habit, a partner, ask
           how long the thing has already existed, and bet on the old.
         </p>
@@ -209,7 +209,7 @@ export default function BlogPost() {
       </section>
 
       <footer className="mt-12 pt-6 border-t border-ink-700/60 text-xs text-chalk-300/70">
-        Written by Aditya Agrawal. Charts are illustrative, not data — the
+        Written by Aditya Agrawal. Charts are illustrative, not data - the
         point is the shape.
       </footer>
     </article>

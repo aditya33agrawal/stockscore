@@ -59,11 +59,11 @@ const RATIO_GROUPS = [
 ];
 
 const TAB_TOOLTIPS: Record<string, string> = {
-  Charts: "Interactive financial charts — revenue, profit, margins, shareholding, and cash flow over time.",
+  Charts: "Interactive financial charts - revenue, profit, margins, shareholding, and cash flow over time.",
   Tables: "Raw quarterly results, P&L, balance sheet, cash flow, and shareholding data from Screener.in.",
   Ratios: "All key ratios grouped by Valuation, Returns, Leverage, and Technicals.",
   Growth: "Revenue, profit, and other CAGR breakdowns over 3, 5, and 10 year periods.",
-  Factors: "Per-factor scoring detail — every input that shaped the final score.",
+  Factors: "Per-factor scoring detail - every input that shaped the final score.",
 };
 
 type Tab = "Charts" | "Tables" | "Ratios" | "Growth" | "Factors";

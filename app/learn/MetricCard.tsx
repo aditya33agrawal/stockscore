@@ -109,7 +109,7 @@ function MethodTab({ m }: { m: MetricEntry }) {
           {m.inputs.map((i) => (
             <li key={i.name} className="text-sm">
               <span className="text-chalk-50 font-medium">{i.name}</span>
-              <span className="text-chalk-300/60"> — {i.meaning} </span>
+              <span className="text-chalk-300/60"> - {i.meaning} </span>
               <span className="rounded border border-ink-700/60 bg-ink-900 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-chalk-300/60">
                 {i.source}
               </span>

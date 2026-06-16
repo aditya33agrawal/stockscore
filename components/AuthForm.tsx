@@ -63,7 +63,7 @@ export function AuthForm({ mode }: Props) {
       router.push(dest);
       router.refresh();
     } catch {
-      setError("Network error — check your connection and try again.");
+      setError("Network error - check your connection and try again.");
     } finally {
       setBusy(false);
     }

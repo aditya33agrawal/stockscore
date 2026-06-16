@@ -21,7 +21,10 @@ async function loadConfigFile(): Promise<{ sectors: SectorConfigEntry[] }> {
   return JSON.parse(raw);
 }
 
-export async function syncSectorsConfig(log: Log, force = false): Promise<void> {
+export async function syncSectorsConfig(
+  log: Log,
+  force = false,
+): Promise<void> {
   log("[config] Reading sectors_config.json …");
   const config = await loadConfigFile();
 
@@ -36,7 +39,9 @@ export async function syncSectorsConfig(log: Log, force = false): Promise<void> 
   const existing = await sql<{ slug: string; synced_at: string }[]>`
     SELECT slug, synced_at::text AS synced_at FROM sector_config
   `;
-  const syncedMap = new Map(existing.map((r) => [r.slug, new Date(r.synced_at)]));
+  const syncedMap = new Map(
+    existing.map((r) => [r.slug, new Date(r.synced_at)]),
+  );
 
   const cutoff = new Date(Date.now() - FRESH_MS);
   let synced = 0;
@@ -46,8 +51,12 @@ export async function syncSectorsConfig(log: Log, force = false): Promise<void> 
     const lastSync = syncedMap.get(sector.slug);
 
     if (!force && lastSync && lastSync > cutoff) {
-      const ageDays = Math.floor((Date.now() - lastSync.getTime()) / (24 * 3600 * 1000));
-      log(`  [sector] ${sector.name} — already fresh (${ageDays}d old), skipping`);
+      const ageDays = Math.floor(
+        (Date.now() - lastSync.getTime()) / (24 * 3600 * 1000),
+      );
+      log(
+        `  [sector] ${sector.name} - already fresh (${ageDays}d old), skipping`,
+      );
       skipped++;
       continue;
     }
@@ -73,10 +82,12 @@ export async function syncSectorsConfig(log: Log, force = false): Promise<void> 
               synced_at    = EXCLUDED.synced_at
       `;
       const action = lastSync ? "updated" : "inserted";
-      log(`  [sector] ${sector.name} — ${action} (${sector.companies.length} companies) ✓`);
+      log(
+        `  [sector] ${sector.name} - ${action} (${sector.companies.length} companies) ✓`,
+      );
       synced++;
     } catch (err) {
-      log(`  [sector] ${sector.name} — ERROR: ${String(err)}`);
+      log(`  [sector] ${sector.name} - ERROR: ${String(err)}`);
     }
   }
 
@@ -87,11 +98,11 @@ export async function syncSectorsConfig(log: Log, force = false): Promise<void> 
   if (stale.length > 0) {
     for (const slug of stale) {
       await sql`DELETE FROM sector_config WHERE slug = ${slug}`;
-      log(`  [sector] ${slug} — removed (no longer in config)`);
+      log(`  [sector] ${slug} - removed (no longer in config)`);
     }
   }
 
   log(
-    `\n[config] Done — ${synced} synced, ${skipped} skipped${stale.length ? `, ${stale.length} removed` : ""} ✓`
+    `\n[config] Done - ${synced} synced, ${skipped} skipped${stale.length ? `, ${stale.length} removed` : ""} ✓`,
   );
 }

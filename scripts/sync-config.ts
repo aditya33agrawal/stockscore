@@ -4,9 +4,13 @@ config({ path: ".env.local" });
 const force = process.argv.includes("--force");
 
 if (force) {
-  console.log("⚡ Force mode — all sectors will be re-synced regardless of age\n");
+  console.log(
+    "⚡ Force mode - all sectors will be re-synced regardless of age\n",
+  );
 } else {
-  console.log("📋 Sync mode — sectors updated within the last 7 days will be skipped\n");
+  console.log(
+    "📋 Sync mode - sectors updated within the last 7 days will be skipped\n",
+  );
 }
 
 async function main() {

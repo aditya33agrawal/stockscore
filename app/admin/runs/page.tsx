@@ -1,14 +1,10 @@
-import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin";
 import { RunHistory } from "@/components/admin/RunHistory";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Admin — Run History" };
+export const metadata = { title: "Admin - Run History" };
 
 export default async function AdminRunsPage() {
-  const user = await requireAdmin();
-  if (!user) notFound();
 
   return (
     <div>

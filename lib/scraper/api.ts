@@ -21,19 +21,30 @@ function inferYear(dateStr: string): string {
   const m = text.match(/^(\d{1,2})\s+([A-Za-z]{3})$/);
   if (!m) return text;
   const monthMap: Record<string, number> = {
-    Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
-    Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12,
+    Jan: 1,
+    Feb: 2,
+    Mar: 3,
+    Apr: 4,
+    May: 5,
+    Jun: 6,
+    Jul: 7,
+    Aug: 8,
+    Sep: 9,
+    Oct: 10,
+    Nov: 11,
+    Dec: 12,
   };
   const month = monthMap[m[2]] ?? 1;
   const now = new Date();
-  const year = month <= now.getMonth() + 1 ? now.getFullYear() : now.getFullYear() - 1;
+  const year =
+    month <= now.getMonth() + 1 ? now.getFullYear() : now.getFullYear() - 1;
   return `${m[1]} ${m[2]} ${year}`;
 }
 
 export async function fetchAnnouncements(
   session: Session,
   companyId: string,
-  tab: "important" | "recent"
+  tab: "important" | "recent",
 ): Promise<Announcement[]> {
   try {
     const url = `${BASE_URL}/announcements/${tab}/${companyId}/`;
@@ -65,7 +76,7 @@ export async function fetchQuickRatios(
   session: Session,
   warehouseId: string,
   companyUrl: string,
-  consolidated: boolean
+  consolidated: boolean,
 ): Promise<Record<string, string>> {
   try {
     const url = `${BASE_URL}/api/company/${warehouseId}/quick_ratios/?consolidated=${consolidated}`;
@@ -89,7 +100,7 @@ export async function fetchPeersCsv(
   session: Session,
   warehouseId: string,
   companyUrl: string,
-  consolidated: boolean
+  consolidated: boolean,
 ): Promise<string | null> {
   try {
     const url = `${BASE_URL}/api/company/${warehouseId}/peers/?consolidated=${consolidated}`;
@@ -104,7 +115,9 @@ export async function fetchPeersCsv(
       const cells: string[] = [];
       $(tr)
         .find("th, td")
-        .each((_, td) => { cells.push($(td).text().replace(/\s+/g, " ").trim()); });
+        .each((_, td) => {
+          cells.push($(td).text().replace(/\s+/g, " ").trim());
+        });
       if (cells.some((c) => c)) rows.push(cells);
     });
     return rows
@@ -116,7 +129,7 @@ export async function fetchPeersCsv(
 }
 
 // ---------------------------------------------------------------------------
-// Chart data — commented out; re-enable when chart visualisations are needed
+// Chart data - commented out; re-enable when chart visualisations are needed
 // ---------------------------------------------------------------------------
 
 // const CHART_METRICS: Record<string, string> = {

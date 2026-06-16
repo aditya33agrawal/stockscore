@@ -14,7 +14,7 @@ const MORPH_T = 0.022;   // morph speed (per frame, 0→1)
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Fisher–Yates — returns a fresh shuffled index list so every company shows
+/** Fisher–Yates - returns a fresh shuffled index list so every company shows
  *  once, uniquely, before any repeat; reshuffled each full pass. */
 function shuffled(n: number): number[] {
   const a = Array.from({ length: n }, (_, i) => i);
@@ -53,7 +53,7 @@ export function HeroRadar({
     let raf = 0;
     let running = true;
 
-    // Playback order — cycle uniquely, reshuffle each pass.
+    // Playback order - cycle uniquely, reshuffle each pass.
     let order = shuffled(companies.length);
     let pos = 0;
     const nextIdx = () => {
@@ -205,7 +205,7 @@ export function HeroRadar({
         style={{ opacity: 0.4 }}
       />
 
-      {/* Crisp DOM caption for the featured company — always legible */}
+      {/* Crisp DOM caption for the featured company - always legible */}
       {current && (
         <div className="absolute top-5 right-5 z-20 pointer-events-none">
           <div className="flex items-center gap-2.5 rounded-xl border border-subtle bg-ink-900/70 backdrop-blur-sm px-3 py-2 shadow-sm">

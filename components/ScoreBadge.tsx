@@ -74,5 +74,5 @@ export function ScoreBar({ score }: { score: number }) {
   );
 }
 
-/* Legacy alias — keeps old import paths working */
+/* Legacy alias - keeps old import paths working */
 export { ScoreBar as ScoreBarChart };

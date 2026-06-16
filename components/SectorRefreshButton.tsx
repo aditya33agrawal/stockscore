@@ -57,8 +57,8 @@ function parseLogMessage(msg: string, state: LogState): LogState {
     return { ...state, sectorName: sectorM[1], totalCompanies: parseInt(sectorM[2]) };
   }
 
-  // [company] NAME — searching …
-  const searchM = msg.match(/\[company\] (.+?) — searching/);
+  // [company] NAME - searching …
+  const searchM = msg.match(/\[company\] (.+?) - searching/);
   if (searchM) {
     const name = searchM[1].trim();
     const number = state.companies.length + 1;
@@ -75,24 +75,24 @@ function parseLogMessage(msg: string, state: LogState): LogState {
   const foundM = msg.match(/\[company\] (.+?) → https/);
   if (foundM) return patchStep(state, foundM[1].trim(), "Loading company page…");
 
-  // [company] NAME — parsed HTML
-  const parsedM = msg.match(/\[company\] (.+?) — parsed HTML/);
+  // [company] NAME - parsed HTML
+  const parsedM = msg.match(/\[company\] (.+?) - parsed HTML/);
   if (parsedM) return patchStep(state, parsedM[1].trim(), "Parsing financials…");
 
-  // [company] NAME — fetched quick ratios + peers
-  const ratiosM = msg.match(/\[company\] (.+?) — fetched quick ratios/);
+  // [company] NAME - fetched quick ratios + peers
+  const ratiosM = msg.match(/\[company\] (.+?) - fetched quick ratios/);
   if (ratiosM) return patchStep(state, ratiosM[1].trim(), "Fetching ratios & peer data…");
 
-  // [company] NAME — fetched announcements
-  const annM = msg.match(/\[company\] (.+?) — fetched announcements/);
+  // [company] NAME - fetched announcements
+  const annM = msg.match(/\[company\] (.+?) - fetched announcements/);
   if (annM) return patchStep(state, annM[1].trim(), "Fetching announcements…");
 
-  // [company] NAME — wrote companies/...json
-  const wroteM = msg.match(/\[company\] (.+?) — wrote companies/);
+  // [company] NAME - wrote companies/...json
+  const wroteM = msg.match(/\[company\] (.+?) - wrote companies/);
   if (wroteM) return patchStep(state, wroteM[1].trim(), "Saving data…");
 
-  // [company] NAME — score: 52.3/100 (Accumulate)
-  const scoreM = msg.match(/\[company\] (.+?) — score: ([\d.]+)\/100 \((.+?)\)/);
+  // [company] NAME - score: 52.3/100 (Accumulate)
+  const scoreM = msg.match(/\[company\] (.+?) - score: ([\d.]+)\/100 \((.+?)\)/);
   if (scoreM) {
     return patchCompany(state, scoreM[1].trim(), (c) => ({
       ...c,
@@ -103,8 +103,8 @@ function parseLogMessage(msg: string, state: LogState): LogState {
     }));
   }
 
-  // [company] NAME — not found, skipping
-  const skipM = msg.match(/\[company\] (.+?) — not found/);
+  // [company] NAME - not found, skipping
+  const skipM = msg.match(/\[company\] (.+?) - not found/);
   if (skipM) {
     return patchCompany(state, skipM[1].trim(), (c) => ({
       ...c,
@@ -113,8 +113,8 @@ function parseLogMessage(msg: string, state: LogState): LogState {
     }));
   }
 
-  // [company] NAME — ERROR: ...
-  const errM = msg.match(/\[company\] (.+?) — ERROR: (.+)/);
+  // [company] NAME - ERROR: ...
+  const errM = msg.match(/\[company\] (.+?) - ERROR: (.+)/);
   if (errM) {
     return patchCompany(state, errM[1].trim(), (c) => ({
       ...c,
@@ -291,7 +291,7 @@ export function SectorRefreshButton({ sectorSlug }: { sectorSlug: string }) {
           {uiState === "running" && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {uiState === "done"    && <CheckCircle className="h-3.5 w-3.5" />}
           {uiState === "error"   && <XCircle className="h-3.5 w-3.5" />}
-          {uiState === "running" ? "Fetching…" : uiState === "done" ? "Done — dismiss" : "Failed — dismiss"}
+          {uiState === "running" ? "Fetching…" : uiState === "done" ? "Done - dismiss" : "Failed - dismiss"}
         </button>
       )}
 
@@ -438,7 +438,7 @@ export function SectorRefreshButton({ sectorSlug }: { sectorSlug: string }) {
               <div className="flex items-center gap-3 px-4 py-2.5 bg-accent/5">
                 <CheckCircle className="h-3.5 w-3.5 text-accent shrink-0" />
                 <span className="text-xs text-accent">
-                  Sector updated — reloading page…
+                  Sector updated - reloading page…
                 </span>
               </div>
             )}

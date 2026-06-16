@@ -34,10 +34,10 @@ function sma(candles: Candle[], period: number): IndicatorPoint[] {
   return out;
 }
 
-// Ink Wash overlay colors — chosen to read on both Paper (#FFFFE3) and
+// Ink Wash overlay colors - chosen to read on both Paper (#FFFFE3) and
 // Ink-Night (#1E1F21). Slate is the brand line; SMAs use distinct hues that
 // are deliberately NOT green/red (those are reserved for value verdicts).
-const PRICE_COLOR = "#6D8196";  // slate — brand
+const PRICE_COLOR = "#6D8196";  // slate - brand
 const SMA50_COLOR = "#B8862B";  // amber
 const SMA100_COLOR = "#7C3AED"; // violet
 const SMA200_COLOR = "#9A8C7C"; // warm taupe (reads on paper + ink-night)
@@ -55,7 +55,7 @@ function cssRgb(token: string, alpha = 1): string {
 }
 
 function fmt(n: number | undefined): string {
-  if (n === undefined || !Number.isFinite(n)) return "—";
+  if (n === undefined || !Number.isFinite(n)) return "-";
   return n.toLocaleString("en-IN", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 }
 
@@ -86,7 +86,7 @@ export function PriceChart({ symbol }: { symbol: string }) {
     fetch(`/api/charts/${encodeURIComponent(symbol)}`)
       .then(async (res) => {
         if (!res.ok) {
-          if (res.status === 404) throw new Error("No chart data yet — run `npm run refresh:charts`.");
+          if (res.status === 404) throw new Error("No chart data yet - run `npm run refresh:charts`.");
           throw new Error(`HTTP ${res.status}`);
         }
         return res.json();
@@ -264,7 +264,7 @@ export function PriceChart({ symbol }: { symbol: string }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-4 mb-3 text-xs">
-        <span className="text-chalk-300/70">{display.date || "—"}</span>
+        <span className="text-chalk-300/70">{display.date || "-"}</span>
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-2 w-2 rounded-sm" style={{ background: PRICE_COLOR }} />
           <span className="text-chalk-300/70">Price</span>

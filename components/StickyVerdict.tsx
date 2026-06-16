@@ -8,7 +8,7 @@ interface Props {
   name: string;
   score: number;
   classification?: string;
-  /** ID of the hero element — sticky bar hides when hero is visible */
+  /** ID of the hero element - sticky bar hides when hero is visible */
   heroId?: string;
 }
 

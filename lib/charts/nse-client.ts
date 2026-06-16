@@ -27,13 +27,12 @@ async function warmCookies(): Promise<string> {
   const res = await fetch("https://www.nseindia.com/", {
     headers: {
       "User-Agent": UA,
-      Accept:
-        "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       "Accept-Language": "en-US,en;q=0.9",
     },
   });
   const raw = res.headers.get("set-cookie") ?? "";
-  // The combined set-cookie header has cookies separated by ", " — preserve only key=value pairs.
+  // The combined set-cookie header has cookies separated by ", " - preserve only key=value pairs.
   const cookies = raw
     .split(/,(?=[^;]+?=)/)
     .map((c) => c.split(";")[0].trim())
@@ -81,7 +80,7 @@ export async function fetchNseCandles1Y(ticker: string): Promise<Candle[]> {
   }
   const json = (await res.json()) as NseResponse;
   const rows = json.data ?? [];
-  // NSE returns latest-first — flip to chronological.
+  // NSE returns latest-first - flip to chronological.
   return rows
     .map((r) => ({
       t: r.CH_TIMESTAMP,

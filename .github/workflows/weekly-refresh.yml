@@ -1,16 +1,16 @@
 name: Weekly Data Refresh
 
 # Tuesday 09:00 IST = 03:30 UTC.
-# GitHub Actions cron is UTC and can be delayed 5–15 min during peak load —
+# GitHub Actions cron is UTC and can be delayed 5–15 min during peak load -
 # acceptable for a weekly batch job.
 
 on:
   schedule:
-    - cron: '30 3 * * 2'
+    - cron: "30 3 * * 2"
   workflow_dispatch:
     inputs:
       force:
-        description: 'Bypass 7-day cache'
+        description: "Bypass 7-day cache"
         type: boolean
         default: false
 
@@ -25,8 +25,8 @@ jobs:
 
     env:
       DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
-      SCREENER_EMAIL:       ${{ secrets.SCREENER_EMAIL }}
-      SCREENER_PASSWORD:    ${{ secrets.SCREENER_PASSWORD }}
+      SCREENER_EMAIL: ${{ secrets.SCREENER_EMAIL }}
+      SCREENER_PASSWORD: ${{ secrets.SCREENER_PASSWORD }}
       TZ: Asia/Kolkata
 
     steps:
@@ -36,8 +36,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci

@@ -1,16 +1,11 @@
-import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin";
 import { getAdminStats } from "@/lib/admin-stats";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Admin — Overview" };
+export const metadata = { title: "Admin - Overview" };
 
 export default async function AdminOverviewPage() {
-  const user = await requireAdmin();
-  if (!user) notFound();
-
   const stats = await getAdminStats();
 
   return (

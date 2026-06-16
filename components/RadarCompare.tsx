@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import type { Company } from "@/lib/types";
 
-// Obsidian palette — cyan primary, violet secondary, then complementary tones
+// Obsidian palette - cyan primary, violet secondary, then complementary tones
 const PALETTE = [
   "#6D8196",  // cyan
   "#7C3AED",  // violet
@@ -58,7 +58,7 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
         <p className="text-xs text-chalk-300/50">Click any company name to deselect it &amp; re-sort the list</p>
       </div>
 
-      {/* Company toggle pills — selected first, deselected sink to the end.
+      {/* Company toggle pills - selected first, deselected sink to the end.
           Color stays keyed to each company's original index so it never shifts. */}
       <div className="flex flex-wrap gap-2 mb-5">
         {companies

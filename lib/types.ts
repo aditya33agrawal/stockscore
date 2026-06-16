@@ -35,18 +35,18 @@ export interface TopItem {
 }
 
 /**
- * Per-factor breakdown row — tidy long-format data for the UI factor-detail
+ * Per-factor breakdown row - tidy long-format data for the UI factor-detail
  * tab and for paper reproducibility / ablation analysis (Figure 1).
  */
 export interface FactorRow {
   factor: string;
   category: string;
   raw_value: number | null;
-  score_01: number;    // 0..1 before weight is applied
+  score_01: number; // 0..1 before weight is applied
   weight: number;
   points: number;
   source: "absolute" | "relative" | "trend";
-  notes?: string;      // e.g. "scored vs sector prior, n=4"
+  notes?: string; // e.g. "scored vs sector prior, n=4"
 }
 
 // ─── Raw company metrics (stored in DB, used by evaluators) ──────────────────
@@ -75,7 +75,7 @@ export interface CompanyRaw {
   peg?: number;
 }
 
-// ─── Company (v2 — extends v1 fields, all additions optional for backwards compat) ─
+// ─── Company (v2 - extends v1 fields, all additions optional for backwards compat) ─
 
 export interface Company {
   slug: string;
@@ -103,7 +103,7 @@ export interface Company {
   peer_percentile?: number;
   /** Freshness multipliers applied to quality and quarterly categories. */
   freshness_multipliers?: { quarterly: number; annual: number };
-  /** Long-format per-factor breakdown — Figure 1 in paper. */
+  /** Long-format per-factor breakdown - Figure 1 in paper. */
   factor_breakdown?: FactorRow[];
 }
 

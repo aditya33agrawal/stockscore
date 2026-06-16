@@ -122,7 +122,7 @@ export function RunHistory() {
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-sm text-chalk-100 truncate">
-                  {(run.request?.phases ?? []).join(" · ") || "—"}
+                  {(run.request?.phases ?? []).join(" · ") || "-"}
                   {run.request?.force && <span className="ml-1.5 text-warn text-xs">force</span>}
                 </p>
                 <p className="text-xs text-chalk-300/50 num">
@@ -178,7 +178,7 @@ export function RunHistory() {
                               <span className="font-semibold">{e.phase}</span>
                               {e.scope ? ` · ${e.scope}` : ""}
                               {e.item ? ` · ${e.item}` : ""}
-                              {e.reason ? ` · ${e.reason}` : ""} — {e.message}
+                              {e.reason ? ` · ${e.reason}` : ""} - {e.message}
                             </summary>
                             {e.stack && (
                               <pre className="mt-2 overflow-x-auto whitespace-pre-wrap text-[11px] text-chalk-300/70">

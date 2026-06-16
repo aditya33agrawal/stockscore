@@ -74,7 +74,7 @@ export function AssetAllocator() {
             </select>
           </Field>
 
-          <Field label={`Age — ${age}`}>
+          <Field label={`Age - ${age}`}>
             <input
               type="range"
               min={18}
@@ -85,7 +85,7 @@ export function AssetAllocator() {
             />
           </Field>
 
-          <Field label={`Time horizon — ${horizon} years`}>
+          <Field label={`Time horizon - ${horizon} years`}>
             <input
               type="range"
               min={1}
@@ -114,7 +114,7 @@ export function AssetAllocator() {
             </div>
           </Field>
 
-          <Field label={`Expected annual return — ${expectedReturn}%`}>
+          <Field label={`Expected annual return - ${expectedReturn}%`}>
             <input
               type="range"
               min={5}
@@ -125,7 +125,7 @@ export function AssetAllocator() {
             />
           </Field>
 
-          <Field label={`Monthly investment — ₹${monthly.toLocaleString("en-IN")}`}>
+          <Field label={`Monthly investment - ₹${monthly.toLocaleString("en-IN")}`}>
             <input
               type="range"
               min={1000}
@@ -262,7 +262,7 @@ export function AssetAllocator() {
                   {s.pct}%
                 </span>
                 <span>
-                  <strong className="text-chalk-100">{s.label}</strong> —{" "}
+                  <strong className="text-chalk-100">{s.label}</strong> -{" "}
                   {s.rationale}
                 </span>
               </li>

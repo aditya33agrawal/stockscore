@@ -5,7 +5,7 @@ import { AlertTriangle, BookOpen, ArrowRight } from "lucide-react";
 export const metadata: Metadata = {
   title: "Terms & Educational Disclaimer",
   description:
-    "This site is a learning tool for fundamental analysis — not a stock recommendation platform. Understand the approach and its limitations.",
+    "This site is a learning tool for fundamental analysis - not a stock recommendation platform. Understand the approach and its limitations.",
 };
 
 export default function TermsPage() {
@@ -21,7 +21,7 @@ export default function TermsPage() {
         </h1>
         <p className="mt-4 text-chalk-300 text-lg leading-relaxed serif">
           Before you use any score, ranking, or chart on this site to make a
-          financial decision — please read this page. It will take three
+          financial decision - please read this page. It will take three
           minutes and save you from a potentially costly misunderstanding.
         </p>
       </header>
@@ -42,8 +42,8 @@ export default function TermsPage() {
               </li>
               <li>
                 <strong className="text-chalk-50">No buy / sell / hold recommendations.</strong>{" "}
-                Nothing on this site — scores, rankings, analyst notes, or any
-                other content — constitutes a recommendation to buy, sell, or
+                Nothing on this site - scores, rankings, analyst notes, or any
+                other content - constitutes a recommendation to buy, sell, or
                 hold any security.
               </li>
               <li>
@@ -75,7 +75,7 @@ export default function TermsPage() {
         </h2>
         <p>
           This is a personal learning project. I built it to develop and
-          document my own understanding of fundamental analysis — and to share
+          document my own understanding of fundamental analysis - and to share
           that process transparently with anyone who wants to see it.
         </p>
         <p>
@@ -85,7 +85,7 @@ export default function TermsPage() {
           rubric will change. The scores are a snapshot, not a verdict.
         </p>
         <p>
-          Think of it as a structured checklist made visible — not a black-box
+          Think of it as a structured checklist made visible - not a black-box
           rating or an authoritative ranking. The value is in the breakdown,
           not the final number.
         </p>
@@ -111,7 +111,7 @@ export default function TermsPage() {
               reading annual reports, understanding how the company earns money,
               who its customers are, what its competitive advantages are, and
               whether management allocates capital well. The score is a
-              quantitative shortcut — it cannot replace reading the actual
+              quantitative shortcut - it cannot replace reading the actual
               report.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function TermsPage() {
               Evaluating any metric in isolation, without understanding the
               sector's structural economics, leads to wrong conclusions. This is
               why every score on this site is computed relative to the peer group
-              — not against a universal absolute.
+              - not against a universal absolute.
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export default function TermsPage() {
               margins, improving returns on capital, and positive free cash flow
               is much harder to fake. I weight multi-year trends heavily. A
               company that looked great last year but has been eroding for four
-              years before that scores poorly — and rightfully so.
+              years before that scores poorly - and rightfully so.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export default function TermsPage() {
             <p className="mt-2 text-chalk-300 text-sm serif leading-relaxed">
               Net profit is an opinion; cash flow is a fact. A company that
               reports ₹500 Cr profit but only converts ₹200 Cr to operating
-              cash flow deserves scrutiny — the rest may be stuck in working
+              cash flow deserves scrutiny - the rest may be stuck in working
               capital, receivables that may never be collected, or accounting
               entries with no cash backing. I look at CFO-to-operating-profit
               conversion and whether free cash flow has been consistently
@@ -168,7 +168,7 @@ export default function TermsPage() {
               I pay close attention to shareholding patterns. A promoter who is
               steadily buying shares signals confidence. One who is pledging
               shares signals financial stress. Consistent FII and DII buying
-              suggests institutional validation — though institutions are wrong
+              suggests institutional validation - though institutions are wrong
               too. Pledging above 30% is an explicit risk flag in my rubric
               because it means promoters have borrowed against their equity,
               creating downside pressure if the stock falls.
@@ -182,7 +182,7 @@ export default function TermsPage() {
             <p className="mt-2 text-chalk-300 text-sm serif leading-relaxed">
               A great business at a terrible price is a bad investment. I look
               at P/E relative to the sector median, P/BV, an estimated intrinsic
-              value range, and PEG. None of these alone is definitive —
+              value range, and PEG. None of these alone is definitive -
               together, they give a sense of whether the market is pricing in
               excessive optimism. I give the most points when a stock trades at
               a meaningful discount to my estimate of intrinsic value: the
@@ -216,16 +216,16 @@ export default function TermsPage() {
           Use the sector leaderboard to identify which companies in a sector
           score well across fundamentals. Then click into the breakdown and ask
           yourself: do I agree with what the data says? Where does the company
-          score poorly — and is that a temporary issue or a structural problem?
+          score poorly - and is that a temporary issue or a structural problem?
         </p>
         <p>
           Use the radar overlay to compare two companies head-to-head across
           categories. It's a useful way to see where Company A beats Company B
-          and vice versa — and to decide which trade-off you're comfortable with.
+          and vice versa - and to decide which trade-off you're comfortable with.
         </p>
         <p>
           Use this site to build intuition about what good fundamentals look
-          like — not to find "the stock to buy this week." The best investors I
+          like - not to find "the stock to buy this week." The best investors I
           know use quantitative tools to generate questions, not answers.
         </p>
       </section>
@@ -237,13 +237,13 @@ export default function TermsPage() {
           rubric reflects my personal model of what makes a stock fundamentally
           attractive. It is not the only valid model. Value investors, growth
           investors, GARP investors, and quality investors all weight factors
-          differently — and all have periods of outperformance. My rubric skews
+          differently - and all have periods of outperformance. My rubric skews
           toward quality-at-reasonable-value with a tilt toward capital
           efficiency and cash flow conversion. That may not match your
           investment style.
         </p>
         <p>
-          If you disagree with how I weight something — good. Disagreement is
+          If you disagree with how I weight something - good. Disagreement is
           where thinking happens. I'd genuinely love to hear your perspective.{" "}
           <a
             href="mailto:aditya33agrawal@gmail.com"

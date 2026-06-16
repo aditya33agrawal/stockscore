@@ -18,17 +18,45 @@ export interface CategoryMeta {
 }
 
 export const CATEGORIES: CategoryMeta[] = [
-  { id: "valuation",     label: "Valuation",          blurb: "What you pay vs what you get" },
-  { id: "profitability", label: "Profitability",       blurb: "How efficiently capital becomes profit" },
-  { id: "growth",        label: "Growth",              blurb: "Is the business getting bigger?" },
-  { id: "quarterly",     label: "Quarterly Momentum",  blurb: "Short-term direction" },
-  { id: "balance-sheet", label: "Balance Sheet",       blurb: "Can the company survive a shock?" },
-  { id: "cash-flow",     label: "Cash Flow",           blurb: "Is the profit real cash?" },
-  { id: "shareholding",  label: "Shareholding",        blurb: "Who owns it — and are they buying or selling?" },
-  { id: "dividend",      label: "Dividend",            blurb: "Cash returned to owners" },
-  { id: "efficiency",    label: "Operational Efficiency", blurb: "How hard the assets work" },
-  { id: "technical",     label: "Price & Technical",    blurb: "What the chart is saying" },
-  { id: "sector",        label: "Sector & Scoring",     blurb: "Cross-cutting context" },
+  {
+    id: "valuation",
+    label: "Valuation",
+    blurb: "What you pay vs what you get",
+  },
+  {
+    id: "profitability",
+    label: "Profitability",
+    blurb: "How efficiently capital becomes profit",
+  },
+  { id: "growth", label: "Growth", blurb: "Is the business getting bigger?" },
+  {
+    id: "quarterly",
+    label: "Quarterly Momentum",
+    blurb: "Short-term direction",
+  },
+  {
+    id: "balance-sheet",
+    label: "Balance Sheet",
+    blurb: "Can the company survive a shock?",
+  },
+  { id: "cash-flow", label: "Cash Flow", blurb: "Is the profit real cash?" },
+  {
+    id: "shareholding",
+    label: "Shareholding",
+    blurb: "Who owns it - and are they buying or selling?",
+  },
+  { id: "dividend", label: "Dividend", blurb: "Cash returned to owners" },
+  {
+    id: "efficiency",
+    label: "Operational Efficiency",
+    blurb: "How hard the assets work",
+  },
+  {
+    id: "technical",
+    label: "Price & Technical",
+    blurb: "What the chart is saying",
+  },
+  { id: "sector", label: "Sector & Scoring", blurb: "Cross-cutting context" },
 ];
 
 export interface MetricEntry {

@@ -5,7 +5,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 
 // ---------------------------------------------------------------------------
-// scripts/reconcile-db.ts  —  makes the DB agree with sectors_config.json.
+// scripts/reconcile-db.ts  -  makes the DB agree with sectors_config.json.
 //
 // Checks / fixes (dry-run by default; pass --apply to mutate):
 //   1. Orphan company rows  : companies whose symbol isn't in any config sector,
@@ -48,7 +48,8 @@ async function main() {
   `;
 
   const orphans: string[] = [];
-  const misfiled: Array<{ symbol: string; from: string | null; to: string }> = [];
+  const misfiled: Array<{ symbol: string; from: string | null; to: string }> =
+    [];
   for (const row of compRows) {
     const sym = row.symbol.toUpperCase();
     const want = symbolToSector.get(sym);
@@ -66,7 +67,8 @@ async function main() {
   problems += orphans.length + misfiled.length;
 
   if (orphans.length) console.log(`   orphans: ${orphans.join(", ")}`);
-  for (const m of misfiled) console.log(`   misfiled: ${m.symbol}  ${m.from} -> ${m.to}`);
+  for (const m of misfiled)
+    console.log(`   misfiled: ${m.symbol}  ${m.from} -> ${m.to}`);
 
   // --- 2) sectors table: a symbol appearing in two sector arrays -------------
   const secRows = await sql<{ slug: string; companies: unknown }[]>`
@@ -83,14 +85,19 @@ async function main() {
       symbolInSectorArrays.set(t, list);
     }
   }
-  const arrayDups = [...symbolInSectorArrays.entries()].filter(([, s]) => s.length > 1);
-  const arrayMisfiled = [...symbolInSectorArrays.entries()].filter(([sym, slugs]) => {
-    const want = symbolToSector.get(sym);
-    return want && slugs.length === 1 && slugs[0] !== want;
-  });
+  const arrayDups = [...symbolInSectorArrays.entries()].filter(
+    ([, s]) => s.length > 1,
+  );
+  const arrayMisfiled = [...symbolInSectorArrays.entries()].filter(
+    ([sym, slugs]) => {
+      const want = symbolToSector.get(sym);
+      return want && slugs.length === 1 && slugs[0] !== want;
+    },
+  );
   console.log(`\nsectors rows: ${secRows.length}`);
   console.log(`  symbols embedded in >1 sector array: ${arrayDups.length}`);
-  for (const [sym, slugs] of arrayDups) console.log(`   ${sym}: ${slugs.join(", ")}`);
+  for (const [sym, slugs] of arrayDups)
+    console.log(`   ${sym}: ${slugs.join(", ")}`);
   console.log(`  symbols in the wrong sector array:   ${arrayMisfiled.length}`);
   for (const [sym, slugs] of arrayMisfiled)
     console.log(`   ${sym}: in ${slugs[0]}, want ${symbolToSector.get(sym)}`);
@@ -105,7 +112,8 @@ async function main() {
     for (const m of misfiled) {
       await sql`UPDATE companies SET sector_slug = ${m.to} WHERE symbol = ${m.symbol}`;
     }
-    if (misfiled.length) console.log(`🔧 Fixed sector_slug on ${misfiled.length} rows.`);
+    if (misfiled.length)
+      console.log(`🔧 Fixed sector_slug on ${misfiled.length} rows.`);
     if (arrayDups.length || arrayMisfiled.length) {
       console.log(
         "\n⚠️  Sector JSONB arrays still contain stale/duplicate companies. " +
@@ -114,7 +122,7 @@ async function main() {
     }
   } else {
     console.log(
-      `\n${problems === 0 ? "✅ Clean — nothing to reconcile." : `Found ${problems} issue(s). Re-run with --apply to fix companies-table issues.`}`,
+      `\n${problems === 0 ? "✅ Clean - nothing to reconcile." : `Found ${problems} issue(s). Re-run with --apply to fix companies-table issues.`}`,
     );
     if (arrayDups.length || arrayMisfiled.length) {
       console.log(

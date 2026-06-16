@@ -116,7 +116,7 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
         />
       </div>
 
-      {/* Labels — staggered vertically to avoid overlap when markers cluster */}
+      {/* Labels - staggered vertically to avoid overlap when markers cluster */}
       <div className="relative h-20 mx-2 mt-1.5 overflow-visible">
         {(() => {
           const markers = [
@@ -132,7 +132,7 @@ export function PriceRuler({ cmp, dma50, dma200, high52w, low52w }: Props) {
             .map((m, i) => ({ ...m, origIndex: i }))
             .sort((a, b) => a.pos - b.pos);
 
-          // Greedy lane assignment: 3 lanes (0, 30, 60 px) — push to next lane if too close to last in lane.
+          // Greedy lane assignment: 3 lanes (0, 30, 60 px) - push to next lane if too close to last in lane.
           const MIN_GAP = 11; // percent of width before labels visually collide
           const lanes: number[] = [-Infinity, -Infinity, -Infinity];
           const topByOrig: Record<number, number> = {};

@@ -25,13 +25,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const SITE_URL = "https://aditya-finance.vercel.app";
-const TITLE = "Stockscore — Sector-Relative Equity Scoring";
+const TITLE = "Stockscore - Sector-Relative Equity Scoring";
 const DESCRIPTION =
-  "Transparent fundamental analysis of Indian equities, scored sector by sector across 10 categories. No black boxes — every +/− is traceable to a rule.";
+  "Transparent fundamental analysis of Indian equities, scored sector by sector across 10 categories. No black boxes - every +/− is traceable to a rule.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: TITLE, template: "%s — Stockscore" },
+  title: { default: TITLE, template: "%s - Stockscore" },
   description: DESCRIPTION,
   applicationName: "Stockscore",
   keywords: [

@@ -99,7 +99,7 @@ function MetricRow({
   higherIsBetter: boolean;
 }) {
   const fmt = (v: number | null, u: string) => {
-    if (v === null) return "—";
+    if (v === null) return "-";
     if (u === "₹") return `₹${v.toLocaleString("en-IN")}`;
     if (u === "%") return `${v}%`;
     if (u === "x") return `${v}x`;
@@ -149,7 +149,7 @@ function CmpRow({ before, after, delta, pctDelta }: {
   pctDelta: number | null;
 }) {
   const fmt = (v: number | null) =>
-    v === null ? "—" : `₹${v.toLocaleString("en-IN")}`;
+    v === null ? "-" : `₹${v.toLocaleString("en-IN")}`;
 
   const isPositive = pctDelta !== null && pctDelta > 0;
   const isNegative = pctDelta !== null && pctDelta < 0;
@@ -299,7 +299,7 @@ export function BookmarkCard({
                 />
               ))}
 
-              {/* Category deltas — only show changed ones */}
+              {/* Category deltas - only show changed ones */}
               {diff!.categoryDeltas.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-[rgb(var(--chalk-100)_/_0.05)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-chalk-300/35 mb-2">

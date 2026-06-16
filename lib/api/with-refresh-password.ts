@@ -6,7 +6,7 @@
  * performs a constant-time comparison to prevent timing attacks.
  *
  * If REFRESH_PASSWORD is not set in the environment, the route is
- * unguarded (open access) — same behaviour as before.
+ * unguarded (open access) - same behaviour as before.
  *
  * Usage:
  *   export const POST = compose(

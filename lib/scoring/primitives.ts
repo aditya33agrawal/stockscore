@@ -1,5 +1,5 @@
 /**
- * lib/scoring/primitives.ts — StockScore v2 universal scoring primitives.
+ * lib/scoring/primitives.ts - StockScore v2 universal scoring primitives.
  *
  * All functions return [0, 1]. Multiply by weight to get points.
  * The same four shapes cover every factor; this makes the system auditable,
@@ -44,7 +44,7 @@ export function band(
 }
 
 /**
- * Smooth saturating curve — logistic with economically interpretable params.
+ * Smooth saturating curve - logistic with economically interpretable params.
  *
  * x0         = midpoint (score = 0.5)
  * half_width = distance from x0 at which score reaches 0.9 (or 0.1)

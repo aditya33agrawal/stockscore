@@ -15,7 +15,7 @@ export function NavProgress() {
       isFirst.current = false;
       return;
     }
-    // Route changed — show finishing animation
+    // Route changed - show finishing animation
     if (finishTimer.current) window.clearTimeout(finishTimer.current);
     setState("finishing");
     finishTimer.current = window.setTimeout(() => setState("idle"), 320);

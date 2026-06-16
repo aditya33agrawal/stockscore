@@ -9,7 +9,7 @@ interface NavItem {
   label: string;
 }
 
-// 5 narrative layers — maps to the redesigned page structure.
+// 5 narrative layers - maps to the redesigned page structure.
 const ITEMS: NavItem[] = [
   { id: "overview",  label: "Verdict" },
   { id: "story",     label: "Story" },

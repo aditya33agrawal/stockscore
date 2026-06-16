@@ -52,14 +52,14 @@ export function PriceSnapshot({ symbol, cmp, dma50, dma200, high52w, low52w }: P
       {/* Quick chips */}
       <div className="flex flex-wrap gap-2 px-5 py-3 border-t border-[rgb(var(--chalk-100)_/_0.05)]">
         {dma50 != null && (
-          <Tooltip content={{ body: "50-day moving average — short-term trend indicator. Price above = bullish momentum." }}>
+          <Tooltip content={{ body: "50-day moving average - short-term trend indicator. Price above = bullish momentum." }}>
             <span className="num rounded-md border border-ink-700/50 bg-ink-800/40 px-2 py-0.5 text-[11px] text-chalk-300/60 cursor-default">
               50D: ₹{dma50.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
             </span>
           </Tooltip>
         )}
         {dma200 != null && (
-          <Tooltip content={{ body: "200-day moving average — long-term trend indicator. Price above = secular uptrend." }}>
+          <Tooltip content={{ body: "200-day moving average - long-term trend indicator. Price above = secular uptrend." }}>
             <span className="num rounded-md border border-ink-700/50 bg-ink-800/40 px-2 py-0.5 text-[11px] text-chalk-300/60 cursor-default">
               200D: ₹{dma200.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
             </span>

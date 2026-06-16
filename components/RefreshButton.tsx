@@ -41,7 +41,7 @@ export function RefreshButton() {
 
           if (msg === "DONE") {
             setState("done");
-            setLogs((l) => [...l, "✓ Pipeline complete — refreshing page …"]);
+            setLogs((l) => [...l, "✓ Pipeline complete - refreshing page …"]);
             setTimeout(() => router.refresh(), 800);
             return;
           }

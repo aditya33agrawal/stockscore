@@ -8,7 +8,10 @@ type Log = (msg: string) => void;
 const FRESH_DAYS = 7;
 const FRESH_MS = FRESH_DAYS * 24 * 60 * 60 * 1000;
 
-export async function runMarketPipeline(log: Log, force = false): Promise<void> {
+export async function runMarketPipeline(
+  log: Log,
+  force = false,
+): Promise<void> {
   log("[market-pipeline] Ensuring DB tables …");
   await ensureTables();
 
@@ -21,7 +24,9 @@ export async function runMarketPipeline(log: Log, force = false): Promise<void> 
       const age = Date.now() - new Date(lastRefresh).getTime();
       if (age < FRESH_MS) {
         const days = (age / (24 * 3600 * 1000)).toFixed(1);
-        log(`[market-pipeline] Data is ${days}d old (< 7d). Use --force to override.`);
+        log(
+          `[market-pipeline] Data is ${days}d old (< 7d). Use --force to override.`,
+        );
         return;
       }
     }
@@ -30,7 +35,9 @@ export async function runMarketPipeline(log: Log, force = false): Promise<void> 
   const email = process.env.SCREENER_EMAIL;
   const password = process.env.SCREENER_PASSWORD;
   if (!email || !password) {
-    throw new Error("SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local");
+    throw new Error(
+      "SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local",
+    );
   }
 
   log("[market-pipeline] Logging in to screener.in …");
@@ -46,7 +53,9 @@ export async function runMarketPipeline(log: Log, force = false): Promise<void> 
   log(`[market-pipeline] Parsed ${rows.length} sector rows`);
 
   if (rows.length === 0) {
-    throw new Error("Parser returned 0 rows — check if the page structure changed");
+    throw new Error(
+      "Parser returned 0 rows - check if the page structure changed",
+    );
   }
 
   const refreshedAt = new Date().toISOString();

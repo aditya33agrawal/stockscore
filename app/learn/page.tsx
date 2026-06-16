@@ -7,7 +7,7 @@ import LearnControls from "./LearnControls";
 export const metadata = {
   title: "Learn the Metrics",
   description:
-    "Plain-English first, methodology second. Every financial metric used in Stockscore — what it means, how it's computed, why this construction, and what traps to avoid.",
+    "Plain-English first, methodology second. Every financial metric used in Stockscore - what it means, how it's computed, why this construction, and what traps to avoid.",
 };
 
 export default function LearnPage() {
@@ -21,7 +21,7 @@ export default function LearnPage() {
           Learn the Metrics
         </h1>
         <p className="mt-4 text-chalk-300 max-w-2xl text-base leading-relaxed">
-          Plain-English first. Methodology second. Every number you see on this site —
+          Plain-English first. Methodology second. Every number you see on this site -
           explained from first principles, with worked examples, computation details,
           and the traps to avoid.
         </p>

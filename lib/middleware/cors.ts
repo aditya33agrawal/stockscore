@@ -18,13 +18,19 @@ const ALLOWED_ORIGINS = new Set<string>([]);
 
 export function applyCors(req: NextRequest, res: NextResponse): void {
   const origin = req.headers.get("origin");
-  if (!origin) return; // same-origin or non-browser requests — no CORS headers needed
+  if (!origin) return; // same-origin or non-browser requests - no CORS headers needed
 
   const isAllowed = ALLOWED_ORIGINS.has(origin);
   if (isAllowed) {
     res.headers.set("Access-Control-Allow-Origin", origin);
-    res.headers.set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-    res.headers.set("Access-Control-Allow-Headers", "Content-Type, x-refresh-password");
+    res.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, DELETE, OPTIONS",
+    );
+    res.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, x-refresh-password",
+    );
     res.headers.set("Access-Control-Max-Age", "86400");
     res.headers.set("Vary", "Origin");
   }

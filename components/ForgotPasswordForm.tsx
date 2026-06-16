@@ -34,11 +34,11 @@ export function ForgotPasswordForm() {
         setError(data?.error ?? "Could not reset password");
         return;
       }
-      toast.success("Password reset — signing you in");
+      toast.success("Password reset - signing you in");
       router.push("/bookmarks");
       router.refresh();
     } catch {
-      setError("Network error — check your connection and try again.");
+      setError("Network error - check your connection and try again.");
     } finally {
       setBusy(false);
     }

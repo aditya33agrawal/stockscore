@@ -42,7 +42,7 @@ export function AdminDashboard({ stats }: { stats: AdminStats }) {
 
   const lastRunTone = runs.lastOk == null ? "neutral" : runs.lastOk ? "good" : "bad";
   const lastRunValue =
-    runs.lastOk == null ? "—" : runs.lastOk ? "Healthy" : "Failed";
+    runs.lastOk == null ? "-" : runs.lastOk ? "Healthy" : "Failed";
   const staleCount = sectors.list.filter((s) => s.stale).length;
 
   return (
@@ -98,7 +98,7 @@ export function AdminDashboard({ stats }: { stats: AdminStats }) {
           <AlertTriangle className="h-4 w-4 shrink-0" />
           <span>
             <span className="num font-semibold">{runs.openErrors}</span> error
-            {runs.openErrors === 1 ? "" : "s"} in the most recent run — review run history.
+            {runs.openErrors === 1 ? "" : "s"} in the most recent run - review run history.
           </span>
         </Link>
       )}

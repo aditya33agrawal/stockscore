@@ -84,7 +84,10 @@ function tickerFromUrl(url: string): string | null {
 }
 
 // fetch with retry/backoff on 429 (rate limit) and transient network errors.
-async function fetchRetry(url: string, session: Session): Promise<Response | null> {
+async function fetchRetry(
+  url: string,
+  session: Session,
+): Promise<Response | null> {
   const waits = [4000, 8000, 16000, 30000];
   for (let attempt = 0; ; attempt++) {
     try {
@@ -112,7 +115,10 @@ async function fetchRetry(url: string, session: Session): Promise<Response | nul
 
 // Verify a candidate ticker has a live company page (200), with 429 backoff.
 async function pageExists(session: Session, ticker: string): Promise<boolean> {
-  const res = await fetchRetry(`https://www.screener.in/company/${ticker}/`, session);
+  const res = await fetchRetry(
+    `https://www.screener.in/company/${ticker}/`,
+    session,
+  );
   return !!res && res.ok;
 }
 
@@ -124,22 +130,34 @@ async function resolveSymbol(
   const now = () => new Date().toISOString();
   const rawU = raw.toUpperCase();
 
-  // 1) Manual override — trust only if the page actually exists.
+  // 1) Manual override - trust only if the page actually exists.
   if (manual[rawU]) {
     const cand = manual[rawU];
     if (await pageExists(session, cand)) {
-      return { raw, canonical: cand, name: null, url: `/company/${cand}/`, resolvedAt: now() };
+      return {
+        raw,
+        canonical: cand,
+        name: null,
+        url: `/company/${cand}/`,
+        resolvedAt: now(),
+      };
     }
     return { raw, canonical: null, name: null, url: null, resolvedAt: now() };
   }
 
-  // 2) Search API by the raw symbol. NEVER take a fuzzy non-exact guess —
+  // 2) Search API by the raw symbol. NEVER take a fuzzy non-exact guess -
   //    screener's search is fuzzy (e.g. "GATI" -> Jain Irrigation). Only accept
   //    a result whose ticker exactly matches the raw symbol, OR the sole result
   //    when its ticker page also verifies (single unambiguous hit).
-  const res = await fetchRetry(`${SEARCH_API}?q=${encodeURIComponent(raw)}&v=3`, session);
+  const res = await fetchRetry(
+    `${SEARCH_API}?q=${encodeURIComponent(raw)}&v=3`,
+    session,
+  );
   if (res && res.ok) {
-    const results = (await res.json()) as Array<{ name?: string; url?: string }>;
+    const results = (await res.json()) as Array<{
+      name?: string;
+      url?: string;
+    }>;
     if (Array.isArray(results) && results.length > 0) {
       const exact = results.find((r) => r.url && tickerFromUrl(r.url) === rawU);
       if (exact && exact.url) {
@@ -157,10 +175,16 @@ async function resolveSymbol(
   // 3) Fallback: the raw string may itself be a valid screener code that the
   //    search API can't match (hyphens/ampersands, e.g. BAJAJ-AUTO, NAM-INDIA).
   if (await pageExists(session, raw)) {
-    return { raw, canonical: rawU, name: null, url: `/company/${raw}/`, resolvedAt: now() };
+    return {
+      raw,
+      canonical: rawU,
+      name: null,
+      url: `/company/${raw}/`,
+      resolvedAt: now(),
+    };
   }
 
-  // Unresolved — reported, never guessed.
+  // Unresolved - reported, never guessed.
   return { raw, canonical: null, name: null, url: null, resolvedAt: now() };
 }
 
@@ -197,16 +221,21 @@ async function main() {
   }
 
   // 2) Resolve (using cache unless --force).
-  console.log(`Resolving ${rawSymbols.size} unique symbols against screener.in …`);
+  console.log(
+    `Resolving ${rawSymbols.size} unique symbols against screener.in …`,
+  );
   const email = process.env.SCREENER_EMAIL;
   const password = process.env.SCREENER_PASSWORD;
   const toResolve = [...rawSymbols].filter(
-    (s) => !dropSet.has(s) && (FORCE || !cache[s] || cache[s].canonical === null),
+    (s) =>
+      !dropSet.has(s) && (FORCE || !cache[s] || cache[s].canonical === null),
   );
 
   if (toResolve.length > 0) {
     if (!email || !password) {
-      throw new Error("SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local");
+      throw new Error(
+        "SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local",
+      );
     }
     console.log(`Logging in to screener.in (${toResolve.length} to resolve) …`);
     const session = await login(email, password);
@@ -223,7 +252,9 @@ async function main() {
           : "UNRESOLVED";
         console.log(`  [${i}/${toResolve.length}] ${raw.padEnd(16)} ${tag}`);
       } catch (err) {
-        console.log(`  [${i}/${toResolve.length}] ${raw.padEnd(16)} ERROR ${String(err)}`);
+        console.log(
+          `  [${i}/${toResolve.length}] ${raw.padEnd(16)} ERROR ${String(err)}`,
+        );
         cache[raw] = {
           raw,
           canonical: null,
@@ -242,13 +273,15 @@ async function main() {
 
   // canonical lookup for a raw config string
   const canonicalOf = (configSymbol: string): string | null => {
-    const u = aliasMap[configSymbol.toUpperCase()] ?? configSymbol.toUpperCase();
+    const u =
+      aliasMap[configSymbol.toUpperCase()] ?? configSymbol.toUpperCase();
     return cache[u]?.canonical ?? null;
   };
 
   // 3) Build sector -> canonical symbol set, applying merge_sectors.
   const mergeMap: Record<string, string> = {};
-  for (const [from, to] of Object.entries(ov.merge_sectors ?? {})) mergeMap[from] = to;
+  for (const [from, to] of Object.entries(ov.merge_sectors ?? {}))
+    mergeMap[from] = to;
 
   const report = {
     generated_at: new Date().toISOString(),
@@ -256,7 +289,11 @@ async function main() {
     dropped: [] as string[],
     rewritten: [] as Array<{ from: string; to: string }>,
     merged_sectors: mergeMap,
-    cross_sector_resolved: [] as Array<{ symbol: string; kept: string; removedFrom: string[] }>,
+    cross_sector_resolved: [] as Array<{
+      symbol: string;
+      kept: string;
+      removedFrom: string[];
+    }>,
     cross_sector_undecided: [] as Array<{ symbol: string; sectors: string[] }>,
   };
 
@@ -311,8 +348,11 @@ async function main() {
       continue; // hard error later
     }
     if (!slugs.has(chosen)) {
-      // primary points somewhere this symbol isn't currently in — still honour it
-      report.cross_sector_undecided.push({ symbol, sectors: [...slugs, `(primary=${chosen} not present)`] });
+      // primary points somewhere this symbol isn't currently in - still honour it
+      report.cross_sector_undecided.push({
+        symbol,
+        sectors: [...slugs, `(primary=${chosen} not present)`],
+      });
       continue;
     }
     finalSectorSymbols.get(chosen)!.push(symbol);
@@ -341,29 +381,40 @@ async function main() {
   console.log("\n──────────── STANDARDIZE REPORT ────────────");
   console.log(`Sectors: ${cfg.sectors.length} -> ${proposed.sectors.length}`);
   console.log(`Symbols rewritten to canonical: ${report.rewritten.length}`);
-  console.log(`Cross-sector dups auto-resolved: ${report.cross_sector_resolved.length}`);
+  console.log(
+    `Cross-sector dups auto-resolved: ${report.cross_sector_resolved.length}`,
+  );
   console.log(`Unresolved symbols (dropped):    ${report.unresolved.length}`);
   console.log(`Explicit drops:                  ${report.dropped.length}`);
-  console.log(`UNDECIDED cross-sector dups:     ${report.cross_sector_undecided.length}`);
+  console.log(
+    `UNDECIDED cross-sector dups:     ${report.cross_sector_undecided.length}`,
+  );
 
   if (report.rewritten.length) {
     console.log("\nRewrites:");
     for (const r of report.rewritten) console.log(`  ${r.from} -> ${r.to}`);
   }
   if (report.unresolved.length) {
-    console.log("\nUnresolved (verify or add to sector_overrides.drop / alias):");
-    for (const u of report.unresolved) console.log(`  ${u.symbol}  [${u.sectors.join(", ")}]`);
+    console.log(
+      "\nUnresolved (verify or add to sector_overrides.drop / alias):",
+    );
+    for (const u of report.unresolved)
+      console.log(`  ${u.symbol}  [${u.sectors.join(", ")}]`);
   }
   if (report.cross_sector_undecided.length) {
-    console.log("\n⚠️  UNDECIDED — add a primary_sector entry for each:");
+    console.log("\n⚠️  UNDECIDED - add a primary_sector entry for each:");
     for (const d of report.cross_sector_undecided) {
-      console.log(`  "${d.symbol}": "?"   // currently in: ${d.sectors.join(", ")}`);
+      console.log(
+        `  "${d.symbol}": "?"   // currently in: ${d.sectors.join(", ")}`,
+      );
     }
   }
   console.log(`\nReport: ${REPORT_PATH}`);
 
   if (report.cross_sector_undecided.length > 0) {
-    console.log("\n❌ Refusing to finalize — resolve the undecided dups in sector_overrides.json.");
+    console.log(
+      "\n❌ Refusing to finalize - resolve the undecided dups in sector_overrides.json.",
+    );
     if (WRITE) {
       console.log("   (--write ignored.)");
     }
@@ -379,7 +430,9 @@ async function main() {
     await fs.rm(PROPOSED_PATH, { force: true });
   } else {
     await fs.writeFile(PROPOSED_PATH, JSON.stringify(proposed, null, 2) + "\n");
-    console.log(`\n✅ Dry run. Review ${PROPOSED_PATH}, then re-run with --write.`);
+    console.log(
+      `\n✅ Dry run. Review ${PROPOSED_PATH}, then re-run with --write.`,
+    );
   }
 }
 

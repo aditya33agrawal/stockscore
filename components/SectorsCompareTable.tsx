@@ -44,7 +44,7 @@ const FILTERS: { key: FilterKey; label: string }[] = [
 ];
 
 function fmtNum(v: number | null, suffix = ""): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (suffix === "Cr") {
     return v >= 100000
       ? `${(v / 100000).toFixed(1)}L Cr`
@@ -214,7 +214,7 @@ export function SectorsCompareTable({ rows, refreshedAt }: Props) {
                     {row.name}
                   </a>
                 </td>
-                <td className="px-4 py-3 num text-chalk-300 text-right">{row.companyCount ?? "—"}</td>
+                <td className="px-4 py-3 num text-chalk-300 text-right">{row.companyCount ?? "-"}</td>
                 <td className="px-4 py-3 num text-chalk-300 text-right">{fmtNum(row.totalMarketCap, "Cr")}</td>
                 <td className="px-4 py-3 num text-chalk-300 text-right">{fmtNum(row.medianMarketCap, "Cr")}</td>
                 <td className="px-4 py-3 num text-right">

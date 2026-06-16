@@ -8,7 +8,7 @@ import * as path from "path";
 // scripts/rebuild-sectors-from-db.ts
 //
 // Rebuilds the `sectors` table and fixes `companies.sector_slug` to match the
-// cleaned sectors_config.json — WITHOUT re-scraping screener.in. Uses the
+// cleaned sectors_config.json - WITHOUT re-scraping screener.in. Uses the
 // company scores already stored in `companies.data.score`.
 //
 // This is the fast fix for the live "company shown in multiple sectors" bug:
@@ -90,7 +90,9 @@ async function main() {
   console.log("──────────── REBUILD SECTORS FROM DB ────────────");
   console.log(`Stored company scores: ${scoreBySymbol.size}`);
   console.log(`Config sectors: ${cfg.sectors.length}`);
-  console.log(`Stale sector rows to delete: ${staleRows.length}${staleRows.length ? ` (${staleRows.map((s) => s.slug).join(", ")})` : ""}`);
+  console.log(
+    `Stale sector rows to delete: ${staleRows.length}${staleRows.length ? ` (${staleRows.map((s) => s.slug).join(", ")})` : ""}`,
+  );
 
   let rebuilt = 0;
   let companiesPlaced = 0;
@@ -138,9 +140,13 @@ async function main() {
     await sql`DELETE FROM sectors WHERE slug <> ALL(${[...configSlugs]})`;
   }
 
-  console.log(`\n${APPLY ? "✅ Rebuilt" : "Would rebuild"} ${rebuilt} sectors, placing ${companiesPlaced} company rows.`);
+  console.log(
+    `\n${APPLY ? "✅ Rebuilt" : "Would rebuild"} ${rebuilt} sectors, placing ${companiesPlaced} company rows.`,
+  );
   if (missing.length) {
-    console.log(`\n⚠️  ${missing.length} config companies have no stored score yet (will populate on next refresh):`);
+    console.log(
+      `\n⚠️  ${missing.length} config companies have no stored score yet (will populate on next refresh):`,
+    );
     const bySec = new Map<string, string[]>();
     for (const m of missing) {
       const a = bySec.get(m.sector) ?? [];
@@ -149,7 +155,7 @@ async function main() {
     }
     for (const [s, syms] of bySec) console.log(`   ${s}: ${syms.join(", ")}`);
   }
-  if (!APPLY) console.log("\nDry run — re-run with --apply to write.");
+  if (!APPLY) console.log("\nDry run - re-run with --apply to write.");
 
   await sql.end();
 }

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin" };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Defence in depth — every /admin route also re-checks in its own page.
+  // Defence in depth - every /admin route also re-checks in its own page.
   const user = await requireAdmin();
   if (!user) notFound();
 

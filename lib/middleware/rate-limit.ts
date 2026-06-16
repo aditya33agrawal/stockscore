@@ -2,7 +2,7 @@
  * lib/middleware/rate-limit.ts
  *
  * Simple fixed-window in-memory rate limiter.
- * Edge-runtime compatible — uses only Map and Date.
+ * Edge-runtime compatible - uses only Map and Date.
  *
  * ⚠ NOT durable across cold starts. NOT shared across Vercel edge instances.
  *   Adequate for a low-traffic single-region deployment. If traffic grows,
@@ -31,7 +31,10 @@ export interface RateLimitResult {
   retryAfterSec: number;
 }
 
-export function rateLimit(key: string, opts: RateLimitOptions): RateLimitResult {
+export function rateLimit(
+  key: string,
+  opts: RateLimitOptions,
+): RateLimitResult {
   const now = Date.now();
   const bucket = store.get(key);
 
@@ -52,7 +55,7 @@ export function rateLimit(key: string, opts: RateLimitOptions): RateLimitResult 
 
 /**
  * Periodic cleanup to prevent unbounded Map growth.
- * Called lazily — runs if the Map exceeds 50k entries.
+ * Called lazily - runs if the Map exceeds 50k entries.
  */
 export function maybePurgeExpired(): void {
   if (store.size < 50_000) return;

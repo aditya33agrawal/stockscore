@@ -4,7 +4,7 @@
  * Pure utility for computing the score / metric diff between a bookmark snapshot
  * (captured when the user saved the company) and the current live company data.
  *
- * No DB access — purely functional so it is easy to test and reuse.
+ * No DB access - purely functional so it is easy to test and reuse.
  */
 
 // ─── Snapshot shape (stored as JSONB in bookmarks.score_snapshot) ────────────
@@ -70,7 +70,7 @@ export interface ScoreDiff {
   hasNewData: boolean;
   /**
    * True when the snapshot was written as a backfill baseline rather than at
-   * the actual moment of bookmarking — so delta is relative to "when baseline
+   * the actual moment of bookmarking - so delta is relative to "when baseline
    * was set", not "when user originally bookmarked".
    */
   isBackfilled: boolean;
@@ -86,13 +86,18 @@ interface MetricDef {
 }
 
 const METRIC_DEFS: MetricDef[] = [
-  { label: "ROE",        key: "roe",            unit: "%", higherIsBetter: true  },
-  { label: "ROCE",       key: "roce",           unit: "%", higherIsBetter: true  },
-  { label: "OPM",        key: "opm",            unit: "%", higherIsBetter: true  },
-  { label: "D/E",        key: "debt_to_equity", unit: "x", higherIsBetter: false },
-  { label: "P/E",        key: "pe",             unit: "x", higherIsBetter: false },
-  { label: "Pledged %",  key: "pledged_pct",    unit: "%", higherIsBetter: false },
-  { label: "Sales CAGR", key: "sales_5y_cagr",  unit: "%", higherIsBetter: true  },
+  { label: "ROE", key: "roe", unit: "%", higherIsBetter: true },
+  { label: "ROCE", key: "roce", unit: "%", higherIsBetter: true },
+  { label: "OPM", key: "opm", unit: "%", higherIsBetter: true },
+  { label: "D/E", key: "debt_to_equity", unit: "x", higherIsBetter: false },
+  { label: "P/E", key: "pe", unit: "x", higherIsBetter: false },
+  { label: "Pledged %", key: "pledged_pct", unit: "%", higherIsBetter: false },
+  {
+    label: "Sales CAGR",
+    key: "sales_5y_cagr",
+    unit: "%",
+    higherIsBetter: true,
+  },
 ];
 
 // ─── Main function ────────────────────────────────────────────────────────────
@@ -106,13 +111,14 @@ export function computeScoreDiff(
 ): ScoreDiff {
   // Score delta
   const scoreDelta =
-    typeof current.final_score === "number" && typeof snapshot.final_score === "number"
+    typeof current.final_score === "number" &&
+    typeof snapshot.final_score === "number"
       ? parseFloat((current.final_score - snapshot.final_score).toFixed(1))
       : null;
 
   // Classification change
   const classificationBefore = snapshot.classification ?? null;
-  const classificationAfter  = current.classification ?? null;
+  const classificationAfter = current.classification ?? null;
   const classificationChanged =
     !!classificationBefore &&
     !!classificationAfter &&
@@ -120,7 +126,7 @@ export function computeScoreDiff(
 
   // CMP delta
   const cmpBefore = snapshot.cmp ?? null;
-  const cmpAfter  = current.cmp ?? null;
+  const cmpAfter = current.cmp ?? null;
   const cmpDelta =
     cmpBefore !== null && cmpAfter !== null
       ? parseFloat((cmpAfter - cmpBefore).toFixed(2))
@@ -133,15 +139,22 @@ export function computeScoreDiff(
   // Metric deltas
   const metricDeltas: MetricDelta[] = METRIC_DEFS.map((def) => {
     const before = snapshot.raw[def.key] ?? null;
-    const after  = current.raw[def.key] ?? null;
+    const after = current.raw[def.key] ?? null;
     const delta =
       before !== null && after !== null
         ? parseFloat((after - before).toFixed(2))
         : null;
-    return { label: def.label, unit: def.unit, higherIsBetter: def.higherIsBetter, before, after, delta };
+    return {
+      label: def.label,
+      unit: def.unit,
+      higherIsBetter: def.higherIsBetter,
+      before,
+      after,
+      delta,
+    };
   }).filter((m) => m.before !== null || m.after !== null);
 
-  // Category deltas — match by name
+  // Category deltas - match by name
   const currentCatMap = new Map(current.categories.map((c) => [c.name, c]));
   const categoryDeltas: CategoryDelta[] = snapshot.categories
     .map((sc) => {
@@ -177,24 +190,24 @@ import type { Company } from "@/lib/types";
 
 export function snapshotFromCompany(company: Company): BookmarkSnapshot {
   return {
-    final_score:    company.final_score,
+    final_score: company.final_score,
     classification: company.classification ?? "",
-    cmp:            company.cmp,
-    score_version:  company.score_version,
+    cmp: company.cmp,
+    score_version: company.score_version,
     raw: {
-      pe:             company.raw.pe             ?? null,
-      roe:            company.raw.roe            ?? null,
-      roce:           company.raw.roce           ?? null,
-      opm:            company.raw.opm            ?? null,
+      pe: company.raw.pe ?? null,
+      roe: company.raw.roe ?? null,
+      roce: company.raw.roce ?? null,
+      opm: company.raw.opm ?? null,
       debt_to_equity: company.raw.debt_to_equity ?? null,
-      pledged_pct:    company.raw.pledged_pct    ?? null,
-      sales_5y_cagr:  company.raw.sales_5y_cagr  ?? null,
+      pledged_pct: company.raw.pledged_pct ?? null,
+      sales_5y_cagr: company.raw.sales_5y_cagr ?? null,
       profit_5y_cagr: company.raw.profit_5y_cagr ?? null,
     },
     categories: company.categories.map((c) => ({
-      name:   c.name,
+      name: c.name,
       earned: c.earned,
-      max:    c.max,
+      max: c.max,
     })),
   };
 }

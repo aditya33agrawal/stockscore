@@ -71,7 +71,7 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
           setBookmarked(false);
           toast.success("Removed from bookmarks");
         } else {
-          toast.error("Couldn't remove — try again");
+          toast.error("Couldn't remove - try again");
         }
       } else {
         const res = await fetch("/api/bookmarks", {
@@ -94,11 +94,11 @@ export function BookmarkButton({ sectorSlug, companySlug, companyTicker, company
           pulse();
           toast.success(`Saved ${companyTicker ?? companyName ?? "company"}`);
         } else {
-          toast.error("Couldn't save — try again");
+          toast.error("Couldn't save - try again");
         }
       }
     } catch {
-      toast.error("Network error — check your connection");
+      toast.error("Network error - check your connection");
     } finally {
       setBusy(false);
     }

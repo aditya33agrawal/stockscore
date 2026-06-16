@@ -2,91 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ink Wash — Palette: Ink #4A4A4A · Mist #CBCBCB · Paper #FFFFE3 · Slate #6D8196 */
+/* Ink Wash - Palette: Ink #4A4A4A · Mist #CBCBCB · Paper #FFFFE3 · Slate #6D8196 */
 :root {
   color-scheme: light;
 
   /* Surface scale: Paper → Mist (light → mid) */
-  --ink-950: 255 255 227;   /* Paper — page background        */
-  --ink-900: 250 250 224;   /* card / surface (slightly off)  */
-  --ink-800: 244 244 214;   /* raised surface                 */
-  --ink-700: 203 203 203;   /* Mist — borders                 */
-  --ink-600: 168 168 160;   /* stronger border / disabled     */
-  --ink-500: 122 128 130;   /* icon / muted chrome            */
+  --ink-950: 255 255 227; /* Paper - page background        */
+  --ink-900: 250 250 224; /* card / surface (slightly off)  */
+  --ink-800: 244 244 214; /* raised surface                 */
+  --ink-700: 203 203 203; /* Mist - borders                 */
+  --ink-600: 168 168 160; /* stronger border / disabled     */
+  --ink-500: 122 128 130; /* icon / muted chrome            */
 
   /* Text scale: Ink → muted (darkened for stronger body contrast) */
-  --chalk-50:  20 20 20;     /* near-black headings            */
-  --chalk-100: 47 47 47;     /* Ink — body text                */
-  --chalk-200: 58 58 58;     /* secondary text                 */
-  --chalk-300: 82 86 92;     /* muted / captions               */
+  --chalk-50: 20 20 20; /* near-black headings            */
+  --chalk-100: 47 47 47; /* Ink - body text                */
+  --chalk-200: 58 58 58; /* secondary text                 */
+  --chalk-300: 82 86 92; /* muted / captions               */
 
-  /* Brand — Slate (chrome / interactive, NOT a verdict color) */
-  --accent:        109 129 150;   /* #6D8196 */
-  --accent-soft:   132 150 168;
-  --accent-deep:    86 104 124;
+  /* Brand - Slate (chrome / interactive, NOT a verdict color) */
+  --accent: 109 129 150; /* #6D8196 */
+  --accent-soft: 132 150 168;
+  --accent-deep: 86 104 124;
 
   /* Semantic verdict colors (tuned to sit on cream) */
-  --good:      63 122 82;    /* #3F7A52 — positive          */
+  --good: 63 122 82; /* #3F7A52 - positive          */
   --good-deep: 47 94 63;
-  --warn:      184 134 43;   /* #B8862B — caution           */
-  --bad:       176 82 78;    /* #B0524E — negative          */
-  --bad-deep:  138 63 60;
+  --warn: 184 134 43; /* #B8862B - caution           */
+  --bad: 176 82 78; /* #B0524E - negative          */
+  --bad-deep: 138 63 60;
 
-  --panel-bg:      rgba(74, 74, 74, 0.04);
-  --panel-border:  rgba(74, 74, 74, 0.16);
-  --page-bg:       rgb(255 255 227);
-  --page-fg:       rgb(47 47 47);
+  --panel-bg: rgba(74, 74, 74, 0.04);
+  --panel-border: rgba(74, 74, 74, 0.16);
+  --page-bg: rgb(255 255 227);
+  --page-fg: rgb(47 47 47);
   --scrollbar-track: rgb(255 255 227);
   --scrollbar-thumb: rgb(203 203 203);
   --scrollbar-thumb-hover: rgb(168 168 160);
 }
 
-/* ── Ink Wash Night — matched dark variant (toggled via `.dark` on <html>) ── */
+/* ── Ink Wash Night - matched dark variant (toggled via `.dark` on <html>) ── */
 .dark {
   color-scheme: dark;
 
   /* Surfaces: warm charcoal → mid */
-  --ink-950: 24 24 22;      /* page background                */
-  --ink-900: 32 32 30;      /* card / surface                 */
-  --ink-800: 42 42 39;      /* raised surface                 */
-  --ink-700: 64 64 60;      /* borders                        */
-  --ink-600: 88 88 83;      /* stronger border / disabled     */
-  --ink-500: 130 132 130;   /* icon / muted chrome            */
+  --ink-950: 24 24 22; /* page background                */
+  --ink-900: 32 32 30; /* card / surface                 */
+  --ink-800: 42 42 39; /* raised surface                 */
+  --ink-700: 64 64 60; /* borders                        */
+  --ink-600: 88 88 83; /* stronger border / disabled     */
+  --ink-500: 130 132 130; /* icon / muted chrome            */
 
   /* Text: near-white → muted (lightened for stronger contrast on charcoal) */
-  --chalk-50:  253 253 251;
+  --chalk-50: 253 253 251;
   --chalk-100: 245 245 241;
   --chalk-200: 226 226 220;
   --chalk-300: 200 202 202;
 
-  /* Slate accent — brightened to read on charcoal */
-  --accent:        138 158 180;
-  --accent-soft:   160 178 198;
-  --accent-deep:   110 130 152;
+  /* Slate accent - brightened to read on charcoal */
+  --accent: 138 158 180;
+  --accent-soft: 160 178 198;
+  --accent-deep: 110 130 152;
 
-  /* Semantic verdict colors — brightened for dark surfaces */
-  --good:      90 170 116;
+  /* Semantic verdict colors - brightened for dark surfaces */
+  --good: 90 170 116;
   --good-deep: 70 140 95;
-  --warn:      212 162 70;
-  --bad:       208 112 106;
-  --bad-deep:  176 82 78;
+  --warn: 212 162 70;
+  --bad: 208 112 106;
+  --bad-deep: 176 82 78;
 
-  --panel-bg:      rgba(255, 255, 255, 0.03);
-  --panel-border:  rgba(255, 255, 255, 0.10);
-  --page-bg:       rgb(24 24 22);
-  --page-fg:       rgb(224 224 218);
+  --panel-bg: rgba(255, 255, 255, 0.03);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --page-bg: rgb(24 24 22);
+  --page-fg: rgb(224 224 218);
   --scrollbar-track: rgb(24 24 22);
   --scrollbar-thumb: rgb(64 64 60);
   --scrollbar-thumb-hover: rgb(88 88 83);
 }
-
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }
 
-html, body {
+html,
+body {
   background: var(--page-bg);
   color: var(--page-fg);
   -webkit-font-smoothing: antialiased;
@@ -94,7 +94,16 @@ html, body {
 }
 
 /* ── Global focus-visible ring ── */
-:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+:where(
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea,
+  summary,
+  [tabindex]
+):focus-visible {
   outline: 2px solid rgb(var(--accent) / 0.65);
   outline-offset: 2px;
   border-radius: 8px;
@@ -102,7 +111,9 @@ html, body {
 :where(input, textarea, select):focus-visible {
   outline-offset: 0;
 }
-:focus:not(:focus-visible) { outline: none; }
+:focus:not(:focus-visible) {
+  outline: none;
+}
 
 .skip-link {
   position: absolute;
@@ -117,10 +128,14 @@ html, body {
   font-size: 13px;
   transition: top 0.2s ease;
 }
-.skip-link:focus { top: 12px; }
+.skip-link:focus {
+  top: 12px;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -138,7 +153,7 @@ html, body {
   font-family: var(--font-mono), ui-monospace, Menlo, monospace;
 }
 
-/* ── Surface panels (flat, monotone — no gradient or blur) ── */
+/* ── Surface panels (flat, monotone - no gradient or blur) ── */
 .glass {
   background: var(--panel-bg);
 }
@@ -160,27 +175,61 @@ html, body {
 
 /* ── Hero grid (dot matrix) ── */
 .hero-grid {
-  background-image: radial-gradient(circle, rgb(var(--chalk-100) / 0.3) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgb(var(--chalk-100) / 0.3) 1px,
+    transparent 1px
+  );
   background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse 90% 85% at 50% 10%, black 20%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 10%, black 20%, transparent 100%);
+  mask-image: radial-gradient(
+    ellipse 90% 85% at 50% 10%,
+    black 20%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 85% at 50% 10%,
+    black 20%,
+    transparent 100%
+  );
 }
 
-
 /* ── Scrollbar ── */
-::-webkit-scrollbar          { height: 6px; width: 6px; }
-::-webkit-scrollbar-track    { background: var(--scrollbar-track); }
-::-webkit-scrollbar-thumb    { background: var(--scrollbar-thumb); border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
 
-.scrollbar-thin::-webkit-scrollbar        { height: 6px; width: 6px; }
-.scrollbar-thin::-webkit-scrollbar-thumb  { background: var(--scrollbar-thumb); border-radius: 6px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
 
 /* ── Live pulse animation ── */
 @keyframes live-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 .live-dot {
   animation: live-pulse 2s ease-in-out infinite;
@@ -188,8 +237,12 @@ html, body {
 
 /* ── Score ticker tape ── */
 @keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .score-ticker-track {
   animation: ticker-scroll 70s linear infinite;
@@ -199,12 +252,16 @@ html, body {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
-  .score-ticker-track { animation: none; }
+  .score-ticker-track {
+    animation: none;
+  }
 }
 
 /* ── Score bar fill animations ── */
 @keyframes score-fill {
-  from { width: 0%; }
+  from {
+    width: 0%;
+  }
 }
 .score-bar-animated {
   animation: score-fill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -212,9 +269,15 @@ html, body {
 
 /* ── Shimmer skeleton (flat) ── */
 @keyframes shimmer {
-  0%   { opacity: 0.4; }
-  50%  { opacity: 0.8; }
-  100% { opacity: 0.4; }
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
 }
 .skeleton {
   border-radius: 8px;
@@ -223,13 +286,24 @@ html, body {
 }
 
 @keyframes progress-bar {
-  0%   { width: 0%;   opacity: 1; }
-  60%  { width: 85%;  opacity: 1; }
-  100% { width: 100%; opacity: 0; }
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+  60% {
+    width: 85%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
 }
 .page-loader-bar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2px;
   background: rgb(var(--accent));
   z-index: 9999;
@@ -237,17 +311,29 @@ html, body {
 }
 
 @keyframes nav-progress-grow {
-  0%   { width: 0%; }
-  50%  { width: 70%; }
-  90%  { width: 90%; }
-  100% { width: 92%; }
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  90% {
+    width: 90%;
+  }
+  100% {
+    width: 92%;
+  }
 }
 @keyframes nav-progress-finish {
-  to { width: 100%; opacity: 0; }
+  to {
+    width: 100%;
+    opacity: 0;
+  }
 }
 .nav-progress {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   height: 2px;
   width: 0%;
   background: rgb(var(--accent));
@@ -263,11 +349,19 @@ html, body {
 }
 
 @keyframes bookmark-pop {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.35); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
-.bookmark-pop { animation: bookmark-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.bookmark-pop {
+  animation: bookmark-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
 /* ── Scroll-to-top button ── */
 .scroll-top-btn {
@@ -286,7 +380,10 @@ html, body {
   justify-content: center;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
   pointer-events: none;
 }
 .scroll-top-btn[data-visible="true"] {
@@ -294,7 +391,9 @@ html, body {
   transform: translateY(0);
   pointer-events: auto;
 }
-.scroll-top-btn:hover { background: rgb(var(--accent) / 0.2); }
+.scroll-top-btn:hover {
+  background: rgb(var(--accent) / 0.2);
+}
 
 /* ── Sonner toast theme overrides ── */
 [data-sonner-toaster] {
@@ -310,28 +409,58 @@ html, body {
 }
 
 @keyframes drawer-down {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.drawer-down { animation: drawer-down 0.18s ease-out; }
+.drawer-down {
+  animation: drawer-down 0.18s ease-out;
+}
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.fade-in { animation: fade-in 0.16s ease-out; }
+.fade-in {
+  animation: fade-in 0.16s ease-out;
+}
 
 @keyframes sheet-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.sheet-up { animation: sheet-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.sheet-up {
+  animation: sheet-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 
 @keyframes count-rise {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.count-rise { animation: count-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.count-rise {
+  animation: count-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
 
 /* ── Tooltip primitive ── */
 .tooltip-wrap {
@@ -354,7 +483,7 @@ html, body {
   color: rgb(var(--chalk-100));
   font-size: 12px;
   line-height: 1.45;
-  box-shadow: 0 6px 20px rgba(74,74,74,0.18);
+  box-shadow: 0 6px 20px rgba(74, 74, 74, 0.18);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;
@@ -381,8 +510,12 @@ html, body {
   margin-bottom: 4px;
   font-size: 12px;
 }
-.tooltip-body { color: rgb(var(--chalk-200)); }
-.tooltip-body p + p { margin-top: 6px; }
+.tooltip-body {
+  color: rgb(var(--chalk-200));
+}
+.tooltip-body p + p {
+  margin-top: 6px;
+}
 .tooltip-trigger {
   display: inline-flex;
   align-items: center;

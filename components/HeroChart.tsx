@@ -33,7 +33,7 @@ export function HeroChart() {
     let momentum = 0;
     let frame    = 0;
 
-    // Depth bars — cumulative, lerped toward random targets
+    // Depth bars - cumulative, lerped toward random targets
     let bids: number[] = Array(DEPTH_LEVELS).fill(0);
     let asks: number[] = Array(DEPTH_LEVELS).fill(0);
     let bidTgt: number[] = [];
@@ -225,13 +225,13 @@ export function HeroChart() {
         const y   = dY + i * rowH;
         const gap = rowH > 2 ? 1 : 0;
 
-        // DEMAND (left side — bar grows rightward from left margin)
+        // DEMAND (left side - bar grows rightward from left margin)
         const bW      = (bids[i] / maxQty) * halfW;
         const alphaB  = 0.05 + (i / DEPTH_LEVELS) * 0.55;
         g.fillStyle = GA(alphaB);
         g.fillRect(margin, y, bW, rowH - gap);
 
-        // SUPPLY (right side — bar grows leftward from right margin)
+        // SUPPLY (right side - bar grows leftward from right margin)
         const sW      = (asks[i] / maxQty) * halfW;
         const alphaS  = 0.05 + (i / DEPTH_LEVELS) * 0.55;
         g.fillStyle = RA(alphaS);

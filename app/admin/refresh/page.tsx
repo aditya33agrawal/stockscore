@@ -1,16 +1,11 @@
-import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin";
 import { loadSectorsConfig } from "@/lib/data";
 import { RefreshConsole } from "@/components/admin/RefreshConsole";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Admin — Refresh" };
+export const metadata = { title: "Admin - Refresh" };
 
 export default async function AdminRefreshPage() {
-  const user = await requireAdmin();
-  if (!user) notFound();
-
   const sectors = await loadSectorsConfig();
 
   return (

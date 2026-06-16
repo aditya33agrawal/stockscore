@@ -1,5 +1,5 @@
 /**
- * lib/scorer.ts — StockScore v2 Scoring Engine
+ * lib/scorer.ts - StockScore v2 Scoring Engine
  *
  * Implements the algorithm described in docs/scoring-algorithm-v2-plan.md.
  * All category scores use continuous logistic/linear primitives (no step rubrics).
@@ -37,7 +37,7 @@ import { getSectorOpmPrior } from "./scoring/sector_stats";
 // ─── Options ──────────────────────────────────────────────────────────────────
 
 export interface ScoreOptions {
-  /** True if the sector is tagged cyclical in sectors_config.json — cap at 90. */
+  /** True if the sector is tagged cyclical in sectors_config.json - cap at 90. */
   cyclical?: boolean;
   /** Sector slug for priors lookup. */
   sectorSlug?: string;
@@ -49,7 +49,10 @@ export interface ScoreOptions {
 
 function parseNum(s: string | undefined | null): number {
   if (!s || ["-", "NA", "N/A", ""].includes(s.trim())) return 0;
-  const cleaned = s.replace(/[₹,%\s]/g, "").replace(/Cr\.?/g, "").trim();
+  const cleaned = s
+    .replace(/[₹,%\s]/g, "")
+    .replace(/Cr\.?/g, "")
+    .trim();
   const noComma = cleaned.replace(/,/g, "");
   const m = noComma.match(/-?[\d.]+/);
   return m ? parseFloat(m[0]) : 0;
@@ -150,7 +153,7 @@ interface Metrics {
 
   // Cash flow
   annualCfo: number[];
-  annualCapex: number[];   // absolute values of investing cash flow
+  annualCapex: number[]; // absolute values of investing cash flow
   annualFcf: number[];
 
   // Ratio table series
@@ -171,7 +174,12 @@ interface Metrics {
   fiiTrend8q: number;
   diiTrend8q: number;
   promoterTrend8q: number;
-  shareholdingHistory: { promoter: number[]; fii: number[]; dii: number[]; public: number[] };
+  shareholdingHistory: {
+    promoter: number[];
+    fii: number[];
+    dii: number[];
+    public: number[];
+  };
 
   // Quarterly
   qtrlySales: number[];
@@ -212,8 +220,10 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   const high52w = parseNum(hlParts[0]);
   const low52w = parseNum(hlParts[1] ?? "0");
 
-  const sg = gt["Compounded Sales Growth"] ?? gt["compounded sales growth"] ?? {};
-  const pg = gt["Compounded Profit Growth"] ?? gt["compounded profit growth"] ?? {};
+  const sg =
+    gt["Compounded Sales Growth"] ?? gt["compounded sales growth"] ?? {};
+  const pg =
+    gt["Compounded Profit Growth"] ?? gt["compounded profit growth"] ?? {};
   const sc = gt["Stock Price CAGR"] ?? gt["stock price cagr"] ?? {};
   const re = gt["Return on Equity"] ?? gt["return on equity"] ?? {};
 
@@ -225,7 +235,9 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   const annualEps = rowNums(findRow(plRows, "eps"));
   const annualDepreciation = rowNums(findRow(plRows, "depreciation"));
   const otherIncomeRow = findRow(plRows, "other income");
-  const otherIncomeCr = otherIncomeRow ? (last(rowNums(otherIncomeRow)) as number) : 0;
+  const otherIncomeCr = otherIncomeRow
+    ? (last(rowNums(otherIncomeRow)) as number)
+    : 0;
   const dividendPayoutRow = findRow(plRows, "dividend payout");
   const dividendPayout = dividendPayoutRow
     ? (last(rowPercents(dividendPayoutRow)) as number)
@@ -242,8 +254,14 @@ function extractMetrics(raw: RawCompanyData): Metrics {
 
   // ── D/E with fallback ──
   let debtEquity = parseNum(r["Debt / Equity"] ?? r["Debt to equity"] ?? "");
-  if (!debtEquity && annualBorrowings.length && annualReserves.length && annualEquityCapital.length) {
-    const equity = (last(annualReserves) as number) + (last(annualEquityCapital) as number);
+  if (
+    !debtEquity &&
+    annualBorrowings.length &&
+    annualReserves.length &&
+    annualEquityCapital.length
+  ) {
+    const equity =
+      (last(annualReserves) as number) + (last(annualEquityCapital) as number);
     if (equity > 0) debtEquity = (last(annualBorrowings) as number) / equity;
   }
 
@@ -257,10 +275,9 @@ function extractMetrics(raw: RawCompanyData): Metrics {
 
   // ── Ratios table rows ──
   const ratiosRows = parseCsv(raw.ratiosTable);
-  const cfoOpRow = findRow(ratiosRows, "cfo") ?? findRow(ratiosRows, "cash from oper");
-  let cfoToOp = cfoOpRow
-    ? parsePercent(cfoOpRow[cfoOpRow.length - 1])
-    : 0;
+  const cfoOpRow =
+    findRow(ratiosRows, "cfo") ?? findRow(ratiosRows, "cash from oper");
+  let cfoToOp = cfoOpRow ? parsePercent(cfoOpRow[cfoOpRow.length - 1]) : 0;
   // Fallback: compute CFO / Operating Profit from raw P&L + cash flow data
   if (!cfoToOp && annualCfo.length && annualSales.length && annualOpm.length) {
     const recentOp = annualSales
@@ -271,16 +288,24 @@ function extractMetrics(raw: RawCompanyData): Metrics {
       .map((c, i) => ({ c, op: recentOp[i] }))
       .filter(({ op }) => op > 0);
     if (validPairs.length >= 2) {
-      const avgRatio = validPairs.reduce((sum, { c, op }) => sum + c / op, 0) / validPairs.length;
+      const avgRatio =
+        validPairs.reduce((sum, { c, op }) => sum + c / op, 0) /
+        validPairs.length;
       cfoToOp = parseFloat((avgRatio * 100).toFixed(1));
     }
   }
   const debtorDaysSeries = rowNums(findRow(ratiosRows, "debtor days"));
-  const inventoryDaysSeries = rowNums(findRow(ratiosRows, "inventory days") ?? findRow(ratiosRows, "inventory turnover"));
+  const inventoryDaysSeries = rowNums(
+    findRow(ratiosRows, "inventory days") ??
+      findRow(ratiosRows, "inventory turnover"),
+  );
   const debtorDays = (last(debtorDaysSeries) as number) || 0;
   const inventoryDays = (last(inventoryDaysSeries) as number) || 0;
-  const ccc = (last(rowNums(findRow(ratiosRows, "cash conversion cycle"))) as number) || 0;
-  const wcd = (last(rowNums(findRow(ratiosRows, "working capital days"))) as number) || 0;
+  const ccc =
+    (last(rowNums(findRow(ratiosRows, "cash conversion cycle"))) as number) ||
+    0;
+  const wcd =
+    (last(rowNums(findRow(ratiosRows, "working capital days"))) as number) || 0;
   const annualRoce = rowPercents(findRow(ratiosRows, "roce"));
 
   // ── Current ratio ──
@@ -290,8 +315,12 @@ function extractMetrics(raw: RawCompanyData): Metrics {
     : parseNum(r["Current Ratio"] ?? "0");
   // Fallback: compute from balance sheet current assets / current liabilities
   if (!currentRatio) {
-    const caRow = findRow(bsRows, "current assets") ?? findRow(bsRows, "total current assets");
-    const clRow = findRow(bsRows, "current liabilities") ?? findRow(bsRows, "total current liabilities");
+    const caRow =
+      findRow(bsRows, "current assets") ??
+      findRow(bsRows, "total current assets");
+    const clRow =
+      findRow(bsRows, "current liabilities") ??
+      findRow(bsRows, "total current liabilities");
     if (caRow && clRow) {
       const ca = last(rowNums(caRow)) as number;
       const cl = last(rowNums(clRow)) as number;
@@ -317,9 +346,14 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   const diiHolding = (last(diiNums) as number) || 0;
   const publicHolding = (last(publicNums) as number) || 0;
   // 8-quarter deltas
-  const fiiTrend8q = fiiNums.length >= 9 ? fiiHolding - fiiNums[fiiNums.length - 9] : 0;
-  const diiTrend8q = diiNums.length >= 9 ? diiHolding - diiNums[diiNums.length - 9] : 0;
-  const promoterTrend8q = promoterNums.length >= 9 ? promoterHolding - promoterNums[promoterNums.length - 9] : 0;
+  const fiiTrend8q =
+    fiiNums.length >= 9 ? fiiHolding - fiiNums[fiiNums.length - 9] : 0;
+  const diiTrend8q =
+    diiNums.length >= 9 ? diiHolding - diiNums[diiNums.length - 9] : 0;
+  const promoterTrend8q =
+    promoterNums.length >= 9
+      ? promoterHolding - promoterNums[promoterNums.length - 9]
+      : 0;
 
   // ── Quarterly rows ──
   const qRows = parseCsv(raw.quarters);
@@ -336,7 +370,9 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   const peerDataRows = peersRows.filter(
     (r, i) => i > 0 && !r[0]?.toLowerCase().includes("median"),
   );
-  const medianRow = peersRows.find((r) => r[0]?.toLowerCase().includes("median"));
+  const medianRow = peersRows.find((r) =>
+    r[0]?.toLowerCase().includes("median"),
+  );
 
   let peerPeMedian = 0;
   let peerRoceMedian = 0;
@@ -352,14 +388,24 @@ function extractMetrics(raw: RawCompanyData): Metrics {
   }
 
   // Peer arrays for percentile scoring (columns: PE=3, ROCE=10, OPM=11, QtrProfitVar=6, QtrSalesVar=8, Loan=9, DivYld=4, MarCap=2)
-  const peerPeArr = peerDataRows.map((r) => parseNum(r[3])).filter((v) => v > 0);
-  const peerRoceArr = peerDataRows.map((r) => parseNum(r[10])).filter((v) => v > 0);
-  const peerOpmArr = peerDataRows.map((r) => parseNum(r[11])).filter((v) => v > 0);
+  const peerPeArr = peerDataRows
+    .map((r) => parseNum(r[3]))
+    .filter((v) => v > 0);
+  const peerRoceArr = peerDataRows
+    .map((r) => parseNum(r[10]))
+    .filter((v) => v > 0);
+  const peerOpmArr = peerDataRows
+    .map((r) => parseNum(r[11]))
+    .filter((v) => v > 0);
   const peerQtrProfitGrowthArr = peerDataRows.map((r) => parseNum(r[6]));
   const peerQtrSalesGrowthArr = peerDataRows.map((r) => parseNum(r[8]));
-  const peerMcapArr = peerDataRows.map((r) => parseNum(r[2])).filter((v) => v > 0);
+  const peerMcapArr = peerDataRows
+    .map((r) => parseNum(r[2]))
+    .filter((v) => v > 0);
   const peerLoanArr = peerDataRows.map((r) => parseNum(r[9]));
-  const peerDivYieldArr = peerDataRows.map((r) => parseNum(r[4])).filter((v) => v >= 0);
+  const peerDivYieldArr = peerDataRows
+    .map((r) => parseNum(r[4]))
+    .filter((v) => v >= 0);
   // Debt/Mcap ratio per peer
   const peerDebtMcapArr = peerDataRows.map((r) => {
     const mcap = parseNum(r[2]);
@@ -390,7 +436,11 @@ function extractMetrics(raw: RawCompanyData): Metrics {
     const v = parsePercent(sg["10 Years"] ?? sg["10 Yrs"] ?? "");
     if (v) return v;
     if (annualSales.length >= 11) {
-      return cagr(annualSales[annualSales.length - 11], last(annualSales) as number, 10);
+      return cagr(
+        annualSales[annualSales.length - 11],
+        last(annualSales) as number,
+        10,
+      );
     }
     return 0;
   })();
@@ -398,19 +448,30 @@ function extractMetrics(raw: RawCompanyData): Metrics {
     const v = parsePercent(pg["10 Years"] ?? pg["10 Yrs"] ?? "");
     if (v) return v;
     if (annualNetProfit.length >= 11) {
-      return cagr(Math.abs(annualNetProfit[annualNetProfit.length - 11]), Math.abs(last(annualNetProfit) as number), 10);
+      return cagr(
+        Math.abs(annualNetProfit[annualNetProfit.length - 11]),
+        Math.abs(last(annualNetProfit) as number),
+        10,
+      );
     }
     return 0;
   })();
 
   // ── Industry classification ──
-  const fullText = (raw.about + raw.prosCons.pros.join(" ") + raw.prosCons.cons.join(" ")).toLowerCase();
+  const fullText = (
+    raw.about +
+    raw.prosCons.pros.join(" ") +
+    raw.prosCons.cons.join(" ")
+  ).toLowerCase();
   let industry = "general";
   if (/(tobacco|cigarette)/i.test(fullText)) industry = "tobacco";
-  else if (/(bank|nbfc|insurance|lending)/i.test(fullText)) industry = "financial";
+  else if (/(bank|nbfc|insurance|lending)/i.test(fullText))
+    industry = "financial";
   else if (/(pharma|pharmaceutical)/i.test(fullText)) industry = "pharma";
-  else if (/(software|it services|technology)/i.test(fullText)) industry = "technology";
-  else if (/(oil|petroleum|refin|exploration)/i.test(fullText)) industry = "energy";
+  else if (/(software|it services|technology)/i.test(fullText))
+    industry = "technology";
+  else if (/(oil|petroleum|refin|exploration)/i.test(fullText))
+    industry = "energy";
 
   return {
     pe: parseNum(r["Stock P/E"]),
@@ -473,7 +534,12 @@ function extractMetrics(raw: RawCompanyData): Metrics {
     fiiTrend8q,
     diiTrend8q,
     promoterTrend8q,
-    shareholdingHistory: { promoter: promoterNums, fii: fiiNums, dii: diiNums, public: publicNums },
+    shareholdingHistory: {
+      promoter: promoterNums,
+      fii: fiiNums,
+      dii: diiNums,
+      public: publicNums,
+    },
     qtrlySales,
     qtrlyOpm,
     qtrlyNetProfit,
@@ -533,7 +599,8 @@ function toFactorRow(
 
 function scoreQuality(m: Metrics, opts: ScoreOptions) {
   const assumptions: string[] = [];
-  const opmSectorMedian = opts.sectorOpmMedian ?? getSectorOpmPrior(opts.sectorSlug ?? "_default");
+  const opmSectorMedian =
+    opts.sectorOpmMedian ?? getSectorOpmPrior(opts.sectorSlug ?? "_default");
   const opmSource = opts.sectorOpmMedian ? "live" : "prior";
 
   // ROCE consistency: mean × (1 − cv) mapped via logistic
@@ -548,7 +615,10 @@ function scoreQuality(m: Metrics, opts: ScoreOptions) {
 
   // Sales CV (for gross profitability proxy)
   const salesCv = m.annualSales.length >= 5 ? cv(m.annualSales.slice(-5)) : 0.5;
-  const grossProxy = salesCv > 0 ? ((last(m.annualOpm) as number) || 0) / (salesCv * 100 + 1) : 0;
+  const grossProxy =
+    salesCv > 0
+      ? ((last(m.annualOpm) as number) || 0) / (salesCv * 100 + 1)
+      : 0;
 
   // Capex / Depreciation 5yr avg
   let capexDepRatio = 1; // default = replacing assets
@@ -557,7 +627,7 @@ function scoreQuality(m: Metrics, opts: ScoreOptions) {
     const dep5 = mean(m.annualDepreciation.slice(-5).filter((v) => v > 0));
     if (dep5 > 0) capexDepRatio = capex5 / dep5;
   } else {
-    assumptions.push("Capex/Depreciation skipped — <3 years of data");
+    assumptions.push("Capex/Depreciation skipped - <3 years of data");
   }
 
   const items = [
@@ -566,49 +636,55 @@ function scoreQuality(m: Metrics, opts: ScoreOptions) {
       logistic(m.roce, 18, 8.8),
       5,
       `ROCE ${m.roce.toFixed(1)}%`,
-      "logistic(x0=18%, hw=8.8pp) — midpoint at 18%; full score at ~27%; near-zero at 9%",
+      "logistic(x0=18%, hw=8.8pp) - midpoint at 18%; full score at ~27%; near-zero at 9%",
     ),
     makeItem(
       "ROCE 5yr consistency",
       logistic(roceConsistencyVal, 16, 8),
       2.5,
       `Adj. ROCE ${roceConsistencyVal.toFixed(1)}% (mean × (1−CV))`,
-      "Penalises cyclical ROCE swings — logistic(x0=16, hw=8) on mean×(1−CV)",
+      "Penalises cyclical ROCE swings - logistic(x0=16, hw=8) on mean×(1−CV)",
     ),
     makeItem(
       "ROE (latest)",
       logistic(m.roe, 18, 11),
       3.5,
       `ROE ${m.roe.toFixed(1)}%`,
-      "logistic(x0=18%, hw=11pp) — wider band as ROE is noisier than ROCE",
+      "logistic(x0=18%, hw=11pp) - wider band as ROE is noisier than ROCE",
     ),
     makeItem(
       "OPM vs Sector Median",
-      logistic(m.annualOpm.length ? (last(m.annualOpm) as number) - opmSectorMedian : 0, 0, 6),
+      logistic(
+        m.annualOpm.length
+          ? (last(m.annualOpm) as number) - opmSectorMedian
+          : 0,
+        0,
+        6,
+      ),
       3,
-      `OPM ${(last(m.annualOpm) as number || 0).toFixed(1)}% vs ${opmSectorMedian.toFixed(1)}% sector (${opmSource})`,
-      "Relative factor — logistic(Δ vs sector median, x0=0, hw=6pp). Scored vs sector prior when live peers <8.",
+      `OPM ${((last(m.annualOpm) as number) || 0).toFixed(1)}% vs ${opmSectorMedian.toFixed(1)}% sector (${opmSource})`,
+      "Relative factor - logistic(Δ vs sector median, x0=0, hw=6pp). Scored vs sector prior when live peers <8.",
     ),
     makeItem(
       "OPM Trend (3yr slope)",
       logistic(opmSlope, 0, 1.1),
       2,
       `OPM slope ${opmSlope >= 0 ? "+" : ""}${opmSlope.toFixed(2)}pp/yr`,
-      "OLS slope of last 3 annual OPM% values — logistic(x0=0, hw=1.1pp/yr)",
+      "OLS slope of last 3 annual OPM% values - logistic(x0=0, hw=1.1pp/yr)",
     ),
     makeItem(
       "Capex / Depreciation",
       band(capexDepRatio, 0.5, 1.0, 2.5, 4.0),
       1.5,
       `Capex/Dep ${capexDepRatio.toFixed(2)}x (5yr avg)`,
-      "Goldilocks: band(0.5, 1.0, 2.5, 4.0) — 1.0–2.5x is reinvesting for growth without over-spending",
+      "Goldilocks: band(0.5, 1.0, 2.5, 4.0) - 1.0–2.5x is reinvesting for growth without over-spending",
     ),
     makeItem(
       "Margin Stability",
       linUp(grossProxy, 0, 30),
       0.5,
       `OPM / sales_volatility proxy = ${grossProxy.toFixed(1)}`,
-      "Rewards stable margins on stable revenue — penalises commodity-like earnings volatility",
+      "Rewards stable margins on stable revenue - penalises commodity-like earnings volatility",
     ),
   ];
 
@@ -621,11 +697,16 @@ function scoreGrowth(m: Metrics) {
   const assumptions: string[] = [];
 
   // EPS CAGR 5yr from series
-  const epsCagr5 = m.annualEps.length >= 6
-    ? cagr(Math.abs(m.annualEps[m.annualEps.length - 6]), Math.abs((last(m.annualEps) as number) || 0.001), 5)
-    : m.profitCagr5y; // fallback
+  const epsCagr5 =
+    m.annualEps.length >= 6
+      ? cagr(
+          Math.abs(m.annualEps[m.annualEps.length - 6]),
+          Math.abs((last(m.annualEps) as number) || 0.001),
+          5,
+        )
+      : m.profitCagr5y; // fallback
 
-  // Growth durability — fraction of last 10 years with positive YoY sales growth
+  // Growth durability - fraction of last 10 years with positive YoY sales growth
   let durabilityFraction = 0.5;
   if (m.annualSales.length >= 2) {
     let positive = 0;
@@ -646,16 +727,18 @@ function scoreGrowth(m: Metrics) {
   // Earnings acceleration (C1): gated by sign of 5yr CAGR
   const accelerationScore = (() => {
     if (m.profitCagr5y <= 0) {
-      assumptions.push("Earnings acceleration gated — 5yr PAT CAGR ≤ 0");
+      assumptions.push("Earnings acceleration gated - 5yr PAT CAGR ≤ 0");
       return 0;
     }
     // PAT TTM = sum of last 4 quarters; prior = sum of 4 quarters before that
-    const patTtm = m.qtrlyNetProfit.length >= 4
-      ? m.qtrlyNetProfit.slice(-4).reduce((a, b) => a + b, 0)
-      : null;
-    const patPrior = m.qtrlyNetProfit.length >= 8
-      ? m.qtrlyNetProfit.slice(-8, -4).reduce((a, b) => a + b, 0)
-      : null;
+    const patTtm =
+      m.qtrlyNetProfit.length >= 4
+        ? m.qtrlyNetProfit.slice(-4).reduce((a, b) => a + b, 0)
+        : null;
+    const patPrior =
+      m.qtrlyNetProfit.length >= 8
+        ? m.qtrlyNetProfit.slice(-8, -4).reduce((a, b) => a + b, 0)
+        : null;
     if (!patTtm || !patPrior || patPrior <= 0) {
       assumptions.push("Earnings acceleration: insufficient quarterly data");
       return 0.5; // neutral
@@ -671,7 +754,8 @@ function scoreGrowth(m: Metrics) {
   const profW10 = has10y ? 2 : 0;
   const salesW5 = has10y ? 2 : 3;
   const profW5 = has10y ? 2 : 3;
-  if (!has10y) assumptions.push("10yr CAGR unavailable — weight redistributed to 5yr/3yr");
+  if (!has10y)
+    assumptions.push("10yr CAGR unavailable - weight redistributed to 5yr/3yr");
 
   const items = [
     makeItem(
@@ -679,21 +763,21 @@ function scoreGrowth(m: Metrics) {
       logistic(m.salesCagr10y, 10, 8),
       salesW10,
       `${m.salesCagr10y.toFixed(1)}% CAGR`,
-      "logistic(x0=10%, hw=8pp) — long-term franchise durability",
+      "logistic(x0=10%, hw=8pp) - long-term franchise durability",
     ),
     makeItem(
       "Sales CAGR 5yr",
       logistic(m.salesCagr5y, 12, 8),
       salesW5,
       `${m.salesCagr5y.toFixed(1)}% CAGR`,
-      "logistic(x0=12%, hw=8pp) — medium-term growth",
+      "logistic(x0=12%, hw=8pp) - medium-term growth",
     ),
     makeItem(
       "Sales CAGR 3yr",
       logistic(m.salesCagr3y, 15, 8),
       1,
       `${m.salesCagr3y.toFixed(1)}% CAGR`,
-      "logistic(x0=15%, hw=8pp) — recent window held to higher bar",
+      "logistic(x0=15%, hw=8pp) - recent window held to higher bar",
     ),
     makeItem(
       "PAT CAGR 10yr",
@@ -714,35 +798,35 @@ function scoreGrowth(m: Metrics) {
       logistic(m.profitCagr3y, 18, 9),
       1,
       `${m.profitCagr3y.toFixed(1)}% CAGR`,
-      "logistic(x0=18%, hw=9pp) — highest bar for recent earnings",
+      "logistic(x0=18%, hw=9pp) - highest bar for recent earnings",
     ),
     makeItem(
       "EPS CAGR 5yr",
       logistic(epsCagr5, 15, 9),
       1,
       `${epsCagr5.toFixed(1)}% CAGR`,
-      "Per-share earnings growth (dilution-aware) — logistic(x0=15%, hw=9pp)",
+      "Per-share earnings growth (dilution-aware) - logistic(x0=15%, hw=9pp)",
     ),
     makeItem(
       "Earnings Acceleration",
       accelerationScore,
       2,
       `TTM growth vs 5yr CAGR (${m.profitCagr5y.toFixed(1)}%)`,
-      "TTM PAT growth minus 5yr CAGR — logistic(x0=0, hw=10pp). Gated: no credit if 5yr CAGR ≤ 0.",
+      "TTM PAT growth minus 5yr CAGR - logistic(x0=0, hw=10pp). Gated: no credit if 5yr CAGR ≤ 0.",
     ),
     makeItem(
       "Sales–Profit Alignment",
       salesProfitAlignment,
       1,
       `PAT CAGR (${m.profitCagr5y.toFixed(1)}%) vs Sales CAGR (${m.salesCagr5y.toFixed(1)}%)`,
-      "Operating leverage check — full score if profit grows faster than sales",
+      "Operating leverage check - full score if profit grows faster than sales",
     ),
     makeItem(
       "Growth Durability",
       linUp(durabilityFraction, 0.5, 1.0),
       2,
       `${Math.round(durabilityFraction * 100)}% of years with positive YoY sales growth`,
-      "Fraction of last 10 years with positive YoY sales — linUp(0.5, 1.0). Anti-volatility.",
+      "Fraction of last 10 years with positive YoY sales - linUp(0.5, 1.0). Anti-volatility.",
     ),
   ];
 
@@ -758,12 +842,26 @@ function scoreValuation(m: Metrics, qualityScore01: number) {
   // P/E vs industry (C2: guard)
   const peVsIndustry = (() => {
     if (!m.pe || m.pe <= 0) {
-      assumptions.push("P/E non-positive — P/E vs Industry factor scored 0");
-      return makeItem("P/E vs Industry", 0, 4, "P/E unavailable", "linDown(pe/industry_pe, 0.5, 1.8)");
+      assumptions.push("P/E non-positive - P/E vs Industry factor scored 0");
+      return makeItem(
+        "P/E vs Industry",
+        0,
+        4,
+        "P/E unavailable",
+        "linDown(pe/industry_pe, 0.5, 1.8)",
+      );
     }
     if (!m.peerPeMedian || m.peerPeMedian <= 0) {
-      assumptions.push("Industry P/E unavailable — P/E vs Industry factor scored 0");
-      return makeItem("P/E vs Industry", 0, 4, "Industry P/E unavailable", "linDown(pe/industry_pe, 0.5, 1.8)");
+      assumptions.push(
+        "Industry P/E unavailable - P/E vs Industry factor scored 0",
+      );
+      return makeItem(
+        "P/E vs Industry",
+        0,
+        4,
+        "Industry P/E unavailable",
+        "linDown(pe/industry_pe, 0.5, 1.8)",
+      );
     }
     const r = m.pe / m.peerPeMedian;
     return makeItem(
@@ -771,30 +869,42 @@ function scoreValuation(m: Metrics, qualityScore01: number) {
       linDown(r, 0.5, 1.8),
       4,
       `P/E ${m.pe.toFixed(1)}x vs sector ${m.peerPeMedian.toFixed(1)}x (ratio ${r.toFixed(2)}x)`,
-      "linDown(pe/industry_pe, lo=0.5, hi=1.8) — full score at 50% of sector PE; zero at 1.8×",
+      "linDown(pe/industry_pe, lo=0.5, hi=1.8) - full score at 50% of sector PE; zero at 1.8×",
     );
   })();
 
   // P/E absolute (C2: guard)
   const peAbsolute = (() => {
     if (!m.pe || m.pe <= 0) {
-      assumptions.push("P/E non-positive — P/E Absolute scored 0");
-      return makeItem("P/E Absolute", 0, 2, "P/E unavailable", "linDown(pe, 12, 40)");
+      assumptions.push("P/E non-positive - P/E Absolute scored 0");
+      return makeItem(
+        "P/E Absolute",
+        0,
+        2,
+        "P/E unavailable",
+        "linDown(pe, 12, 40)",
+      );
     }
     return makeItem(
       "P/E Absolute",
       linDown(m.pe, 12, 40),
       2,
       `P/E ${m.pe.toFixed(1)}x`,
-      "linDown(12, 40) — full score at P/E ≤12; zero at P/E ≥40",
+      "linDown(12, 40) - full score at P/E ≤12; zero at P/E ≥40",
     );
   })();
 
   // P/B (C2: guard)
   const pbRatio = (() => {
     if (!m.bookValue || m.bookValue <= 0) {
-      assumptions.push("Book value ≤ 0 — P/B factor scored 0");
-      return makeItem("Price to Book", 0, 2, "Book value unavailable or negative", "Requires BV > 0");
+      assumptions.push("Book value ≤ 0 - P/B factor scored 0");
+      return makeItem(
+        "Price to Book",
+        0,
+        2,
+        "Book value unavailable or negative",
+        "Requires BV > 0",
+      );
     }
     const score = pbv <= 1 ? 1 : linDown(pbv, 1.0, 3.0);
     return makeItem(
@@ -809,33 +919,49 @@ function scoreValuation(m: Metrics, qualityScore01: number) {
   // PEG (C2: guard)
   const pegItem = (() => {
     if (!m.pegRatio || m.pegRatio <= 0 || m.profitCagr5y <= 0) {
-      assumptions.push("PEG invalid (growth ≤ 0 or unavailable) — PEG factor scored 0");
-      return makeItem("PEG Ratio", 0, 2, "PEG invalid — growth ≤ 0", "linDown(peg, 0.5, 2.5)");
+      assumptions.push(
+        "PEG invalid (growth ≤ 0 or unavailable) - PEG factor scored 0",
+      );
+      return makeItem(
+        "PEG Ratio",
+        0,
+        2,
+        "PEG invalid - growth ≤ 0",
+        "linDown(peg, 0.5, 2.5)",
+      );
     }
     return makeItem(
       "PEG Ratio",
       linDown(m.pegRatio, 0.5, 2.5),
       2,
       `PEG ${m.pegRatio.toFixed(2)}`,
-      "linDown(0.5, 2.5) — full score at PEG ≤0.5 (cheap growth); zero at PEG ≥2.5",
+      "linDown(0.5, 2.5) - full score at PEG ≤0.5 (cheap growth); zero at PEG ≥2.5",
     );
   })();
 
   // Graham/IV gap
   const ivGap = (() => {
     if (!m.intrinsicValue || m.intrinsicValue <= 0) {
-      assumptions.push("Intrinsic Value unavailable — IV Gap scored neutral");
-      return makeItem("Margin of Safety (IV)", 0.5, 2, "IV not available", "linUp(gap, −0.2, 0.5)");
+      assumptions.push("Intrinsic Value unavailable - IV Gap scored neutral");
+      return makeItem(
+        "Margin of Safety (IV)",
+        0.5,
+        2,
+        "IV not available",
+        "linUp(gap, −0.2, 0.5)",
+      );
     }
     const gap = (m.intrinsicValue - m.cmp) / m.intrinsicValue;
-    const ivSource = parseNum(String(m.intrinsicValue)) ? "screener" : "Graham formula";
+    const ivSource = parseNum(String(m.intrinsicValue))
+      ? "screener"
+      : "Graham formula";
     assumptions.push(`Intrinsic Value source: ${ivSource}`);
     return makeItem(
       "Margin of Safety (IV)",
       linUp(gap, -0.2, 0.5),
       2,
       `CMP ₹${m.cmp.toFixed(0)} vs IV ₹${m.intrinsicValue.toFixed(0)} (${gap >= 0 ? "+" : ""}${(gap * 100).toFixed(1)}% MoS)`,
-      "linUp(gap, lo=−0.2, hi=0.5) — 50% margin of safety = full score; overvalued = 0",
+      "linUp(gap, lo=−0.2, hi=0.5) - 50% margin of safety = full score; overvalued = 0",
     );
   })();
 
@@ -845,22 +971,29 @@ function scoreValuation(m: Metrics, qualityScore01: number) {
     logistic(m.dividendYield, 2, 1.5),
     1,
     `${m.dividendYield.toFixed(2)}% yield`,
-    "logistic(x0=2%, hw=1.5pp) — caps gracefully at ~5% to avoid yield trap",
+    "logistic(x0=2%, hw=1.5pp) - caps gracefully at ~5% to avoid yield trap",
   );
 
-  // 52w drawdown — quality-gated (C3)
+  // 52w drawdown - quality-gated (C3)
   const drawdown = (() => {
-    if (!m.high52w || !m.cmp) return makeItem("52w Drawdown", 0, 1, "Price range unavailable", "Requires 52w high");
+    if (!m.high52w || !m.cmp)
+      return makeItem(
+        "52w Drawdown",
+        0,
+        1,
+        "Price range unavailable",
+        "Requires 52w high",
+      );
     const pct = (m.high52w - m.cmp) / m.high52w;
     if (qualityScore01 < 0.6) {
       assumptions.push(
-        `Drawdown points withheld — quality score ${(qualityScore01 * 100).toFixed(0)}% < 60% (avoiding falling knife)`,
+        `Drawdown points withheld - quality score ${(qualityScore01 * 100).toFixed(0)}% < 60% (avoiding falling knife)`,
       );
       return makeItem(
         "52w Drawdown",
         0,
         1,
-        `${(pct * 100).toFixed(1)}% below 52w high — withheld (quality gate)`,
+        `${(pct * 100).toFixed(1)}% below 52w high - withheld (quality gate)`,
         "Quality-gated: only rewards 'buying quality on weakness', not falling knives",
       );
     }
@@ -869,26 +1002,37 @@ function scoreValuation(m: Metrics, qualityScore01: number) {
       linUp(pct, 0.1, 0.4),
       1,
       `${(pct * 100).toFixed(1)}% below 52w high ₹${m.high52w.toFixed(0)}`,
-      "linUp(0.10, 0.40) — 10–40% drawdown from high is an attractive entry zone",
+      "linUp(0.10, 0.40) - 10–40% drawdown from high is an attractive entry zone",
     );
   })();
 
-  return { items: [peVsIndustry, peAbsolute, pbRatio, pegItem, ivGap, divYield, drawdown], assumptions };
+  return {
+    items: [
+      peVsIndustry,
+      peAbsolute,
+      pbRatio,
+      pegItem,
+      ivGap,
+      divYield,
+      drawdown,
+    ],
+    assumptions,
+  };
 }
 
 // ─── Category 4: Balance Sheet & Solvency (12) ───────────────────────────────
 
 const SECTOR_DE_BANDS: Record<string, [number, number, number, number]> = {
-  "utilities":        [0, 0.3, 2.5, 4.5],
-  "telecom":          [0, 0.3, 2.0, 4.0],
-  "infrastructure":   [0, 0.3, 2.0, 3.5],
-  "real-estate":      [0, 0.3, 1.8, 3.5],
-  "construction-infra":[0, 0.3, 1.8, 3.5],
-  "power":            [0, 0.3, 2.0, 4.0],
+  utilities: [0, 0.3, 2.5, 4.5],
+  telecom: [0, 0.3, 2.0, 4.0],
+  infrastructure: [0, 0.3, 2.0, 3.5],
+  "real-estate": [0, 0.3, 1.8, 3.5],
+  "construction-infra": [0, 0.3, 1.8, 3.5],
+  power: [0, 0.3, 2.0, 4.0],
   "renewable-energy": [0, 0.3, 2.5, 4.5],
-  "aviation":         [0, 0.3, 2.0, 4.0],
-  "automobile":       [0, 0.2, 1.5, 3.0],
-  "_default":         [0, 0.2, 1.5, 3.0],
+  aviation: [0, 0.3, 2.0, 4.0],
+  automobile: [0, 0.2, 1.5, 3.0],
+  _default: [0, 0.2, 1.5, 3.0],
 };
 
 function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
@@ -896,31 +1040,50 @@ function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
 
   // D/E sector-aware band (C4)
   const deScore = (() => {
-    const bv = (last(m.annualReserves) as number) + (last(m.annualEquityCapital) as number);
+    const bv =
+      (last(m.annualReserves) as number) +
+      (last(m.annualEquityCapital) as number);
     if (bv <= 0) {
-      assumptions.push("Negative book value — D/E undefined, scored 0");
-      return makeItem("Debt to Equity", 0, 4, "Negative book value", "Sector-aware band");
+      assumptions.push("Negative book value - D/E undefined, scored 0");
+      return makeItem(
+        "Debt to Equity",
+        0,
+        4,
+        "Negative book value",
+        "Sector-aware band",
+      );
     }
-    const [a, b, c, d] = SECTOR_DE_BANDS[opts.sectorSlug ?? "_default"] ?? SECTOR_DE_BANDS["_default"];
-    assumptions.push(`D/E band: [${a}, ${b}, ${c}, ${d}] for sector "${opts.sectorSlug ?? "default"}"`);
+    const [a, b, c, d] =
+      SECTOR_DE_BANDS[opts.sectorSlug ?? "_default"] ??
+      SECTOR_DE_BANDS["_default"];
+    assumptions.push(
+      `D/E band: [${a}, ${b}, ${c}, ${d}] for sector "${opts.sectorSlug ?? "default"}"`,
+    );
     return makeItem(
       "Debt to Equity",
       band(m.debtEquity, a, b, c, d),
       4,
       `D/E ${m.debtEquity.toFixed(2)}x`,
-      `Sector-aware band(${a}, ${b}, ${c}, ${d}) — Goldilocks zone ${b}–${c}×`,
+      `Sector-aware band(${a}, ${b}, ${c}, ${d}) - Goldilocks zone ${b}–${c}×`,
     );
   })();
 
   // Debt trajectory 5yr
   const debtTraj5 = (() => {
-    const borrow5yAgo = m.annualBorrowings.length >= 6
-      ? m.annualBorrowings[m.annualBorrowings.length - 6]
-      : null;
+    const borrow5yAgo =
+      m.annualBorrowings.length >= 6
+        ? m.annualBorrowings[m.annualBorrowings.length - 6]
+        : null;
     const currentBorrow = last(m.annualBorrowings) as number;
     if (!borrow5yAgo || borrow5yAgo <= 0) {
       assumptions.push("Debt trajectory 5yr: insufficient data");
-      return makeItem("Debt Trend (5yr)", 0.5, 2, "Insufficient data", "linDown(current/5yAgo, 0.8, 2.0)");
+      return makeItem(
+        "Debt Trend (5yr)",
+        0.5,
+        2,
+        "Insufficient data",
+        "linDown(current/5yAgo, 0.8, 2.0)",
+      );
     }
     const ratio = currentBorrow / borrow5yAgo;
     return makeItem(
@@ -928,19 +1091,26 @@ function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
       linDown(ratio, 0.8, 2.0),
       2,
       `Debt ${ratio < 1 ? "↓" : "↑"} ${ratio.toFixed(2)}× vs 5yr ago`,
-      "linDown(0.8, 2.0) — debt shrinking scores high; doubling scores 0",
+      "linDown(0.8, 2.0) - debt shrinking scores high; doubling scores 0",
     );
   })();
 
   // Debt trajectory 10yr
   const debtTraj10 = (() => {
-    const borrow10yAgo = m.annualBorrowings.length >= 11
-      ? m.annualBorrowings[m.annualBorrowings.length - 11]
-      : null;
+    const borrow10yAgo =
+      m.annualBorrowings.length >= 11
+        ? m.annualBorrowings[m.annualBorrowings.length - 11]
+        : null;
     const currentBorrow = last(m.annualBorrowings) as number;
     if (!borrow10yAgo || borrow10yAgo <= 0) {
       assumptions.push("Debt trajectory 10yr: insufficient data");
-      return makeItem("Debt Trend (10yr)", 0.5, 1, "Insufficient data", "linDown(current/10yAgo, 0.8, 2.0)");
+      return makeItem(
+        "Debt Trend (10yr)",
+        0.5,
+        1,
+        "Insufficient data",
+        "linDown(current/10yAgo, 0.8, 2.0)",
+      );
     }
     const ratio = currentBorrow / borrow10yAgo;
     return makeItem(
@@ -957,8 +1127,12 @@ function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
     "Pledged Shares",
     linDown(m.pledgedPct, 0, 10),
     2,
-    m.pledgedPct > 0 ? `${m.pledgedPct.toFixed(1)}% pledged` : m.pledgedPct === 0 ? "No shares pledged" : "Pledge data not available",
-    "linDown(0, 10) — 0% pledged = full score; ≥10% = 0. Heavy penalty also in §5 if ≥25%.",
+    m.pledgedPct > 0
+      ? `${m.pledgedPct.toFixed(1)}% pledged`
+      : m.pledgedPct === 0
+        ? "No shares pledged"
+        : "Pledge data not available",
+    "linDown(0, 10) - 0% pledged = full score; ≥10% = 0. Heavy penalty also in §5 if ≥25%.",
   );
 
   // Debt vs market cap
@@ -968,7 +1142,7 @@ function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
     m.marketCap > 0 ? linDown(totalDebt / m.marketCap, 0.1, 0.6) : 0,
     1,
     `Debt ₹${totalDebt.toFixed(0)} Cr vs MCap ₹${m.marketCap.toFixed(0)} Cr`,
-    "linDown(debt/mcap, 0.1, 0.6) — debt >60% of market cap scores 0",
+    "linDown(debt/mcap, 0.1, 0.6) - debt >60% of market cap scores 0",
   );
 
   // Current ratio
@@ -976,23 +1150,41 @@ function scoreBalanceSheet(m: Metrics, opts: ScoreOptions) {
     "Current Ratio",
     band(m.currentRatio, 0.8, 1.5, 3.0, 5.0),
     1,
-    m.currentRatio ? `Current ratio ${m.currentRatio.toFixed(2)}` : "Current ratio unavailable",
-    "band(0.8, 1.5, 3.0, 5.0) — Goldilocks 1.5–3.0; >5 = idle capital; <0.8 = liquidity risk",
+    m.currentRatio
+      ? `Current ratio ${m.currentRatio.toFixed(2)}`
+      : "Current ratio unavailable",
+    "band(0.8, 1.5, 3.0, 5.0) - Goldilocks 1.5–3.0; >5 = idle capital; <0.8 = liquidity risk",
   );
 
   // Reserves CAGR 5yr
-  const reserves5yCagr = m.annualReserves.length >= 6
-    ? cagr(m.annualReserves[m.annualReserves.length - 6], (last(m.annualReserves) as number), 5)
-    : 0;
+  const reserves5yCagr =
+    m.annualReserves.length >= 6
+      ? cagr(
+          m.annualReserves[m.annualReserves.length - 6],
+          last(m.annualReserves) as number,
+          5,
+        )
+      : 0;
   const reservesCagr = makeItem(
     "Reserves CAGR 5yr",
     logistic(reserves5yCagr, 10, 7),
     1,
     `${reserves5yCagr.toFixed(1)}% CAGR`,
-    "logistic(x0=10%, hw=7pp) — compounding equity base",
+    "logistic(x0=10%, hw=7pp) - compounding equity base",
   );
 
-  return { items: [deScore, debtTraj5, debtTraj10, pledgeItem, debtMcap, crItem, reservesCagr], assumptions };
+  return {
+    items: [
+      deScore,
+      debtTraj5,
+      debtTraj10,
+      pledgeItem,
+      debtMcap,
+      crItem,
+      reservesCagr,
+    ],
+    assumptions,
+  };
 }
 
 // ─── Category 5: Cash Flow Quality (10) ──────────────────────────────────────
@@ -1018,20 +1210,28 @@ function scoreCashFlow(m: Metrics) {
   const fcfPositive = m.annualFcf.slice(-5).filter((v) => v > 0).length;
 
   // FCF yield
-  const fcfYield = m.marketCap > 0 && m.annualFcf.length
-    ? ((last(m.annualFcf) as number) / m.marketCap) * 100
-    : 0;
+  const fcfYield =
+    m.marketCap > 0 && m.annualFcf.length
+      ? ((last(m.annualFcf) as number) / m.marketCap) * 100
+      : 0;
 
   // Receivable days OLS slope
-  const recSlope = m.debtorDaysSeries.length >= 3 ? olsSlope(m.debtorDaysSeries.slice(-5)) : 0;
-  if (m.debtorDaysSeries.length < 3) assumptions.push("Receivable days trend: insufficient data");
+  const recSlope =
+    m.debtorDaysSeries.length >= 3 ? olsSlope(m.debtorDaysSeries.slice(-5)) : 0;
+  if (m.debtorDaysSeries.length < 3)
+    assumptions.push("Receivable days trend: insufficient data");
 
   // Inventory days OLS slope
-  const invSlope = m.inventoryDaysSeries.length >= 3 ? olsSlope(m.inventoryDaysSeries.slice(-5)) : 0;
-  if (m.inventoryDaysSeries.length < 3) assumptions.push("Inventory days trend: insufficient data");
+  const invSlope =
+    m.inventoryDaysSeries.length >= 3
+      ? olsSlope(m.inventoryDaysSeries.slice(-5))
+      : 0;
+  if (m.inventoryDaysSeries.length < 3)
+    assumptions.push("Inventory days trend: insufficient data");
 
   // CFO growth normalised slope
-  const cfoSlope = m.annualCfo.length >= 3 ? olsSlope(m.annualCfo.slice(-5)) : 0;
+  const cfoSlope =
+    m.annualCfo.length >= 3 ? olsSlope(m.annualCfo.slice(-5)) : 0;
   const cfoMean = mean(m.annualCfo.filter((v) => v > 0).slice(-5));
   const cfoNormSlope = cfoMean > 0 ? cfoSlope / cfoMean : 0;
 
@@ -1043,7 +1243,7 @@ function scoreCashFlow(m: Metrics) {
       cfoPat.n > 0
         ? `5yr avg CFO/PAT = ${cfoPat.ratio.toFixed(2)} (n=${cfoPat.n})`
         : "Insufficient data",
-      "logistic(x0=0.85, hw=0.55) — measures profit-to-cash conversion quality; <0.5 triggers penalty",
+      "logistic(x0=0.85, hw=0.55) - measures profit-to-cash conversion quality; <0.5 triggers penalty",
     ),
     makeItem(
       "FCF Positive Years",
@@ -1056,29 +1256,31 @@ function scoreCashFlow(m: Metrics) {
       "FCF Yield",
       linUp(fcfYield, 1, 7),
       2,
-      m.marketCap > 0 ? `FCF yield ${fcfYield.toFixed(2)}%` : "Market cap unavailable",
-      "linUp(1%, 7%) — 7%+ FCF yield = full score",
+      m.marketCap > 0
+        ? `FCF yield ${fcfYield.toFixed(2)}%`
+        : "Market cap unavailable",
+      "linUp(1%, 7%) - 7%+ FCF yield = full score",
     ),
     makeItem(
       "Receivable Days Trend",
       linDown(Math.max(recSlope, 0), 0, 15),
       1.5,
       `Debtor days slope: ${recSlope.toFixed(1)} days/yr`,
-      "linDown(slope, 0, 15) — stretching >15 days/yr = 0 score. Deteriorating working capital.",
+      "linDown(slope, 0, 15) - stretching >15 days/yr = 0 score. Deteriorating working capital.",
     ),
     makeItem(
       "Inventory Days Trend",
       linDown(Math.max(invSlope, 0), 0, 20),
       1,
       `Inventory days slope: ${invSlope.toFixed(1)} days/yr`,
-      "linDown(slope, 0, 20) — bloating >20 days/yr = 0 score",
+      "linDown(slope, 0, 20) - bloating >20 days/yr = 0 score",
     ),
     makeItem(
       "CFO Growth Trend",
       logistic(cfoNormSlope, 0, 0.5),
       0.5,
       `Normalised CFO slope: ${cfoNormSlope.toFixed(2)}`,
-      "OLS slope / mean CFO — logistic(x0=0, hw=0.5). Rewards steadily growing cash generation.",
+      "OLS slope / mean CFO - logistic(x0=0, hw=0.5). Rewards steadily growing cash generation.",
     ),
   ];
 
@@ -1091,40 +1293,62 @@ function scoreQuarterly(m: Metrics) {
   const assumptions: string[] = [];
 
   if (m.qtrlySales.length < 5) {
-    assumptions.push("Quarterly momentum: insufficient quarterly data (<5 quarters)");
-    return { items: [] as ReturnType<typeof makeItem>[], assumptions, quarterlyMult: 1 };
+    assumptions.push(
+      "Quarterly momentum: insufficient quarterly data (<5 quarters)",
+    );
+    return {
+      items: [] as ReturnType<typeof makeItem>[],
+      assumptions,
+      quarterlyMult: 1,
+    };
   }
 
   const n = m.qtrlySales.length;
 
   // YoY (latest vs same quarter 4 quarters ago)
-  const revYoy = m.qtrlySales[n - 5] > 0
-    ? ((m.qtrlySales[n - 1] - m.qtrlySales[n - 5]) / m.qtrlySales[n - 5]) * 100
-    : 0;
-  const revQoq = m.qtrlySales[n - 2] > 0
-    ? ((m.qtrlySales[n - 1] - m.qtrlySales[n - 2]) / m.qtrlySales[n - 2]) * 100
-    : 0;
+  const revYoy =
+    m.qtrlySales[n - 5] > 0
+      ? ((m.qtrlySales[n - 1] - m.qtrlySales[n - 5]) / m.qtrlySales[n - 5]) *
+        100
+      : 0;
+  const revQoq =
+    m.qtrlySales[n - 2] > 0
+      ? ((m.qtrlySales[n - 1] - m.qtrlySales[n - 2]) / m.qtrlySales[n - 2]) *
+        100
+      : 0;
 
-  const profYoy = m.qtrlyNetProfit.length >= 5 && m.qtrlyNetProfit[n - 5] > 0
-    ? ((m.qtrlyNetProfit[n - 1] - m.qtrlyNetProfit[n - 5]) / m.qtrlyNetProfit[n - 5]) * 100
-    : 0;
+  const profYoy =
+    m.qtrlyNetProfit.length >= 5 && m.qtrlyNetProfit[n - 5] > 0
+      ? ((m.qtrlyNetProfit[n - 1] - m.qtrlyNetProfit[n - 5]) /
+          m.qtrlyNetProfit[n - 5]) *
+        100
+      : 0;
 
-  const epsYoy = m.qtrlyEps.length >= 5 && m.qtrlyEps[n - 5] > 0
-    ? ((m.qtrlyEps[n - 1] - m.qtrlyEps[n - 5]) / m.qtrlyEps[n - 5]) * 100
-    : profYoy; // fallback
+  const epsYoy =
+    m.qtrlyEps.length >= 5 && m.qtrlyEps[n - 5] > 0
+      ? ((m.qtrlyEps[n - 1] - m.qtrlyEps[n - 5]) / m.qtrlyEps[n - 5]) * 100
+      : profYoy; // fallback
 
   // OPM YoY delta
-  const opmYoyDelta = m.qtrlyOpm.length >= 5
-    ? m.qtrlyOpm[m.qtrlyOpm.length - 1] - m.qtrlyOpm[m.qtrlyOpm.length - 5]
-    : 0;
+  const opmYoyDelta =
+    m.qtrlyOpm.length >= 5
+      ? m.qtrlyOpm[m.qtrlyOpm.length - 1] - m.qtrlyOpm[m.qtrlyOpm.length - 5]
+      : 0;
 
   // OPM 4-quarter OLS slope
-  const opmSlope4q = m.qtrlyOpm.length >= 4 ? olsSlope(m.qtrlyOpm.slice(-4)) : 0;
+  const opmSlope4q =
+    m.qtrlyOpm.length >= 4 ? olsSlope(m.qtrlyOpm.slice(-4)) : 0;
 
   // PAT 2yr stacked CAGR (base-effect resilient): (latest_q / q_8_ago)^0.5 - 1
-  const pat2yCagr = m.qtrlyNetProfit.length >= 9 && m.qtrlyNetProfit[n - 9] > 0
-    ? (Math.pow(Math.abs(m.qtrlyNetProfit[n - 1]) / m.qtrlyNetProfit[n - 9], 0.5) - 1) * 100
-    : profYoy * 0.5; // rough fallback
+  const pat2yCagr =
+    m.qtrlyNetProfit.length >= 9 && m.qtrlyNetProfit[n - 9] > 0
+      ? (Math.pow(
+          Math.abs(m.qtrlyNetProfit[n - 1]) / m.qtrlyNetProfit[n - 9],
+          0.5,
+        ) -
+          1) *
+        100
+      : profYoy * 0.5; // rough fallback
 
   // Other-income share of PBT (positive-only factor, §3.6)
   const latestPbt = m.qtrlyPbt.length ? m.qtrlyPbt[m.qtrlyPbt.length - 1] : 0;
@@ -1141,21 +1365,69 @@ function scoreQuarterly(m: Metrics) {
   }
 
   const items = [
-    makeItem("Revenue YoY", logistic(revYoy, 10, 10), 1.5, `${revYoy.toFixed(1)}% YoY`, "logistic(x0=10%, hw=10pp)"),
-    makeItem("Revenue QoQ", logistic(revQoq, 0, 5), 0.5, `${revQoq.toFixed(1)}% QoQ`, "logistic(x0=0, hw=5pp)"),
-    makeItem("Net Profit YoY", logistic(profYoy, 10, 10), 1.5, `${profYoy.toFixed(1)}% YoY`, "logistic(x0=10%, hw=10pp)"),
-    makeItem("PAT 2yr Stacked CAGR", logistic(pat2yCagr, 10, 12), 1, `${pat2yCagr.toFixed(1)}% 2yr CAGR`, "logistic(x0=10%, hw=12pp) — wider hw for base-effect resilience"),
-    makeItem("EPS YoY", logistic(epsYoy, 10, 10), 1, `${epsYoy.toFixed(1)}% YoY`, "logistic(x0=10%, hw=10pp)"),
-    makeItem("OPM YoY Δ", logistic(opmYoyDelta, 0, 2.7), 1.5, `${opmYoyDelta >= 0 ? "+" : ""}${opmYoyDelta.toFixed(1)}pp YoY`, "logistic(x0=0, hw=2.7pp) — margin expansion above peer growth"),
-    makeItem("OPM Trend (4Q OLS)", logistic(opmSlope4q, 0, 1.1), 1, `OLS slope ${opmSlope4q.toFixed(2)}pp/qtr`, "logistic(x0=0, hw=1.1) on 4-quarter OPM trend"),
+    makeItem(
+      "Revenue YoY",
+      logistic(revYoy, 10, 10),
+      1.5,
+      `${revYoy.toFixed(1)}% YoY`,
+      "logistic(x0=10%, hw=10pp)",
+    ),
+    makeItem(
+      "Revenue QoQ",
+      logistic(revQoq, 0, 5),
+      0.5,
+      `${revQoq.toFixed(1)}% QoQ`,
+      "logistic(x0=0, hw=5pp)",
+    ),
+    makeItem(
+      "Net Profit YoY",
+      logistic(profYoy, 10, 10),
+      1.5,
+      `${profYoy.toFixed(1)}% YoY`,
+      "logistic(x0=10%, hw=10pp)",
+    ),
+    makeItem(
+      "PAT 2yr Stacked CAGR",
+      logistic(pat2yCagr, 10, 12),
+      1,
+      `${pat2yCagr.toFixed(1)}% 2yr CAGR`,
+      "logistic(x0=10%, hw=12pp) - wider hw for base-effect resilience",
+    ),
+    makeItem(
+      "EPS YoY",
+      logistic(epsYoy, 10, 10),
+      1,
+      `${epsYoy.toFixed(1)}% YoY`,
+      "logistic(x0=10%, hw=10pp)",
+    ),
+    makeItem(
+      "OPM YoY Δ",
+      logistic(opmYoyDelta, 0, 2.7),
+      1.5,
+      `${opmYoyDelta >= 0 ? "+" : ""}${opmYoyDelta.toFixed(1)}pp YoY`,
+      "logistic(x0=0, hw=2.7pp) - margin expansion above peer growth",
+    ),
+    makeItem(
+      "OPM Trend (4Q OLS)",
+      logistic(opmSlope4q, 0, 1.1),
+      1,
+      `OLS slope ${opmSlope4q.toFixed(2)}pp/qtr`,
+      "logistic(x0=0, hw=1.1) on 4-quarter OPM trend",
+    ),
     makeItem(
       "Other-Income Quality",
-      linDown(otherIncomeShare, 0.10, 0.30),
+      linDown(otherIncomeShare, 0.1, 0.3),
       1,
       `Other income ${(otherIncomeShare * 100).toFixed(1)}% of PBT`,
-      "linDown(0.10, 0.30) — score 1 if <10%; 0 if >30%. Tail-risk penalty for >30% in §5.",
+      "linDown(0.10, 0.30) - score 1 if <10%; 0 if >30%. Tail-risk penalty for >30% in §5.",
     ),
-    makeItem("Profit Growth Streak", linUp(streak, 0, 4), 1, `${streak} consecutive YoY profit-growth quarters`, "Consecutive quarters of YoY PAT growth — capped at 4 to avoid base-effect gaming"),
+    makeItem(
+      "Profit Growth Streak",
+      linUp(streak, 0, 4),
+      1,
+      `${streak} consecutive YoY profit-growth quarters`,
+      "Consecutive quarters of YoY PAT growth - capped at 4 to avoid base-effect gaming",
+    ),
   ];
 
   return { items, assumptions };
@@ -1173,21 +1445,21 @@ function scoreShareholding(m: Metrics) {
       linUp(m.promoterHolding, 25, 60),
       2,
       `${m.promoterHolding.toFixed(1)}%`,
-      "linUp(25%, 60%) — full score at ≥60%; zero if <25%",
+      "linUp(25%, 60%) - full score at ≥60%; zero if <25%",
     ),
     makeItem(
       "Promoter Trend (8Q)",
       logistic(m.promoterTrend8q, 0, 2),
       3,
       `${m.promoterTrend8q >= 0 ? "+" : ""}${m.promoterTrend8q.toFixed(2)}pp over 8 quarters`,
-      "logistic(x0=0, hw=2pp) — direction of promoter stake matters most. Exit penalty in §5.",
+      "logistic(x0=0, hw=2pp) - direction of promoter stake matters most. Exit penalty in §5.",
     ),
     makeItem(
       "FII Trend (8Q)",
       logistic(m.fiiTrend8q, 0, 3),
       1.5,
       `FII ${m.fiiTrend8q >= 0 ? "+" : ""}${m.fiiTrend8q.toFixed(2)}pp over 8Q`,
-      "logistic(x0=0, hw=3pp) — wider band as FII flows are more volatile",
+      "logistic(x0=0, hw=3pp) - wider band as FII flows are more volatile",
     ),
     makeItem(
       "DII Trend (8Q)",
@@ -1200,8 +1472,10 @@ function scoreShareholding(m: Metrics) {
       "FII + DII Joint Buying",
       jointBuying,
       0.5,
-      jointBuying ? "Both FII and DII added stake over 8Q" : "No joint institutional buying",
-      "Binary: +0.5 if both FII and DII trends positive — smart-money confirmation",
+      jointBuying
+        ? "Both FII and DII added stake over 8Q"
+        : "No joint institutional buying",
+      "Binary: +0.5 if both FII and DII trends positive - smart-money confirmation",
     ),
   ];
 
@@ -1215,36 +1489,121 @@ function scorePeers(m: Metrics) {
 
   const totalPeers = m.peerPeArr.length;
   if (totalPeers < 3) {
-    assumptions.push(`Peer composite skipped — only ${totalPeers} peers (min 3 required)`);
-    return { items: [] as ReturnType<typeof makeItem>[], peerPercentile: undefined, assumptions };
+    assumptions.push(
+      `Peer composite skipped - only ${totalPeers} peers (min 3 required)`,
+    );
+    return {
+      items: [] as ReturnType<typeof makeItem>[],
+      peerPercentile: undefined,
+      assumptions,
+    };
   }
 
   // Add self to peer arrays so rank is computed relative to full peer set
-  const peScores    = percentileRank(m.pe, [...m.peerPeArr, m.pe], false);   // lower PE = better
-  const roceScores  = percentileRank(m.roce, [...m.peerRoceArr, m.roce], true);
-  const opmScores   = percentileRank(last(m.annualOpm) as number, [...m.peerOpmArr, last(m.annualOpm) as number], true);
-  const profGScores = percentileRank(m.profitCagrTtm, [...m.peerQtrProfitGrowthArr, m.profitCagrTtm], true);
-  const salesGScores = percentileRank(m.salesCagrTtm, [...m.peerQtrSalesGrowthArr, m.salesCagrTtm], true);
-  const myDebtMcap  = m.marketCap > 0 ? (last(m.annualBorrowings) as number) / m.marketCap : 0;
-  const debtScores  = percentileRank(myDebtMcap, [...m.peerDebtMcapArr, myDebtMcap], false); // lower debt = better
-  const divScores   = percentileRank(m.dividendYield, [...m.peerDivYieldArr, m.dividendYield], true);
-  const mcapScore   = percentileRank(Math.log1p(m.marketCap), m.peerMcapArr.map((v) => Math.log1p(v)), true);
+  const peScores = percentileRank(m.pe, [...m.peerPeArr, m.pe], false); // lower PE = better
+  const roceScores = percentileRank(m.roce, [...m.peerRoceArr, m.roce], true);
+  const opmScores = percentileRank(
+    last(m.annualOpm) as number,
+    [...m.peerOpmArr, last(m.annualOpm) as number],
+    true,
+  );
+  const profGScores = percentileRank(
+    m.profitCagrTtm,
+    [...m.peerQtrProfitGrowthArr, m.profitCagrTtm],
+    true,
+  );
+  const salesGScores = percentileRank(
+    m.salesCagrTtm,
+    [...m.peerQtrSalesGrowthArr, m.salesCagrTtm],
+    true,
+  );
+  const myDebtMcap =
+    m.marketCap > 0 ? (last(m.annualBorrowings) as number) / m.marketCap : 0;
+  const debtScores = percentileRank(
+    myDebtMcap,
+    [...m.peerDebtMcapArr, myDebtMcap],
+    false,
+  ); // lower debt = better
+  const divScores = percentileRank(
+    m.dividendYield,
+    [...m.peerDivYieldArr, m.dividendYield],
+    true,
+  );
+  const mcapScore = percentileRank(
+    Math.log1p(m.marketCap),
+    m.peerMcapArr.map((v) => Math.log1p(v)),
+    true,
+  );
 
   // Composite peer percentile (weighted)
   const weightedPercentile =
-    (peScores * 1.0 + roceScores * 1.0 + opmScores * 1.0 + profGScores * 1.0 +
-     salesGScores * 0.5 + debtScores * 0.5 + divScores * 0.5 + mcapScore * 0.5) /
+    (peScores * 1.0 +
+      roceScores * 1.0 +
+      opmScores * 1.0 +
+      profGScores * 1.0 +
+      salesGScores * 0.5 +
+      debtScores * 0.5 +
+      divScores * 0.5 +
+      mcapScore * 0.5) /
     (1 + 1 + 1 + 1 + 0.5 + 0.5 + 0.5 + 0.5);
 
   const items = [
-    makeItem("Peer: P/E Rank",       peScores,    1.0, `${(peScores * 100).toFixed(0)}th percentile (lower PE better)`, "Percentile rank within peer set — lower P/E = higher rank"),
-    makeItem("Peer: ROCE Rank",      roceScores,  1.0, `${(roceScores * 100).toFixed(0)}th percentile`, "Higher ROCE = better rank"),
-    makeItem("Peer: OPM Rank",       opmScores,   1.0, `${(opmScores * 100).toFixed(0)}th percentile`, "Higher OPM = better rank"),
-    makeItem("Peer: Profit Growth",  profGScores, 1.0, `${(profGScores * 100).toFixed(0)}th percentile`, "Higher quarterly profit growth = better rank"),
-    makeItem("Peer: Sales Growth",   salesGScores,0.5, `${(salesGScores * 100).toFixed(0)}th percentile`, "Higher quarterly sales growth = better rank"),
-    makeItem("Peer: Debt Efficiency",debtScores,  0.5, `${(debtScores * 100).toFixed(0)}th percentile (lower debt/mcap better)`, "Lower debt/mcap = better rank"),
-    makeItem("Peer: Dividend Yield", divScores,   0.5, `${(divScores * 100).toFixed(0)}th percentile`, "Higher dividend yield = better rank"),
-    makeItem("Peer: Market Cap Size",mcapScore,   0.5, `${(mcapScore * 100).toFixed(0)}th percentile (log-scaled)`, "Log-scaled market cap — larger = less illiquidity risk"),
+    makeItem(
+      "Peer: P/E Rank",
+      peScores,
+      1.0,
+      `${(peScores * 100).toFixed(0)}th percentile (lower PE better)`,
+      "Percentile rank within peer set - lower P/E = higher rank",
+    ),
+    makeItem(
+      "Peer: ROCE Rank",
+      roceScores,
+      1.0,
+      `${(roceScores * 100).toFixed(0)}th percentile`,
+      "Higher ROCE = better rank",
+    ),
+    makeItem(
+      "Peer: OPM Rank",
+      opmScores,
+      1.0,
+      `${(opmScores * 100).toFixed(0)}th percentile`,
+      "Higher OPM = better rank",
+    ),
+    makeItem(
+      "Peer: Profit Growth",
+      profGScores,
+      1.0,
+      `${(profGScores * 100).toFixed(0)}th percentile`,
+      "Higher quarterly profit growth = better rank",
+    ),
+    makeItem(
+      "Peer: Sales Growth",
+      salesGScores,
+      0.5,
+      `${(salesGScores * 100).toFixed(0)}th percentile`,
+      "Higher quarterly sales growth = better rank",
+    ),
+    makeItem(
+      "Peer: Debt Efficiency",
+      debtScores,
+      0.5,
+      `${(debtScores * 100).toFixed(0)}th percentile (lower debt/mcap better)`,
+      "Lower debt/mcap = better rank",
+    ),
+    makeItem(
+      "Peer: Dividend Yield",
+      divScores,
+      0.5,
+      `${(divScores * 100).toFixed(0)}th percentile`,
+      "Higher dividend yield = better rank",
+    ),
+    makeItem(
+      "Peer: Market Cap Size",
+      mcapScore,
+      0.5,
+      `${(mcapScore * 100).toFixed(0)}th percentile (log-scaled)`,
+      "Log-scaled market cap - larger = less illiquidity risk",
+    ),
   ];
 
   return { items, peerPercentile: weightedPercentile, assumptions };
@@ -1263,17 +1622,16 @@ function classifyRegime(
 ): { regime: Regime; points: number } {
   // Signal 1: DMA stack
   const stack =
-    cmp > dma50 && dma50 > dma200 ? 1 :
-    cmp < dma50 && dma50 < dma200 ? -1 : 0;
+    cmp > dma50 && dma50 > dma200 ? 1 : cmp < dma50 && dma50 < dma200 ? -1 : 0;
 
   // Signal 2: 52-week position
   const pos = high52 > low52 ? (cmp - low52) / (high52 - low52) : 0.5;
   const posSignal = pos > 0.66 ? 1 : pos < 0.33 ? -1 : 0;
 
   const total = stack + posSignal;
-  if (total >= 2)  return { regime: "uptrend",   points: 4 };
-  if (total === 1) return { regime: "uptrend",   points: 3 };
-  if (total === 0) return { regime: "sideways",  points: 2 };
+  if (total >= 2) return { regime: "uptrend", points: 4 };
+  if (total === 1) return { regime: "uptrend", points: 3 };
+  if (total === 0) return { regime: "sideways", points: 2 };
   if (total === -1) return { regime: "downtrend", points: 1 };
   return { regime: "downtrend", points: 0 };
 }
@@ -1282,19 +1640,39 @@ function scoreTechnical(m: Metrics) {
   if (!m.dma50 && !m.dma200) {
     return {
       regime: "sideways" as Regime,
-      items: [makeItem("Price Regime", 0.5, 4, "DMA data unavailable — neutral", "2-signal: DMA stack + 52w position")],
+      items: [
+        makeItem(
+          "Price Regime",
+          0.5,
+          4,
+          "DMA data unavailable - neutral",
+          "2-signal: DMA stack + 52w position",
+        ),
+      ],
     };
   }
 
-  const { regime, points } = classifyRegime(m.cmp, m.dma50, m.dma200, m.low52w, m.high52w);
+  const { regime, points } = classifyRegime(
+    m.cmp,
+    m.dma50,
+    m.dma200,
+    m.low52w,
+    m.high52w,
+  );
 
   const detail = [
-    m.dma50 ? `CMP ${m.cmp > m.dma50 ? "above" : "below"} 50 DMA (₹${m.dma50.toFixed(0)})` : null,
-    m.dma200 ? `${m.cmp > m.dma200 ? "above" : "below"} 200 DMA (₹${m.dma200.toFixed(0)})` : null,
-    m.high52w && m.low52w
-      ? `at ${((( m.cmp - m.low52w) / (m.high52w - m.low52w)) * 100).toFixed(0)}% of 52w range`
+    m.dma50
+      ? `CMP ${m.cmp > m.dma50 ? "above" : "below"} 50 DMA (₹${m.dma50.toFixed(0)})`
       : null,
-  ].filter(Boolean).join("; ");
+    m.dma200
+      ? `${m.cmp > m.dma200 ? "above" : "below"} 200 DMA (₹${m.dma200.toFixed(0)})`
+      : null,
+    m.high52w && m.low52w
+      ? `at ${(((m.cmp - m.low52w) / (m.high52w - m.low52w)) * 100).toFixed(0)}% of 52w range`
+      : null,
+  ]
+    .filter(Boolean)
+    .join("; ");
 
   return {
     regime,
@@ -1303,8 +1681,8 @@ function scoreTechnical(m: Metrics) {
         "Price Regime",
         points / 4,
         4,
-        `${regime.charAt(0).toUpperCase() + regime.slice(1)} — ${detail}`,
-        "2-signal regime: DMA stack (CMP vs 50/200 DMA) + 52w position (>0.66 up; <0.33 down). Minimalist — no fitted parameters.",
+        `${regime.charAt(0).toUpperCase() + regime.slice(1)} - ${detail}`,
+        "2-signal regime: DMA stack (CMP vs 50/200 DMA) + 52w position (>0.66 up; <0.33 down). Minimalist - no fitted parameters.",
       ),
     ],
   };
@@ -1314,14 +1692,22 @@ function scoreTechnical(m: Metrics) {
 
 function scoreSize(m: Metrics) {
   const score =
-    m.marketCap > 50000 ? 1 :
-    m.marketCap > 10000 ? 0.75 :
-    m.marketCap > 1000  ? 0.5  : 0.25;
+    m.marketCap > 50000
+      ? 1
+      : m.marketCap > 10000
+        ? 0.75
+        : m.marketCap > 1000
+          ? 0.5
+          : 0.25;
 
   const tier =
-    m.marketCap > 50000 ? "Large-cap" :
-    m.marketCap > 10000 ? "Mid-cap"   :
-    m.marketCap > 1000  ? "Small-cap" : "Micro-cap";
+    m.marketCap > 50000
+      ? "Large-cap"
+      : m.marketCap > 10000
+        ? "Mid-cap"
+        : m.marketCap > 1000
+          ? "Small-cap"
+          : "Micro-cap";
 
   return {
     items: [
@@ -1329,7 +1715,7 @@ function scoreSize(m: Metrics) {
         "Market Cap Tier",
         score,
         2,
-        `${tier} — ₹${m.marketCap.toLocaleString("en-IN")} Cr`,
+        `${tier} - ₹${m.marketCap.toLocaleString("en-IN")} Cr`,
         "Investability tax: Large >₹50k Cr = 2pts; Mid = 1.5pts; Small = 1pt; Micro = 0.5pts",
       ),
     ],
@@ -1343,27 +1729,49 @@ function calcBonuses(m: Metrics): Bonus[] {
 
   const totalDebt = last(m.annualBorrowings) as number;
   if (totalDebt < m.cashEquivalents && m.cashEquivalents > 0) {
-    bonuses.push({ label: "Net Cash Company", points: 2, detail: "Total debt < cash equivalents — effectively debt-free" });
+    bonuses.push({
+      label: "Net Cash Company",
+      points: 2,
+      detail: "Total debt < cash equivalents - effectively debt-free",
+    });
   }
 
   if (m.roe5y >= 18 && m.profitCagr5y >= 15 && m.debtEquity < 0.5) {
-    bonuses.push({ label: "Compounding Machine", points: 2, detail: `5yr ROE ${m.roe5y.toFixed(1)}%, 5yr PAT CAGR ${m.profitCagr5y.toFixed(1)}%, D/E ${m.debtEquity.toFixed(2)}` });
+    bonuses.push({
+      label: "Compounding Machine",
+      points: 2,
+      detail: `5yr ROE ${m.roe5y.toFixed(1)}%, 5yr PAT CAGR ${m.profitCagr5y.toFixed(1)}%, D/E ${m.debtEquity.toFixed(2)}`,
+    });
   }
 
   if (m.dividendPayout >= 20 && m.dividendPayout <= 60 && m.dividendYield > 0) {
-    bonuses.push({ label: "Dividend Aristocrat", points: 1, detail: `${m.dividendPayout.toFixed(1)}% payout ratio — sustainable dividend track record` });
+    bonuses.push({
+      label: "Dividend Aristocrat",
+      points: 1,
+      detail: `${m.dividendPayout.toFixed(1)}% payout ratio - sustainable dividend track record`,
+    });
   }
 
   if (m.promoterTrend8q >= 1.5) {
-    bonuses.push({ label: "Promoter Buying", points: 1, detail: `Promoters added ${m.promoterTrend8q.toFixed(2)}pp stake over 8 quarters` });
+    bonuses.push({
+      label: "Promoter Buying",
+      points: 1,
+      detail: `Promoters added ${m.promoterTrend8q.toFixed(2)}pp stake over 8 quarters`,
+    });
   }
 
   const opmLast = last(m.annualOpm) as number;
-  const opmPrev3 = m.annualOpm.length >= 4 ? mean(m.annualOpm.slice(-4, -1)) : opmLast;
+  const opmPrev3 =
+    m.annualOpm.length >= 4 ? mean(m.annualOpm.slice(-4, -1)) : opmLast;
   const roceLast = m.roce;
-  const rocePrev3 = m.annualRoce.length >= 4 ? mean(m.annualRoce.slice(-4, -1)) : roceLast;
+  const rocePrev3 =
+    m.annualRoce.length >= 4 ? mean(m.annualRoce.slice(-4, -1)) : roceLast;
   if (opmLast - opmPrev3 >= 3 && roceLast - rocePrev3 >= 5) {
-    bonuses.push({ label: "Margin Expander", points: 1, detail: `OPM +${(opmLast - opmPrev3).toFixed(1)}pp and ROCE +${(roceLast - rocePrev3).toFixed(1)}pp over 3yr` });
+    bonuses.push({
+      label: "Margin Expander",
+      points: 1,
+      detail: `OPM +${(opmLast - opmPrev3).toFixed(1)}pp and ROCE +${(roceLast - rocePrev3).toFixed(1)}pp over 3yr`,
+    });
   }
 
   // Cap at +5
@@ -1381,16 +1789,28 @@ function calcPenalties(m: Metrics): Penalty[] {
   const penalties: Penalty[] = [];
 
   if (m.industry === "tobacco") {
-    penalties.push({ label: "Sin Business — Tobacco", points: -4, detail: "Industry ceiling 75 also applied; ESG exclusion risk" });
+    penalties.push({
+      label: "Sin Business - Tobacco",
+      points: -4,
+      detail: "Industry ceiling 75 also applied; ESG exclusion risk",
+    });
   }
 
   if (m.pledgedPct >= 25) {
-    penalties.push({ label: "Heavy Promoter Pledge", points: -5, detail: `${m.pledgedPct.toFixed(1)}% of promoter shares pledged — material risk on sharp drawdowns` });
+    penalties.push({
+      label: "Heavy Promoter Pledge",
+      points: -5,
+      detail: `${m.pledgedPct.toFixed(1)}% of promoter shares pledged - material risk on sharp drawdowns`,
+    });
   }
 
   // Promoter exit: 5pp+ drop over last 8 quarters (2yr)
   if (m.promoterTrend8q <= -5) {
-    penalties.push({ label: "Promoter Exit", points: -3, detail: `Promoters sold ${Math.abs(m.promoterTrend8q).toFixed(1)}pp stake in last 8 quarters` });
+    penalties.push({
+      label: "Promoter Exit",
+      points: -3,
+      detail: `Promoters sold ${Math.abs(m.promoterTrend8q).toFixed(1)}pp stake in last 8 quarters`,
+    });
   }
 
   // CFO/PAT quality failure
@@ -1401,37 +1821,65 @@ function calcPenalties(m: Metrics): Penalty[] {
   if (cfoPatPairs.length >= 3) {
     const avgRatio = mean(cfoPatPairs.map(({ cfo, pat }) => cfo / pat));
     if (avgRatio < 0.5) {
-      penalties.push({ label: "Earnings Quality Red Flag", points: -3, detail: `5yr avg CFO/PAT = ${avgRatio.toFixed(2)} — persistent accrual earnings` });
+      penalties.push({
+        label: "Earnings Quality Red Flag",
+        points: -3,
+        detail: `5yr avg CFO/PAT = ${avgRatio.toFixed(2)} - persistent accrual earnings`,
+      });
     }
   }
 
   // Other-income dependency (tail-risk gate beyond the continuous factor)
   const latestPbt = m.qtrlyPbt.length ? m.qtrlyPbt[m.qtrlyPbt.length - 1] : 0;
-  const latestOI = m.qtrlyOtherIncome.length ? m.qtrlyOtherIncome[m.qtrlyOtherIncome.length - 1] : 0;
+  const latestOI = m.qtrlyOtherIncome.length
+    ? m.qtrlyOtherIncome[m.qtrlyOtherIncome.length - 1]
+    : 0;
   if (latestPbt > 0) {
     const oiShare = latestOI / latestPbt;
-    if (oiShare > 0.50) {
-      penalties.push({ label: "Other-Income Dependency", points: -4, detail: `Other income is ${(oiShare * 100).toFixed(0)}% of PBT — core operations may be weak` });
-    } else if (oiShare > 0.30) {
-      penalties.push({ label: "Other-Income Elevated", points: -2, detail: `Other income is ${(oiShare * 100).toFixed(0)}% of PBT — monitor for sustainability` });
+    if (oiShare > 0.5) {
+      penalties.push({
+        label: "Other-Income Dependency",
+        points: -4,
+        detail: `Other income is ${(oiShare * 100).toFixed(0)}% of PBT - core operations may be weak`,
+      });
+    } else if (oiShare > 0.3) {
+      penalties.push({
+        label: "Other-Income Elevated",
+        points: -2,
+        detail: `Other income is ${(oiShare * 100).toFixed(0)}% of PBT - monitor for sustainability`,
+      });
     }
   }
 
   // Float dominated by retail public
-  if (m.publicHolding > Math.max(m.fiiHolding, m.diiHolding, m.promoterHolding)) {
-    penalties.push({ label: "Float Dominated by Retail", points: -1.5, detail: `Public holds ${m.publicHolding.toFixed(1)}% — largest single bloc; institutional conviction low` });
+  if (
+    m.publicHolding > Math.max(m.fiiHolding, m.diiHolding, m.promoterHolding)
+  ) {
+    penalties.push({
+      label: "Float Dominated by Retail",
+      points: -1.5,
+      detail: `Public holds ${m.publicHolding.toFixed(1)}% - largest single bloc; institutional conviction low`,
+    });
   }
 
   // Illiquid free float
   const freeFloat = 1 - m.promoterHolding / 100;
   if (freeFloat < 0.15 && m.marketCap < 5000) {
-    penalties.push({ label: "Illiquid Free Float", points: -2, detail: `Free float ${(freeFloat * 100).toFixed(1)}% with mcap <₹5,000 Cr — thin liquidity` });
+    penalties.push({
+      label: "Illiquid Free Float",
+      points: -2,
+      detail: `Free float ${(freeFloat * 100).toFixed(1)}% with mcap <₹5,000 Cr - thin liquidity`,
+    });
   }
 
   // Persistent FCF deficit
   const fcfNegCount = m.annualFcf.slice(-5).filter((v) => v < 0).length;
   if (fcfNegCount >= 4) {
-    penalties.push({ label: "Persistent FCF Deficit", points: -2, detail: `FCF negative in ${fcfNegCount}/5 years — capital-hungry business` });
+    penalties.push({
+      label: "Persistent FCF Deficit",
+      points: -2,
+      detail: `FCF negative in ${fcfNegCount}/5 years - capital-hungry business`,
+    });
   }
 
   // Cap at -14
@@ -1456,7 +1904,11 @@ export function scoreCompany(
   const qualResult = scoreQuality(m, opts);
   allAssumptions.push(...qualResult.assumptions);
   const qualItems = qualResult.items;
-  const qualTotal = clamp(qualItems.reduce((s, i) => s + i.points, 0), 0, 18);
+  const qualTotal = clamp(
+    qualItems.reduce((s, i) => s + i.points, 0),
+    0,
+    18,
+  );
   const qualScore01 = qualTotal / 18; // for drawdown quality gate
 
   const growResult = scoreGrowth(m);
@@ -1508,41 +1960,67 @@ export function scoreCompany(
     };
   }
 
-  const CATEGORIES: { name: string; max: number; result: ReturnType<typeof clampCat> }[] = [
-    { name: "Quality of Business",  max: 18, result: clampCat(qualItems, 18, annualMult) },
-    { name: "Growth",               max: 16, result: clampCat(growResult.items, 16) },
-    { name: "Valuation",            max: 14, result: clampCat(valResult.items, 14) },
-    { name: "Balance Sheet",        max: 12, result: clampCat(bsResult.items, 12) },
-    { name: "Cash Flow",            max: 10, result: clampCat(cfResult.items, 10) },
-    { name: "Quarterly Momentum",   max: 10, result: clampCat(qResult.items, 10, quarterlyMult) },
-    { name: "Shareholding",         max:  8, result: clampCat(shResult.items, 8) },
-    { name: "Peer Composite",       max:  6, result: clampCat(peerResult.items, 6) },
-    { name: "Price & Technical",    max:  4, result: clampCat(techResult.items, 4) },
-    { name: "Size & Liquidity",     max:  2, result: clampCat(sizeResult.items, 2) },
+  const CATEGORIES: {
+    name: string;
+    max: number;
+    result: ReturnType<typeof clampCat>;
+  }[] = [
+    {
+      name: "Quality of Business",
+      max: 18,
+      result: clampCat(qualItems, 18, annualMult),
+    },
+    { name: "Growth", max: 16, result: clampCat(growResult.items, 16) },
+    { name: "Valuation", max: 14, result: clampCat(valResult.items, 14) },
+    { name: "Balance Sheet", max: 12, result: clampCat(bsResult.items, 12) },
+    { name: "Cash Flow", max: 10, result: clampCat(cfResult.items, 10) },
+    {
+      name: "Quarterly Momentum",
+      max: 10,
+      result: clampCat(qResult.items, 10, quarterlyMult),
+    },
+    { name: "Shareholding", max: 8, result: clampCat(shResult.items, 8) },
+    { name: "Peer Composite", max: 6, result: clampCat(peerResult.items, 6) },
+    {
+      name: "Price & Technical",
+      max: 4,
+      result: clampCat(techResult.items, 4),
+    },
+    { name: "Size & Liquidity", max: 2, result: clampCat(sizeResult.items, 2) },
   ];
 
-  const categories: CategoryScore[] = CATEGORIES.map(({ name, max, result }) => ({
-    name,
-    max,
-    earned: result.earned,
-    items: result.items,
-  }));
+  const categories: CategoryScore[] = CATEGORIES.map(
+    ({ name, max, result }) => ({
+      name,
+      max,
+      earned: result.earned,
+      items: result.items,
+    }),
+  );
 
   // ── If peer composite has insufficient peers, redistribute its weight ────
   if (peerResult.items.length === 0) {
-    allAssumptions.push("Peer composite (6pts) redistributed — insufficient peer data");
+    allAssumptions.push(
+      "Peer composite (6pts) redistributed - insufficient peer data",
+    );
     // Add missing 6 to quality, growth, valuation, balance sheet proportionally
     const targets = [0, 1, 2, 3]; // indices
     const dist = [2.5, 1.5, 1, 1]; // redistribution
     targets.forEach((ti, i) => {
       categories[ti].earned = parseFloat(
-        clamp(categories[ti].earned + dist[i], 0, CATEGORIES[ti].max).toFixed(1),
+        clamp(categories[ti].earned + dist[i], 0, CATEGORIES[ti].max).toFixed(
+          1,
+        ),
       );
     });
   }
 
   const rawTotal = parseFloat(
-    clamp(categories.reduce((s, c) => s + c.earned, 0), 0, 100).toFixed(1),
+    clamp(
+      categories.reduce((s, c) => s + c.earned, 0),
+      0,
+      100,
+    ).toFixed(1),
   );
 
   // ── Bonuses & penalties ───────────────────────────────────────────────────
@@ -1562,11 +2040,15 @@ export function scoreCompany(
 
   // ── Classification ────────────────────────────────────────────────────────
   const classification =
-    finalScore < 40 ? "Avoid"
-    : finalScore < 55 ? "Watchlist"
-    : finalScore < 70 ? "Accumulate"
-    : finalScore < 85 ? "Invest-grade"
-    : "Exceptional";
+    finalScore < 40
+      ? "Avoid"
+      : finalScore < 55
+        ? "Watchlist"
+        : finalScore < 70
+          ? "Accumulate"
+          : finalScore < 85
+            ? "Invest-grade"
+            : "Exceptional";
 
   // ── Strengths / weaknesses ────────────────────────────────────────────────
   const allItems = CATEGORIES.flatMap(({ name, result }) =>
@@ -1582,39 +2064,45 @@ export function scoreCompany(
     result.items.map((i) => ({
       label: i.label,
       category: name,
-      missed: (CATEGORIES.find((c) => c.name === name)?.max ?? 0) > 0
-        ? (i as ScoreItem & { weight?: number }).weight ?? 1
-        : 0,
+      missed:
+        (CATEGORIES.find((c) => c.name === name)?.max ?? 0) > 0
+          ? ((i as ScoreItem & { weight?: number }).weight ?? 1)
+          : 0,
       points: i.points,
     })),
   )
     .filter((i) => i.missed > 0)
     .sort((a, b) => b.missed - b.points - (a.missed - a.points))
     .slice(0, 3)
-    .map((i) => ({ label: i.label, category: i.category, points: -(i.missed - i.points) }));
+    .map((i) => ({
+      label: i.label,
+      category: i.category,
+      points: -(i.missed - i.points),
+    }));
 
   // ── Factor breakdown (for paper / UI detail tab) ──────────────────────────
-  const allTypedItems: (ReturnType<typeof makeItem> & { category: string })[] = [
-    ...qualItems.map((i) => ({ ...i, category: "Quality of Business" })),
-    ...growResult.items.map((i) => ({ ...i, category: "Growth" })),
-    ...valResult.items.map((i) => ({ ...i, category: "Valuation" })),
-    ...bsResult.items.map((i) => ({ ...i, category: "Balance Sheet" })),
-    ...cfResult.items.map((i) => ({ ...i, category: "Cash Flow" })),
-    ...qResult.items.map((i) => ({ ...i, category: "Quarterly Momentum" })),
-    ...shResult.items.map((i) => ({ ...i, category: "Shareholding" })),
-    ...peerResult.items.map((i) => ({ ...i, category: "Peer Composite" })),
-    ...techResult.items.map((i) => ({ ...i, category: "Price & Technical" })),
-    ...sizeResult.items.map((i) => ({ ...i, category: "Size & Liquidity" })),
-  ];
+  const allTypedItems: (ReturnType<typeof makeItem> & { category: string })[] =
+    [
+      ...qualItems.map((i) => ({ ...i, category: "Quality of Business" })),
+      ...growResult.items.map((i) => ({ ...i, category: "Growth" })),
+      ...valResult.items.map((i) => ({ ...i, category: "Valuation" })),
+      ...bsResult.items.map((i) => ({ ...i, category: "Balance Sheet" })),
+      ...cfResult.items.map((i) => ({ ...i, category: "Cash Flow" })),
+      ...qResult.items.map((i) => ({ ...i, category: "Quarterly Momentum" })),
+      ...shResult.items.map((i) => ({ ...i, category: "Shareholding" })),
+      ...peerResult.items.map((i) => ({ ...i, category: "Peer Composite" })),
+      ...techResult.items.map((i) => ({ ...i, category: "Price & Technical" })),
+      ...sizeResult.items.map((i) => ({ ...i, category: "Size & Liquidity" })),
+    ];
 
   const factorSources: Record<string, FactorRow["source"]> = {
     "Quality of Business": "absolute",
-    "Growth": "absolute",
-    "Valuation": "absolute",
+    Growth: "absolute",
+    Valuation: "absolute",
     "Balance Sheet": "absolute",
     "Cash Flow": "absolute",
     "Quarterly Momentum": "trend",
-    "Shareholding": "trend",
+    Shareholding: "trend",
     "Peer Composite": "relative",
     "Price & Technical": "trend",
     "Size & Liquidity": "absolute",
@@ -1667,8 +2155,12 @@ export function scoreCompany(
   if (!m.currentRatio) allAssumptions.push("Current ratio unavailable");
   if (!m.cfoToOp) allAssumptions.push("CFO/OP not available");
   if (!m.peerPeMedian) allAssumptions.push("Industry P/E not available");
-  if (!m.pledgedPct && m.pledgedPct !== 0) allAssumptions.push("Pledge data unavailable");
-  if (!m.intrinsicValue) allAssumptions.push("Intrinsic Value not available — IV gap scored neutral");
+  if (!m.pledgedPct && m.pledgedPct !== 0)
+    allAssumptions.push("Pledge data unavailable");
+  if (!m.intrinsicValue)
+    allAssumptions.push(
+      "Intrinsic Value not available - IV gap scored neutral",
+    );
 
   return {
     slug,

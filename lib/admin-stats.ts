@@ -2,6 +2,15 @@ import "server-only";
 import sql from "@/lib/db";
 import { loadSectorsConfig } from "@/lib/data";
 
+function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`DB query timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
+
 const STALE_MS = 7 * 24 * 3600 * 1000; // mirrors the pipeline 7-day freshness rule
 
 export interface AdminSectorStat {
@@ -47,7 +56,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     marketRows,
     runCountRows,
     lastRunRows,
-  ] = await Promise.all([
+  ] = await withTimeout(Promise.all([
     sql<{ total: number }[]>`SELECT COUNT(*)::int AS total FROM companies`,
     sql<{ slug: string; name: string; companies_count: number | null; refreshed_at: string | null }[]>`
       SELECT slug, name, companies_count, refreshed_at FROM sectors
@@ -63,14 +72,14 @@ export async function getAdminStats(): Promise<AdminStats> {
       SELECT id, ok, started_at, finished_at
       FROM refresh_runs ORDER BY started_at DESC LIMIT 1
     `,
-  ]);
+  ]), 10000);
 
   const lastRun = lastRunRows[0];
   let openErrors = 0;
   if (lastRun) {
-    const errRows = await sql<{ count: number }[]>`
+    const errRows = await withTimeout(sql<{ count: number }[]>`
       SELECT COUNT(*)::int AS count FROM refresh_errors WHERE run_id = ${lastRun.id}
-    `;
+    `);
     openErrors = errRows[0]?.count ?? 0;
   }
 

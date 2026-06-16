@@ -12,7 +12,7 @@ export interface RequestMeta {
 
 /**
  * Extracts standardised audit metadata from any NextRequest.
- * Safe to call from any route handler — never throws.
+ * Safe to call from any route handler - never throws.
  */
 export function extractRequestMeta(req: NextRequest): RequestMeta {
   const h = req.headers;
@@ -21,15 +21,15 @@ export function extractRequestMeta(req: NextRequest): RequestMeta {
   const forwarded = h.get("x-forwarded-for");
   const ip = forwarded
     ? forwarded.split(",")[0].trim()
-    : h.get("x-real-ip") ?? null;
+    : (h.get("x-real-ip") ?? null);
 
   return {
     ip,
-    userAgent:  h.get("user-agent")    ?? null,
-    referer:    h.get("referer")        ?? null,
-    requestId:  h.get("x-request-id")  ?? null,
-    country:    h.get("x-vercel-ip-country") ?? null,
-    path:       req.nextUrl.pathname,
-    method:     req.method,
+    userAgent: h.get("user-agent") ?? null,
+    referer: h.get("referer") ?? null,
+    requestId: h.get("x-request-id") ?? null,
+    country: h.get("x-vercel-ip-country") ?? null,
+    path: req.nextUrl.pathname,
+    method: req.method,
   };
 }

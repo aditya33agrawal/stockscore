@@ -22,18 +22,11 @@ function tableToRows($: CheerioAPI, tableEl: any): string[][] {
 
 function rowsToCsv(rows: string[][]): string {
   return rows
-    .map((row) =>
-      row
-        .map((cell) => `"${cell.replace(/"/g, '""')}"`)
-        .join(",")
-    )
+    .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(","))
     .join("\n");
 }
 
-function firstTableInSection(
-  $: CheerioAPI,
-  sectionId: string
-): string | null {
+function firstTableInSection($: CheerioAPI, sectionId: string): string | null {
   const section = $(`#${sectionId}`);
   if (!section.length) return null;
   const table = section.find("table").first();
@@ -55,7 +48,7 @@ function lastNumericCell(cells: string[]): string | null {
 function extractRowLatestValue(
   $: CheerioAPI,
   sectionId: string,
-  rowLabel: string
+  rowLabel: string,
 ): string | null {
   const section = $(`#${sectionId}`);
   if (!section.length) return null;
@@ -64,9 +57,11 @@ function extractRowLatestValue(
   section.find("table tr").each((_, tr) => {
     if (found) return;
     const cells: string[] = [];
-    $(tr).find("th, td").each((_, c) => {
-      cells.push($(c).text().replace(/\s+/g, " ").trim());
-    });
+    $(tr)
+      .find("th, td")
+      .each((_, c) => {
+        cells.push($(c).text().replace(/\s+/g, " ").trim());
+      });
     if (!cells.length) return;
     const label = cells[0]?.toLowerCase() ?? "";
     if (label.includes(needle)) {
@@ -76,10 +71,7 @@ function extractRowLatestValue(
   return found;
 }
 
-export function parseCompanyPage(
-  html: string,
-  symbol: string
-): RawCompanyData {
+export function parseCompanyPage(html: string, symbol: string): RawCompanyData {
   const $ = load(html);
 
   const info = $("#company-info");
@@ -101,10 +93,7 @@ export function parseCompanyPage(
     if (k) ratios[k] = v;
   });
 
-  const about = $(".company-profile .about")
-    .text()
-    .replace(/\s+/g, " ")
-    .trim();
+  const about = $(".company-profile .about").text().replace(/\s+/g, " ").trim();
   const keyPoints = $(".company-profile .commentary")
     .text()
     .replace(/\s+/g, " ")
@@ -112,8 +101,12 @@ export function parseCompanyPage(
 
   const pros: string[] = [];
   const cons: string[] = [];
-  $("#analysis .pros li").each((_, li) => { pros.push($(li).text().trim()); });
-  $("#analysis .cons li").each((_, li) => { cons.push($(li).text().trim()); });
+  $("#analysis .pros li").each((_, li) => {
+    pros.push($(li).text().trim());
+  });
+  $("#analysis .cons li").each((_, li) => {
+    cons.push($(li).text().trim());
+  });
 
   const KNOWN_GROWTH = new Set([
     "compounded sales growth",
@@ -152,9 +145,9 @@ export function parseCompanyPage(
 
   // Backfill ratios that aren't always in the #top-ratios strip
   if (!ratios["Current Ratio"]) {
-    // Screener.in's strip sometimes labels it "Current ratio" (lowercase r) — alias it
+    // Screener.in's strip sometimes labels it "Current ratio" (lowercase r) - alias it
     const aliasKey = Object.keys(ratios).find(
-      (k) => k.toLowerCase() === "current ratio" && k !== "Current Ratio"
+      (k) => k.toLowerCase() === "current ratio" && k !== "Current Ratio",
     );
     if (aliasKey) {
       ratios["Current Ratio"] = ratios[aliasKey];
@@ -195,7 +188,7 @@ export function parseCompanyPage(
 }
 
 // ---------------------------------------------------------------------------
-// Documents — commented out; re-enable when annual reports / concalls are needed
+// Documents - commented out; re-enable when annual reports / concalls are needed
 // ---------------------------------------------------------------------------
 
 // function parseDocuments($: CheerioAPI): Documents {

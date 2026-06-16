@@ -25,7 +25,10 @@ export interface ChartsRunnerResult {
 }
 
 async function loadSymbolsFromConfig(sectors?: string[]): Promise<string[]> {
-  const raw = await fs.readFile(path.join(process.cwd(), "sectors_config.json"), "utf-8");
+  const raw = await fs.readFile(
+    path.join(process.cwd(), "sectors_config.json"),
+    "utf-8",
+  );
   const cfg = JSON.parse(raw) as { sectors: SectorConfig[] };
   const set = new Set<string>();
   const sectorsToScan = sectors?.length
@@ -41,7 +44,7 @@ function sleep(ms: number) {
 
 export async function runChartsRefresh(
   log: Log,
-  opts: { force?: boolean; symbols?: string[]; sectors?: string[] } = {}
+  opts: { force?: boolean; symbols?: string[]; sectors?: string[] } = {},
 ): Promise<ChartsRunnerResult> {
   const { force = false, symbols: explicitSymbols, sectors } = opts;
 
@@ -54,7 +57,9 @@ export async function runChartsRefresh(
   log(`[charts] refreshing ${symbols.length} symbols (force=${force})`);
 
   const queue = [...symbols];
-  let saved = 0, skipped = 0, errored = 0;
+  let saved = 0,
+    skipped = 0,
+    errored = 0;
   const errors: ChartsRunnerError[] = [];
   const concurrency = 4;
 
@@ -64,14 +69,20 @@ export async function runChartsRefresh(
       if (!ticker) return;
       const t0 = Date.now();
       try {
-        const res = await refreshSymbol(ticker, (m) => log(`  [w${id}] ${m}`), force);
+        const res = await refreshSymbol(
+          ticker,
+          (m) => log(`  [w${id}] ${m}`),
+          force,
+        );
         const ms = Date.now() - t0;
         if (res.status === "saved") {
           saved++;
-          log(`  [w${id}] ${ticker} ✓ ${res.source} (${res.candleCount} candles, ${ms}ms)`);
+          log(
+            `  [w${id}] ${ticker} ✓ ${res.source} (${res.candleCount} candles, ${ms}ms)`,
+          );
         } else if (res.status === "skipped") {
           skipped++;
-          log(`  [w${id}] ${ticker} — up to date, skip`);
+          log(`  [w${id}] ${ticker} - up to date, skip`);
         } else {
           errored++;
           errors.push({ ticker, reason: "no data" });
@@ -88,9 +99,13 @@ export async function runChartsRefresh(
     }
   }
 
-  await Promise.all(Array.from({ length: concurrency }, (_, i) => worker(i + 1)));
+  await Promise.all(
+    Array.from({ length: concurrency }, (_, i) => worker(i + 1)),
+  );
 
-  log(`\n[charts] done — saved=${saved} skipped=${skipped} errored=${errored} total=${symbols.length}`);
+  log(
+    `\n[charts] done - saved=${saved} skipped=${skipped} errored=${errored} total=${symbols.length}`,
+  );
 
   if (errors.length > 0) {
     log(`\n[charts] defaulters (${errors.length}):`);

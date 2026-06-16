@@ -8,8 +8,8 @@
  *   ::summary:: {"phases":{...},"failed":N,"duration_ms":T,"ok":bool}
  *
  * Exit code:
- *   0  — all phases succeeded
- *   1  — one or more phases failed (workflow will be marked failed)
+ *   0  - all phases succeeded
+ *   1  - one or more phases failed (workflow will be marked failed)
  *
  * Usage:
  *   npx tsx scripts/refresh-all.ts            # respect 7-day cache
@@ -30,7 +30,10 @@ interface PhaseResult {
 
 const force = process.argv.includes("--force");
 
-async function runPhase(name: string, fn: () => Promise<void>): Promise<PhaseResult> {
+async function runPhase(
+  name: string,
+  fn: () => Promise<void>,
+): Promise<PhaseResult> {
   const t0 = Date.now();
   log.info(`phase.start`, { phase: name, force });
   try {
@@ -60,7 +63,7 @@ async function main() {
 
   const phases: PhaseResult[] = [];
 
-  // Phase 1 — sector + company scraper + scoring
+  // Phase 1 - sector + company scraper + scoring
   phases.push(
     await runPhase("sectors", async () => {
       const { runPipeline } = await import("../lib/pipeline");
@@ -68,7 +71,7 @@ async function main() {
     }),
   );
 
-  // Phase 2 — market overview / sector aggregate metrics
+  // Phase 2 - market overview / sector aggregate metrics
   phases.push(
     await runPhase("market", async () => {
       const { runMarketPipeline } = await import("../lib/market-pipeline");
@@ -76,7 +79,7 @@ async function main() {
     }),
   );
 
-  // Phase 3 — price chart candles per ticker
+  // Phase 3 - price chart candles per ticker
   phases.push(
     await runPhase("charts", async () => {
       const { runChartsRefresh } = await import("../lib/charts/runner");
@@ -93,7 +96,10 @@ async function main() {
     failed,
     duration_ms,
     phases: Object.fromEntries(
-      phases.map((p) => [p.name, { ok: p.ok, duration_ms: p.duration_ms, error: p.error ?? null }]),
+      phases.map((p) => [
+        p.name,
+        { ok: p.ok, duration_ms: p.duration_ms, error: p.error ?? null },
+      ]),
     ),
   };
 
@@ -104,9 +110,10 @@ async function main() {
   process.exit(ok ? 0 : 1);
 }
 
-
 main().catch((err) => {
-  log.error("refresh.crashed", { error: err instanceof Error ? err.message : String(err) });
+  log.error("refresh.crashed", {
+    error: err instanceof Error ? err.message : String(err),
+  });
   if (err instanceof Error && err.stack) console.error(err.stack);
   process.exit(1);
 });

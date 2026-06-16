@@ -1,4 +1,4 @@
-# Aditya Agrawal — Sector-Relative Equity Scoring (Website)
+# Aditya Agrawal - Sector-Relative Equity Scoring (Website)
 
 A fully static Next.js portfolio site that surfaces the sector-scoring engine
 from `../scoring-system/`. Live data is committed as JSON under
@@ -38,7 +38,7 @@ npm run build        # static export of all sector + company pages
        "website/public/data/sectors.json",
    )
    ```
-3. Commit the regenerated JSON and push — Vercel redeploys automatically.
+3. Commit the regenerated JSON and push - Vercel redeploys automatically.
 
 ## Project structure
 
@@ -51,7 +51,7 @@ lib/
   format.ts           Pure helpers (safe in client components)
 public/
   data/sectors.json   Sector index
-  data/sectors/*.json One JSON per sector — the source of truth for the UI
+  data/sectors/*.json One JSON per sector - the source of truth for the UI
   Aditya_Agrawal_Resume.pdf
 ```
 

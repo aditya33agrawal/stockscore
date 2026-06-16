@@ -1,7 +1,7 @@
 /**
  * lib/api/with-error-handler.ts
  *
- * Outermost wrapper — catches any error thrown by inner handlers and
+ * Outermost wrapper - catches any error thrown by inner handlers and
  * converts it to a structured JSON error envelope.
  *
  * Response shape on error:
@@ -23,7 +23,7 @@ export function withErrorHandler(handler: AnyHandler): AnyHandler {
       if (err instanceof ApiError) {
         const body: Record<string, unknown> = {
           error: {
-            code:    err.code ?? "error",
+            code: err.code ?? "error",
             message: err.message,
             ...(err.details !== undefined ? { details: err.details } : {}),
           },
@@ -44,8 +44,11 @@ export function withErrorHandler(handler: AnyHandler): AnyHandler {
 
       const body: Record<string, unknown> = {
         error: {
-          code:    "internal_error",
-          message: process.env.NODE_ENV === "production" ? "Internal server error" : message,
+          code: "internal_error",
+          message:
+            process.env.NODE_ENV === "production"
+              ? "Internal server error"
+              : message,
         },
       };
       return NextResponse.json(body, { status: 500 });

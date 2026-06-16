@@ -37,7 +37,7 @@ export function ChangePasswordForm() {
       setNewPassword("");
       setConfirm("");
     } catch {
-      setError("Network error — check your connection and try again.");
+      setError("Network error - check your connection and try again.");
     } finally {
       setBusy(false);
     }

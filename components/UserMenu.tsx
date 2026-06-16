@@ -28,7 +28,7 @@ export function UserMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch on mount and again on route change — keeps the menu correct after a
+  // Fetch on mount and again on route change - keeps the menu correct after a
   // client-side login/logout transition (the navbar stays mounted across it).
   useEffect(() => {
     let cancelled = false;
@@ -62,7 +62,7 @@ export function UserMenu() {
       await fetch("/api/auth/logout", { method: "POST" });
       toast.success("Signed out");
     } catch {
-      toast.error("Couldn't sign out — try again");
+      toast.error("Couldn't sign out - try again");
     }
     setUser(null);
     setOpen(false);
@@ -71,7 +71,7 @@ export function UserMenu() {
   }
 
   // Avoid a "Sign in" flash for already-logged-in users while the session
-  // check is in flight — render an empty placeholder of the same size.
+  // check is in flight - render an empty placeholder of the same size.
   if (!loaded) {
     return <div className="h-9 w-9" aria-hidden="true" />;
   }

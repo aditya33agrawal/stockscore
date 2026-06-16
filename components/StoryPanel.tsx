@@ -23,17 +23,17 @@ const ITEM_LEARN_MAP: Record<string, string> = {
 };
 
 const ITEM_TOOLTIP_MAP: Record<string, string> = {
-  "Current Ratio":          "Measures short-term liquidity — can the company pay its bills due within a year?",
+  "Current Ratio":          "Measures short-term liquidity - can the company pay its bills due within a year?",
   "Promoter Holding Level": "Higher promoter holding generally signals owner confidence in the company's future.",
   "Promoter Trend (8Q)":    "Whether promoters have been buying or selling over the last 8 quarters.",
-  "P/E vs Industry":        "How much investors pay for ₹1 of earnings vs. sector peers — lower can mean cheaper.",
+  "P/E vs Industry":        "How much investors pay for ₹1 of earnings vs. sector peers - lower can mean cheaper.",
   "Debt / Equity":          "How much of the company is funded by debt vs. shareholder capital.",
   "Return on Equity":       "How much profit the company makes on every rupee of shareholders' money.",
-  "ROCE Consistency":       "Return on Capital Employed across multiple years — consistency matters.",
-  "OPM vs Sector":          "Operating margin vs. peers — tells you whether margins are structurally strong.",
-  "Dividend Yield":         "Annual dividend as a percentage of the stock price — income for shareholders.",
-  "CFO / PAT":              "Cash from operations vs. reported profit — high ratio means earnings are real cash.",
-  "Sales CAGR 5Y":          "Revenue growth compounded over 5 years — is the top line growing meaningfully?",
+  "ROCE Consistency":       "Return on Capital Employed across multiple years - consistency matters.",
+  "OPM vs Sector":          "Operating margin vs. peers - tells you whether margins are structurally strong.",
+  "Dividend Yield":         "Annual dividend as a percentage of the stock price - income for shareholders.",
+  "CFO / PAT":              "Cash from operations vs. reported profit - high ratio means earnings are real cash.",
+  "Sales CAGR 5Y":          "Revenue growth compounded over 5 years - is the top line growing meaningfully?",
 };
 
 interface StoryRowProps {

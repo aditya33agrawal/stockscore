@@ -75,18 +75,20 @@ function computeSectorStats(companies: Company[]) {
     median_roce: median(companies.map((c) => c.raw.roce ?? 0)),
     median_opm: median(companies.map((c) => c.raw.opm ?? 0)),
     median_de: median(companies.map((c) => c.raw.debt_to_equity ?? 0)),
-    median_dividend_yield: median(companies.map((c) => c.raw.dividend_yield ?? 0)),
+    median_dividend_yield: median(
+      companies.map((c) => c.raw.dividend_yield ?? 0),
+    ),
   };
 }
 
 async function scrapeCompany(
   session: { cookies: string; csrfToken: string },
   companyName: string,
-  log: Log
+  log: Log,
 ): Promise<{ rawData: RawCompanyData; url: string; symbol: string } | null> {
   const url = await findCompanyUrl(session, companyName);
   if (!url) {
-    log(`  [company] ${companyName} — not found, skipping`);
+    log(`  [company] ${companyName} - not found, skipping`);
     return null;
   }
   log(`  [company] ${companyName} → ${url}`);
@@ -96,7 +98,7 @@ async function scrapeCompany(
     headers: { Cookie: session.cookies, "User-Agent": UA },
   });
   if (!pageRes.ok) {
-    log(`  [company] ${companyName} — page fetch failed ${pageRes.status}`);
+    log(`  [company] ${companyName} - page fetch failed ${pageRes.status}`);
     return null;
   }
   const html = await pageRes.text();
@@ -105,25 +107,43 @@ async function scrapeCompany(
   const symbol = urlParts[urlParts.length - 2] ?? companyName;
 
   const rawData = parseCompanyPage(html, symbol);
-  log(`  [company] ${companyName} — parsed HTML`);
+  log(`  [company] ${companyName} - parsed HTML`);
 
   if (rawData.warehouseId) {
     await sleep(2000);
-    const quickRatios = await fetchQuickRatios(session, rawData.warehouseId, url, rawData.consolidated);
+    const quickRatios = await fetchQuickRatios(
+      session,
+      rawData.warehouseId,
+      url,
+      rawData.consolidated,
+    );
     Object.assign(rawData.ratios, quickRatios);
 
     await sleep(2000);
-    const peersCsv = await fetchPeersCsv(session, rawData.warehouseId, url, rawData.consolidated);
+    const peersCsv = await fetchPeersCsv(
+      session,
+      rawData.warehouseId,
+      url,
+      rawData.consolidated,
+    );
     if (peersCsv) rawData.peers = peersCsv;
-    log(`  [company] ${companyName} — fetched quick ratios + peers`);
+    log(`  [company] ${companyName} - fetched quick ratios + peers`);
   }
 
   if (rawData.companyId) {
     await sleep(2000);
-    rawData.announcementsImportant = await fetchAnnouncements(session, rawData.companyId, "important");
+    rawData.announcementsImportant = await fetchAnnouncements(
+      session,
+      rawData.companyId,
+      "important",
+    );
     await sleep(2000);
-    rawData.announcementsRecent = await fetchAnnouncements(session, rawData.companyId, "recent");
-    log(`  [company] ${companyName} — fetched announcements`);
+    rawData.announcementsRecent = await fetchAnnouncements(
+      session,
+      rawData.companyId,
+      "recent",
+    );
+    log(`  [company] ${companyName} - fetched announcements`);
   }
 
   return { rawData, url, symbol };
@@ -132,7 +152,7 @@ async function scrapeCompany(
 function buildCompanyData(
   rawData: RawCompanyData,
   score: Omit<Company, "rank"> & { rank: number },
-  refreshedAt: string
+  refreshedAt: string,
 ) {
   return {
     name: rawData.name,
@@ -167,7 +187,7 @@ async function upsertCompanyDb(
   rawData: RawCompanyData,
   score: Omit<Company, "rank"> & { rank: number },
   sectorSlug: string,
-  refreshedAt: string
+  refreshedAt: string,
 ): Promise<void> {
   const data = buildCompanyData(rawData, score, refreshedAt);
   await sql`
@@ -181,7 +201,10 @@ async function upsertCompanyDb(
   `;
 }
 
-async function upsertSectorDb(sectorData: SectorData, topCompany: Company | undefined): Promise<void> {
+async function upsertSectorDb(
+  sectorData: SectorData,
+  topCompany: Company | undefined,
+): Promise<void> {
   await sql`
     INSERT INTO sectors (slug, name, refreshed_at, companies_count, description, analyst_note, sector_stats, companies, top_company, top_ticker, top_score)
     VALUES (
@@ -241,39 +264,54 @@ function checkMissingFields(raw: RawCompanyData): string[] {
     const present = keys.some((k) => hasNumeric(ratios[k]));
     if (!present) missing.push(label);
   }
-  // Promoter holding lives in the shareholding CSV — flag if missing entirely
+  // Promoter holding lives in the shareholding CSV - flag if missing entirely
   if (!raw.shareholding || raw.shareholding.length < 20) {
     missing.push("promoterHolding");
   }
   return missing;
 }
 
-async function writeDefaultersLog(defaulters: Defaulter[], totalCompanies: number): Promise<string | null> {
+async function writeDefaultersLog(
+  defaulters: Defaulter[],
+  totalCompanies: number,
+): Promise<string | null> {
   if (defaulters.length === 0) return null;
   try {
     const dir = path.join(process.cwd(), "logs");
     await fs.mkdir(dir, { recursive: true });
     const ts = new Date().toISOString().replace(/[:.]/g, "-");
     const file = path.join(dir, `refresh-defaulters-${ts}.json`);
-    await fs.writeFile(file, JSON.stringify({
-      generated_at: new Date().toISOString(),
-      total_companies: totalCompanies,
-      defaulter_count: defaulters.length,
-      defaulters,
-    }, null, 2));
+    await fs.writeFile(
+      file,
+      JSON.stringify(
+        {
+          generated_at: new Date().toISOString(),
+          total_companies: totalCompanies,
+          defaulter_count: defaulters.length,
+          defaulters,
+        },
+        null,
+        2,
+      ),
+    );
     return file;
   } catch {
     return null;
   }
 }
 
-function printDefaultersReport(log: Log, defaulters: Defaulter[], totalCompanies: number, logFile: string | null): void {
+function printDefaultersReport(
+  log: Log,
+  defaulters: Defaulter[],
+  totalCompanies: number,
+  logFile: string | null,
+): void {
   log("");
   log("────────────────────────────────────────────────────");
   log("DEFAULTERS REPORT");
   log("────────────────────────────────────────────────────");
   if (defaulters.length === 0) {
-    log("✓ No defaulters — every company scraped and parsed cleanly.");
+    log("✓ No defaulters - every company scraped and parsed cleanly.");
     return;
   }
   const bySector = new Map<string, Defaulter[]>();
@@ -286,28 +324,41 @@ function printDefaultersReport(log: Log, defaulters: Defaulter[], totalCompanies
     log(`Sector: ${sectorName}`);
     for (const d of arr) {
       if (d.reason === "missing_critical_fields") {
-        log(`  ✗ ${d.company.padEnd(28)} missing: ${(d.missing ?? []).join(", ")}`);
+        log(
+          `  ✗ ${d.company.padEnd(28)} missing: ${(d.missing ?? []).join(", ")}`,
+        );
       } else if (d.reason === "not_found") {
         log(`  ✗ ${d.company.padEnd(28)} not found on Screener`);
       } else if (d.reason === "scrape_failed") {
-        log(`  ✗ ${d.company.padEnd(28)} scrape failed${d.detail ? ` (${d.detail})` : ""}`);
+        log(
+          `  ✗ ${d.company.padEnd(28)} scrape failed${d.detail ? ` (${d.detail})` : ""}`,
+        );
       } else {
-        log(`  ✗ ${d.company.padEnd(28)} error${d.detail ? `: ${d.detail}` : ""}`);
+        log(
+          `  ✗ ${d.company.padEnd(28)} error${d.detail ? `: ${d.detail}` : ""}`,
+        );
       }
     }
   }
-  const pct = totalCompanies > 0 ? ((defaulters.length / totalCompanies) * 100).toFixed(1) : "0.0";
+  const pct =
+    totalCompanies > 0
+      ? ((defaulters.length / totalCompanies) * 100).toFixed(1)
+      : "0.0";
   log("────────────────────────────────────────────────────");
   log(`Total defaulters: ${defaulters.length} of ${totalCompanies} (${pct}%)`);
   if (logFile) log(`Log: ${logFile}`);
 }
 
-export async function runPipeline(log: Log, targetSectorSlug?: string, force = false): Promise<Defaulter[]> {
+export async function runPipeline(
+  log: Log,
+  targetSectorSlug?: string,
+  force = false,
+): Promise<Defaulter[]> {
   log("[pipeline] Validating config …");
   const { validateConfig } = await import("./config-validate");
   const configErrors = await validateConfig();
   if (configErrors.length > 0) {
-    log(`[pipeline] ✗ Config invalid — ${configErrors.length} issue(s):`);
+    log(`[pipeline] ✗ Config invalid - ${configErrors.length} issue(s):`);
     for (const e of configErrors) log(`  • ${e}`);
     throw new Error(
       `sectors_config.json failed validation (${configErrors.length} issue(s)). ` +
@@ -328,13 +379,17 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
     : config.sectors;
 
   if (targetSectorSlug && sectorsToRun.length === 0) {
-    throw new Error(`Sector "${targetSectorSlug}" not found in sectors_config.json`);
+    throw new Error(
+      `Sector "${targetSectorSlug}" not found in sectors_config.json`,
+    );
   }
 
   const email = process.env.SCREENER_EMAIL;
   const password = process.env.SCREENER_PASSWORD;
   if (!email || !password) {
-    throw new Error("SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local");
+    throw new Error(
+      "SCREENER_EMAIL and SCREENER_PASSWORD must be set in .env.local",
+    );
   }
 
   log("[pipeline] Logging in to screener.in …");
@@ -357,23 +412,28 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
         const fresh = await findFreshCompany(companyName, sector.slug);
         if (fresh) {
           const ageDays = Math.floor(
-            (Date.now() - new Date(fresh.refreshed_at).getTime()) / (24 * 3600 * 1000),
+            (Date.now() - new Date(fresh.refreshed_at).getTime()) /
+              (24 * 3600 * 1000),
           );
           const cachedScore = (fresh.data as { score?: Company })?.score;
           if (cachedScore) {
             scored.push({ ...cachedScore, rank: 0 });
             skippedSymbols.add(fresh.symbol);
-            log(`  [company] ${companyName} — fresh (${ageDays}d old), skip ✓`);
+            log(`  [company] ${companyName} - fresh (${ageDays}d old), skip ✓`);
             continue;
           }
         }
       }
 
-      log(`  [company] ${companyName} — searching …`);
+      log(`  [company] ${companyName} - searching …`);
       try {
         const result = await scrapeCompany(session, companyName, log);
         if (!result) {
-          defaulters.push({ sector: sector.name, company: companyName, reason: "not_found" });
+          defaulters.push({
+            sector: sector.name,
+            company: companyName,
+            reason: "not_found",
+          });
           continue;
         }
 
@@ -396,9 +456,11 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
         });
         const company: Company = { ...scoreResult, rank: 0 };
         scored.push(company);
-        log(`  [company] ${companyName} — score: ${scoreResult.final_score}/100 (${scoreResult.classification})`);
+        log(
+          `  [company] ${companyName} - score: ${scoreResult.final_score}/100 (${scoreResult.classification})`,
+        );
       } catch (err) {
-        log(`  [company] ${companyName} — ERROR: ${String(err)}`);
+        log(`  [company] ${companyName} - ERROR: ${String(err)}`);
         defaulters.push({
           sector: sector.name,
           company: companyName,
@@ -420,9 +482,11 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
       if (rawData) {
         try {
           await upsertCompanyDb(rawData, company, sector.slug, refreshedAt);
-          log(`  [company] ${company.ticker} — saved to DB`);
+          log(`  [company] ${company.ticker} - saved to DB`);
         } catch (err) {
-          log(`  [company] ${company.ticker} — DB write failed: ${String(err)}`);
+          log(
+            `  [company] ${company.ticker} - DB write failed: ${String(err)}`,
+          );
         }
       }
     }
@@ -443,9 +507,9 @@ export async function runPipeline(log: Log, targetSectorSlug?: string, force = f
 
     try {
       await upsertSectorDb(sectorData, topCompany);
-      log(`[sector] ${sector.name} — saved to DB`);
+      log(`[sector] ${sector.name} - saved to DB`);
     } catch (err) {
-      log(`[sector] ${sector.name} — DB write failed: ${String(err)}`);
+      log(`[sector] ${sector.name} - DB write failed: ${String(err)}`);
     }
   }
 

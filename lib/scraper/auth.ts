@@ -36,23 +36,21 @@ export async function login(email: string, password: string): Promise<Session> {
   const baseHeaders = {
     "User-Agent": UA,
     "Accept-Language": "en-US,en;q=0.9",
-    Accept:
-      "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   };
 
   const getRes = await fetch(LOGIN_URL, {
     headers: baseHeaders,
     redirect: "follow",
   });
-  if (!getRes.ok)
-    throw new Error(`Login page fetch failed: ${getRes.status}`);
+  if (!getRes.ok) throw new Error(`Login page fetch failed: ${getRes.status}`);
 
   const html = await getRes.text();
   const initialCookies = parseCookieHeader(getRes);
 
   const $ = load(html);
   const csrfMiddlewareToken = $(
-    'input[name="csrfmiddlewaretoken"]'
+    'input[name="csrfmiddlewaretoken"]',
   ).val() as string;
   if (!csrfMiddlewareToken)
     throw new Error("CSRF token not found on login page");
@@ -81,7 +79,7 @@ export async function login(email: string, password: string): Promise<Session> {
 
   if (!merged["sessionid"]) {
     throw new Error(
-      "Login failed: no sessionid cookie — check credentials in .env.local"
+      "Login failed: no sessionid cookie - check credentials in .env.local",
     );
   }
 
