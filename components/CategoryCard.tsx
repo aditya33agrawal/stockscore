@@ -101,22 +101,22 @@ export function CategoryCard({ category }: { category: CategoryScore }) {
         <div className="flex-1 min-w-0">
           {/* Name + score */}
           <div className="flex items-baseline justify-between gap-4 mb-1.5">
-            <h3 className="font-semibold text-[15px] text-chalk-50 truncate flex items-center gap-1.5">
+            <h3 className="font-semibold text-[15px] text-chalk-50 flex items-center gap-1.5 min-w-0 whitespace-nowrap">
               {CATEGORY_LEARN_MAP[category.name] ? (
                 <Link
                   href={CATEGORY_LEARN_MAP[category.name]}
-                  className="truncate hover:text-accent transition-colors"
+                  className="truncate hover:text-accent transition-colors min-w-0"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {category.name}
                 </Link>
               ) : (
-                <span className="truncate">{category.name}</span>
+                <span className="truncate min-w-0">{category.name}</span>
               )}
               {(() => {
                 const key = CATEGORY_TOOLTIP_KEY[category.name];
                 const tip = key ? TOOLTIPS[key] : null;
-                if (tip) return <Tooltip text={String(tip.body)} title={tip.title} />;
+                if (tip) return <Tooltip text={String(tip.body)} />;
                 if (CATEGORY_RATIONALE[category.name])
                   return <Tooltip text={CATEGORY_RATIONALE[category.name]} />;
                 return null;

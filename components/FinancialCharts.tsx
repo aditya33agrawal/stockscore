@@ -30,6 +30,10 @@ interface Props {
 }
 
 const COLORS = ["#6D8196", "#7C3AED", "#B8862B", "#9C6FD4"];
+// Margin Trends panel needs OPM and ROCE to be visually distinct per company,
+// not just same color + dash - so they get their own palettes.
+const OPM_COLORS = ["#6D8196", "#9A8C7C", "#84909C", "#C2A878"];
+const ROCE_COLORS = ["#7C3AED", "#B8862B", "#9C6FD4", "#D4915A"];
 const GRID = { strokeDasharray: "3 3", stroke: "rgba(120,120,120,0.18)" };
 const AXIS_STYLE = { fill: "#84909C", fontSize: 11 };
 const TOOLTIP_STYLE = {
@@ -317,7 +321,7 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                     type="monotone"
                     dataKey={`${key}_opm`}
                     name={`${name} OPM%`}
-                    stroke={COLORS[idx % COLORS.length]}
+                    stroke={OPM_COLORS[idx % OPM_COLORS.length]}
                     strokeWidth={2}
                     dot={false}
                   />
@@ -326,9 +330,9 @@ export function FinancialCharts({ primaryData, primaryName, peers }: Props) {
                     type="monotone"
                     dataKey={`${key}_roce`}
                     name={`${name} ROCE%`}
-                    stroke={COLORS[idx % COLORS.length]}
+                    stroke={ROCE_COLORS[idx % ROCE_COLORS.length]}
                     strokeWidth={2}
-                    strokeDasharray="5 3"
+                    strokeDasharray={idx === 0 ? undefined : "5 3"}
                     dot={false}
                   />
                 </>

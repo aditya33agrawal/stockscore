@@ -61,24 +61,38 @@ export function Tooltip({ content, children, triggerLabel, className, align = "c
     );
   }
 
+  // Trigger is a <span role="button">, not a real <button> - this Tooltip is
+  // very often nested inside another clickable element (a row toggle, a tab
+  // button, a <summary>), and a real <button> there is invalid HTML. Browsers
+  // "fix" the DOM by hoisting the inner button out of its parent, which is
+  // what was corrupting layout and making the trigger appear misplaced/hidden.
   return (
     <span
       className={`tooltip-wrap ${className ?? ""}`}
       data-open={open || undefined}
     >
-      <button
-        type="button"
+      <span
+        role="button"
+        tabIndex={0}
         aria-label={triggerLabel ?? "More info"}
         aria-describedby={id}
         onClick={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           setOpen((v) => !v);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen((v) => !v);
+          }
         }}
         onBlur={() => setOpen(false)}
         className="tooltip-trigger"
       >
         i
-      </button>
+      </span>
       {popover}
     </span>
   );

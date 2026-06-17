@@ -81,7 +81,6 @@ export function ScoreBars({ categories }: Props) {
                 <Tooltip
                   align="start"
                   content={{
-                    title: cat.name,
                     body: (
                       <span>
                         {rationale ?? "Scoring criteria for this category."}

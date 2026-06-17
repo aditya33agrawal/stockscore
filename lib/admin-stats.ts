@@ -6,7 +6,10 @@ function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
   return Promise.race([
     promise,
     new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`DB query timed out after ${ms}ms`)), ms),
+      setTimeout(
+        () => reject(new Error(`DB query timed out after ${ms}ms`)),
+        ms,
+      ),
     ),
   ]);
 }
@@ -52,10 +55,18 @@ const EMPTY_STATS: AdminStats = {
   sectors: { configured: 0, scored: 0, list: [] },
   charts: { symbols: 0, lastRefreshed: null },
   market: { lastRefreshed: null },
-  runs: { total: 0, lastOk: null, lastFinishedAt: null, lastStartedAt: null, openErrors: 0 },
+  runs: {
+    total: 0,
+    lastOk: null,
+    lastFinishedAt: null,
+    lastStartedAt: null,
+    openErrors: 0,
+  },
 };
 
-export async function getAdminStats(): Promise<AdminStats & { error?: string }> {
+export async function getAdminStats(): Promise<
+  AdminStats & { error?: string }
+> {
   let config: Awaited<ReturnType<typeof loadSectorsConfig>>;
   try {
     config = await loadSectorsConfig();
@@ -65,11 +76,21 @@ export async function getAdminStats(): Promise<AdminStats & { error?: string }> 
   }
 
   let companiesRows: { total: number }[];
-  let sectorRows: { slug: string; name: string; companies_count: number | null; refreshed_at: string | null }[];
+  let sectorRows: {
+    slug: string;
+    name: string;
+    companies_count: number | null;
+    refreshed_at: string | null;
+  }[];
   let chartRows: { symbols: number; last: string | null }[];
   let marketRows: { last: string | null }[];
   let runCountRows: { total: number }[];
-  let lastRunRows: { id: number; ok: boolean | null; started_at: string | null; finished_at: string | null }[];
+  let lastRunRows: {
+    id: number;
+    ok: boolean | null;
+    started_at: string | null;
+    finished_at: string | null;
+  }[];
 
   try {
     [
@@ -79,24 +100,43 @@ export async function getAdminStats(): Promise<AdminStats & { error?: string }> 
       marketRows,
       runCountRows,
       lastRunRows,
-    ] = await withTimeout(Promise.all([
-    sql<{ total: number }[]>`SELECT COUNT(*)::int AS total FROM companies`,
-    sql<{ slug: string; name: string; companies_count: number | null; refreshed_at: string | null }[]>`
+    ] = await withTimeout(
+      Promise.all([
+        sql<{ total: number }[]>`SELECT COUNT(*)::int AS total FROM companies`,
+        sql<
+          {
+            slug: string;
+            name: string;
+            companies_count: number | null;
+            refreshed_at: string | null;
+          }[]
+        >`
       SELECT slug, name, companies_count, refreshed_at FROM sectors
     `,
-    sql<{ symbols: number; last: string | null }[]>`
+        sql<{ symbols: number; last: string | null }[]>`
       SELECT COUNT(*)::int AS symbols, MAX(fetched_at) AS last FROM chart_data
     `,
-    sql<{ last: string | null }[]>`
+        sql<{ last: string | null }[]>`
       SELECT last_full_refresh AS last FROM market_sectors_meta ORDER BY id LIMIT 1
     `,
-    sql<{ total: number }[]>`SELECT COUNT(*)::int AS total FROM refresh_runs`,
-    sql<{ id: number; ok: boolean | null; started_at: string | null; finished_at: string | null }[]>`
+        sql<
+          { total: number }[]
+        >`SELECT COUNT(*)::int AS total FROM refresh_runs`,
+        sql<
+          {
+            id: number;
+            ok: boolean | null;
+            started_at: string | null;
+            finished_at: string | null;
+          }[]
+        >`
       SELECT id, ok, started_at, finished_at
       FROM refresh_runs ORDER BY started_at DESC LIMIT 1
     `,
-    // 25s: comfortably above the 15s connect_timeout so cold starts can establish the connection
-    ]), 25000);
+        // 25s: comfortably above the 15s connect_timeout so cold starts can establish the connection
+      ]),
+      25000,
+    );
   } catch (err) {
     console.error("[admin-stats] DB queries failed:", err);
     return {
@@ -110,12 +150,15 @@ export async function getAdminStats(): Promise<AdminStats & { error?: string }> 
   let openErrors = 0;
   if (lastRun) {
     try {
-      const errRows = await withTimeout(sql<{ count: number }[]>`
+      const errRows = await withTimeout(
+        sql<{ count: number }[]>`
         SELECT COUNT(*)::int AS count FROM refresh_errors WHERE run_id = ${lastRun.id}
-      `, 8000);
+      `,
+        8000,
+      );
       openErrors = errRows[0]?.count ?? 0;
     } catch {
-      // non-fatal — leave openErrors = 0
+      // non-fatal - leave openErrors = 0
     }
   }
 

@@ -4,6 +4,7 @@ import { loadSectorIndex, loadSectorsConfig, loadCompaniesIndex, loadHeroData, e
 import { SectorSearch } from "@/components/SectorSearch";
 import { HeroRadar } from "@/components/HeroRadar";
 import { ScoreTicker } from "@/components/ScoreTicker";
+import { HeroGuestOverlay } from "@/components/HeroGuestOverlay";
 import { scoreGradient, scoreColor } from "@/lib/format";
 import clsx from "clsx";
 
@@ -44,6 +45,7 @@ export default async function Home() {
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <HeroRadar companies={hero.companies} labels={hero.labels} />
+        <HeroGuestOverlay />
 
         {/* Bottom fade so chart dissolves into page */}
         <div

@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronRight,
   RefreshCw,
+  StopCircle,
 } from "lucide-react";
 import { formatDuration, formatRelative } from "@/lib/format";
 import type { RefreshSummary } from "@/lib/refresh/run";
@@ -41,6 +42,7 @@ export function RunHistory() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<number, ErrorRow[]>>({});
   const [loadingErrors, setLoadingErrors] = useState(false);
+  const [stopping, setStopping] = useState<number | null>(null);
 
   const load = useCallback(() => {
     setRuns(null);
@@ -52,6 +54,18 @@ export function RunHistory() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  async function forceStop(e: React.MouseEvent, run: RunRow) {
+    e.stopPropagation();
+    if (!confirm(`Force-stop run #${run.id}? This marks it as failed.`)) return;
+    setStopping(run.id);
+    try {
+      await fetch(`/api/admin/runs?id=${run.id}`, { method: "PATCH" });
+      load();
+    } finally {
+      setStopping(null);
+    }
+  }
 
   async function toggle(run: RunRow) {
     if (expanded === run.id) {
@@ -136,6 +150,21 @@ export function RunHistory() {
                   <p className="text-xs num text-bad">{run.error_count} err</p>
                 )}
               </div>
+              {ok === null && (
+                <button
+                  onClick={(e) => forceStop(e, run)}
+                  disabled={stopping === run.id}
+                  title="Force-stop this stuck run"
+                  className="ml-2 shrink-0 inline-flex items-center gap-1 rounded-lg border border-bad/30 bg-bad/10 px-2.5 py-1 text-xs text-bad hover:bg-bad/20 transition-colors disabled:opacity-50"
+                >
+                  {stopping === run.id ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <StopCircle className="h-3.5 w-3.5" />
+                  )}
+                  Force stop
+                </button>
+              )}
             </button>
 
             {isOpen && (

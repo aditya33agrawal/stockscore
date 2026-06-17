@@ -60,8 +60,9 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
       <div className="flex flex-wrap items-start justify-between gap-6">
         {/* Left: name + chips */}
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1.5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-1.5 flex items-center">
             Rank {co.rank} of {sector.companies.length} in {sector.name}
+            <Tooltip content={{ body: "Position by final score among all scored companies in this sector - 1 is the highest-scoring." }} />
           </p>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-chalk-50 mb-2">
             {co.name}
@@ -70,20 +71,25 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
           {/* Secondary line */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-chalk-300/50 num mb-4">
             <span className="font-semibold text-chalk-100">{co.ticker}</span>
-            <span>CMP ₹{co.cmp.toLocaleString("en-IN")}</span>
-            {co.raw.pe && <span>P/E {co.raw.pe.toFixed(1)}</span>}
-            {co.raw.industry_pe && <span>Ind P/E {co.raw.industry_pe.toFixed(1)}</span>}
+            <Tooltip content={{ body: "Current market price - the last traded price on the exchange." }}>
+              <span>CMP ₹{co.cmp.toLocaleString("en-IN")}</span>
+            </Tooltip>
+            {co.raw.pe && (
+              <Tooltip content={{ body: "Price ÷ trailing earnings per share - how many years of current earnings you're paying for one share." }}>
+                <span>P/E {co.raw.pe.toFixed(1)}</span>
+              </Tooltip>
+            )}
+            {co.raw.industry_pe && (
+              <Tooltip content={{ body: "Average P/E across the company's sector on Screener.in - use it to judge whether this stock is cheap or expensive relative to peers." }}>
+                <span>Ind P/E {co.raw.industry_pe.toFixed(1)}</span>
+              </Tooltip>
+            )}
           </div>
 
           {/* Contextual chips */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             {/* Trend chip */}
-            <Tooltip
-              content={{
-                title: trendInfo.label,
-                body: trendInfo.sentence,
-              }}
-            >
+            <Tooltip content={{ body: trendInfo.sentence }}>
               <span
                 className={clsx(
                   "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider cursor-default",

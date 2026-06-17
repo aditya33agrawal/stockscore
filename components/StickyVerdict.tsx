@@ -32,7 +32,6 @@ export function StickyVerdict({ name, score, classification, heroId = "overview"
   return (
     <div className="fixed top-0 left-0 right-0 z-40 border-b border-[rgb(var(--chalk-100)_/_0.1)] bg-ink-950/90 backdrop-blur-xl shadow-sm">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between h-11 gap-4">
-        <p className="font-semibold text-chalk-50 text-sm truncate">{name}</p>
         <div className="flex items-center gap-2 shrink-0">
           <span className={clsx("num text-sm font-bold", scoreColor(score))}>
             {score.toFixed(1)}
@@ -54,6 +53,7 @@ export function StickyVerdict({ name, score, classification, heroId = "overview"
             ↑ Top
           </a>
         </div>
+        <p className="font-semibold text-chalk-50 text-sm truncate text-right">{name}</p>
       </div>
     </div>
   );

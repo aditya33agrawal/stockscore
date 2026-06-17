@@ -129,6 +129,56 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
     body: "A simple bucket on top of the score: Avoid (<40), Watchlist (40–55), Accumulate (55–70), Invest-grade (70–82), Exceptional (>82). Use it as a starting point, not a verdict - always read the breakdown.",
   },
 
+  // ── Ratios tab (Deep Dive) ──
+  peg_ratio: {
+    title: "PEG Ratio",
+    body: "P/E ÷ earnings growth rate. Adjusts valuation for growth - a P/E of 30 at 30% growth (PEG≈1) is far cheaper than a P/E of 30 at 5% growth (PEG=6). Below 1 is generally considered cheap.",
+  },
+  price_to_book: {
+    title: "Price to Book Value",
+    body: "Current price ÷ book value per share. Trading at or below book value is a margin of safety for asset-heavy businesses; richly above book usually prices in intangible value like brand or growth.",
+  },
+  book_value: {
+    title: "Book Value",
+    body: "Net worth (equity + reserves) divided by number of shares - the accounting value attributable to each share if the company were liquidated at balance-sheet values.",
+  },
+  intrinsic_value: {
+    title: "Intrinsic Value",
+    body: "Graham number: √(22.5 × EPS × Book Value). A conservative fair-value estimate based purely on earnings and asset backing, ignoring growth expectations.",
+  },
+  pledged_pct: {
+    title: "Pledged Percentage",
+    body: "Share of promoter holding pledged as collateral for loans. A sharp share-price fall can trigger forced sales by lenders, so even 5-10% pledge is worth watching; 25%+ is a serious red flag.",
+  },
+  market_cap_tier: {
+    title: "Market Cap",
+    body: "Share price × shares outstanding. Determines the company's size tier (large/mid/small/micro-cap), which affects liquidity and execution risk.",
+  },
+  dma: {
+    title: "Moving Average (DMA)",
+    body: "Average closing price over the trailing window (50 or 200 days). Price above both DMAs, with the 50-day above the 200-day, is a classic bullish trend structure ('golden cross').",
+  },
+  week52_range: {
+    title: "52-Week Range Position",
+    body: "How far the current price sits from its 52-week high/low. Near the high suggests momentum; near the low can be a value opportunity or a falling knife depending on business quality.",
+  },
+  sales_growth_window: {
+    title: "Compounded Sales Growth",
+    body: "Revenue CAGR over the stated window (3/5/10 years or TTM). Longer windows show durability; shorter windows show recent momentum - compare both to spot acceleration or deceleration.",
+  },
+  profit_growth_window: {
+    title: "Compounded Profit Growth",
+    body: "Net profit CAGR over the stated window. If this consistently beats sales growth, the business is gaining operating leverage - margins are expanding as it scales.",
+  },
+  stock_price_cagr: {
+    title: "Stock Price CAGR",
+    body: "Annualised return an investor would have earned holding the stock over the stated window, based purely on price appreciation (excludes dividends).",
+  },
+  roe_growth_window: {
+    title: "Return on Equity",
+    body: "Average Return on Equity over the stated window - net profit ÷ shareholders' equity. A consistently high ROE across windows signals a durable, capital-efficient business rather than a one-off good year.",
+  },
+
   // ── Compare table headers ──
   market_cap: {
     title: "Market Capitalisation",
