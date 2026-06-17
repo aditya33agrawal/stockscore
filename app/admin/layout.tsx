@@ -7,9 +7,20 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin" };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Defence in depth - every /admin route also re-checks in its own page.
-  const user = await requireAdmin();
-  if (!user) notFound();
+  const result = await requireAdmin();
+
+  if (!result.ok) {
+    if (result.reason === "db_error") {
+      return (
+        <div className="mx-auto max-w-5xl px-6 py-24 text-center">
+          <p className="text-chalk-300 text-sm mb-2">Database unavailable</p>
+          <p className="text-chalk-300/60 text-xs">{result.message}</p>
+          <p className="text-chalk-300/50 text-xs mt-4">Refresh to retry — Supabase may be waking up.</p>
+        </div>
+      );
+    }
+    notFound();
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">

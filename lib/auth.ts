@@ -54,18 +54,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const token = cookies().get(COOKIE_NAME)?.value;
   if (!token) return null;
 
-  try {
-    const rows = await sql<
-      { id: number; email: string; name: string | null }[]
-    >`
-      SELECT u.id, u.email, u.name
-      FROM sessions s
-      JOIN users u ON u.id = s.user_id
-      WHERE s.token = ${token} AND s.expires_at > now()
-      LIMIT 1
-    `;
-    return rows[0] ?? null;
-  } catch {
-    return null;
-  }
+  const rows = await sql<
+    { id: number; email: string; name: string | null }[]
+  >`
+    SELECT u.id, u.email, u.name
+    FROM sessions s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.token = ${token} AND s.expires_at > now()
+    LIMIT 1
+  `;
+  return rows[0] ?? null;
 }

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import sql from "@/lib/db";
-import { ensureTables } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { compose } from "@/lib/api/compose";
@@ -28,8 +27,6 @@ export const POST = compose(
   withMethods(["POST"]),
   withSchema(validateLogin),
 )(async (_req: NextRequest, { body }: { body: LoginBody }) => {
-  await ensureTables();
-
   const rows = await sql<
     { id: number; email: string; name: string | null; password_hash: string }[]
   >`SELECT id, email, name, password_hash FROM users WHERE email = ${body.email} LIMIT 1`;
