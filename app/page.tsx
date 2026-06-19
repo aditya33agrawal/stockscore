@@ -68,7 +68,7 @@ export default async function Home() {
           </h1>
 
           <p className="max-w-lg mx-auto text-[17px] text-chalk-200 leading-relaxed mb-10">
-            Transparent, rule-based fundamental analysis of every Indian sector
+            Transparent, rule based fundamental analysis of every Indian sector
             across 10 categories. No black boxes - every +/− is traceable to a rule.
           </p>
 

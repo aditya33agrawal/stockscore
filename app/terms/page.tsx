@@ -79,7 +79,7 @@ export default function TermsPage() {
           that process transparently with anyone who wants to see it.
         </p>
         <p>
-          Every score on this site is the output of a rule-based rubric I
+          Every score on this site is the output of a rule based rubric I
           designed. The rules reflect my current understanding of what makes a
           company fundamentally sound. That understanding will evolve. The
           rubric will change. The scores are a snapshot, not a verdict.

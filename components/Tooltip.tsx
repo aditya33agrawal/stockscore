@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, useId } from "react";
+import { ReactNode, useState, useId, useRef, useCallback, useLayoutEffect } from "react";
 
 export interface TooltipContent {
   title?: string;
@@ -14,40 +14,85 @@ interface TooltipProps {
   /** ARIA label for the trigger if no children are passed. */
   triggerLabel?: string;
   className?: string;
-  /** Horizontal anchor of the popover. "start" pins it to the left edge
-   *  (so it expands rightward), "end" to the right edge. Default centered. */
+  /** Preferred horizontal anchor relative to the trigger before viewport clamping.
+   *  "start" prefers the trigger's left edge, "end" the right edge. Default centered. */
   align?: "start" | "center" | "end";
 }
 
+const VIEWPORT_MARGIN = 8;
+const GAP = 8;
+
 /**
  * Lightweight, accessible tooltip with hover + focus + tap-to-toggle support.
- * Uses CSS hover/focus-within for desktop and a `data-open` flag for touch
- * devices. Content is delivered through a single shared shape so we can keep
- * every label's explanation consistent.
+ * Position is computed in viewport coordinates and clamped to stay on-screen,
+ * then applied via `position: fixed` - this is what lets the popover escape
+ * `overflow-x-auto` table wrappers and the edges of the viewport instead of
+ * being clipped or running off-screen.
  */
 export function Tooltip({ content, children, triggerLabel, className, align = "center" }: TooltipProps) {
   const [open, setOpen] = useState(false);
+  const [style, setStyle] = useState<{ top: number; left: number } | null>(null);
   const id = useId();
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const popRef = useRef<HTMLSpanElement>(null);
   const c: TooltipContent =
     typeof content === "string" ? { body: content } : content;
 
+  const reposition = useCallback(() => {
+    const trigger = wrapRef.current;
+    const pop = popRef.current;
+    if (!trigger || !pop) return;
+    const a = trigger.getBoundingClientRect();
+    const popWidth = pop.offsetWidth;
+    const popHeight = pop.offsetHeight;
+
+    let left =
+      align === "start" ? a.left : align === "end" ? a.right - popWidth : a.left + a.width / 2 - popWidth / 2;
+    left = Math.min(Math.max(left, VIEWPORT_MARGIN), window.innerWidth - VIEWPORT_MARGIN - popWidth);
+
+    let top = a.top - popHeight - GAP;
+    if (top < VIEWPORT_MARGIN) top = a.bottom + GAP;
+
+    setStyle({ top, left });
+  }, [align]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    reposition();
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    return () => {
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+    };
+  }, [open, reposition]);
+
   const popover = (
     <span
+      ref={popRef}
       role="tooltip"
       id={id}
-      data-align={align}
       className="tooltip-pop"
+      style={style ? { top: style.top, left: style.left, visibility: "visible" } : { visibility: "hidden" }}
     >
       {c.title && <span className="tooltip-title">{c.title}</span>}
       <span className="tooltip-body">{c.body}</span>
     </span>
   );
 
+  const handleEnter = () => setOpen(true);
+  const handleLeave = () => setOpen(false);
+
   if (children) {
     return (
       <span
+        ref={wrapRef}
         className={`tooltip-wrap ${className ?? ""}`}
         data-open={open || undefined}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+        onFocus={handleEnter}
+        onBlur={handleLeave}
         onTouchStart={(e) => {
           e.stopPropagation();
           setOpen((v) => !v);
@@ -68,8 +113,11 @@ export function Tooltip({ content, children, triggerLabel, className, align = "c
   // what was corrupting layout and making the trigger appear misplaced/hidden.
   return (
     <span
+      ref={wrapRef}
       className={`tooltip-wrap ${className ?? ""}`}
       data-open={open || undefined}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
     >
       <span
         role="button"
@@ -88,7 +136,8 @@ export function Tooltip({ content, children, triggerLabel, className, align = "c
             setOpen((v) => !v);
           }
         }}
-        onBlur={() => setOpen(false)}
+        onFocus={handleEnter}
+        onBlur={handleLeave}
         className="tooltip-trigger"
       >
         i

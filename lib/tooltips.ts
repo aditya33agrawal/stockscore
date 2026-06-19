@@ -150,6 +150,14 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
     title: "Pledged Percentage",
     body: "Share of promoter holding pledged as collateral for loans. A sharp share-price fall can trigger forced sales by lenders, so even 5-10% pledge is worth watching; 25%+ is a serious red flag.",
   },
+  current_price: {
+    title: "Current Price",
+    body: "Latest traded share price on the exchange. Read it alongside the 52-week range, P/E and intrinsic value below to see whether it looks cheap or expensive right now.",
+  },
+  face_value: {
+    title: "Face Value",
+    body: "The nominal/par value printed on the share certificate, set at issuance and unrelated to market price. Mainly relevant for dividend-per-share comparisons and corporate-action math (splits, bonus issues).",
+  },
   market_cap_tier: {
     title: "Market Cap",
     body: "Share price × shares outstanding. Determines the company's size tier (large/mid/small/micro-cap), which affects liquidity and execution risk.",

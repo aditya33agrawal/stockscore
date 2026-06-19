@@ -47,7 +47,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-chalk-300/60 leading-relaxed">
-              Transparent, rule-based fundamental analysis of Indian equities - scored sector by sector.
+              Transparent, rule based fundamental analysis of Indian equities - scored sector by sector.
             </p>
 
             {/* Social links */}

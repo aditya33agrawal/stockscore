@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { FinancialTable } from "@/components/FinancialTable";
 import { FinancialCharts } from "@/components/FinancialCharts";
 import { Tooltip } from "@/components/Tooltip";
+import { ValuationPanel } from "@/components/ValuationPanel";
+import { ReturnsPanel, LeveragePanel, TechnicalsPanel, OwnershipLiquidityPanel } from "@/components/RatioVisualPanels";
 import { TOOLTIPS } from "@/lib/tooltips";
 import type { ChartData } from "@/lib/company-data";
 import type { Company } from "@/lib/types";
@@ -57,9 +59,16 @@ const RATIO_GROUPS = [
     label: "Technicals",
     keys: ["DMA 50", "DMA 200", "Down from 52w high", "Up from 52w low"],
   },
+  {
+    label: "Ownership & Liquidity",
+    keys: ["Current Ratio", "Current ratio", "Promoter holding", "Promoter Holding"],
+  },
 ];
 
 const RATIO_TOOLTIP_KEY: Record<string, keyof typeof TOOLTIPS> = {
+  "Current Price": "current_price",
+  "High / Low": "week52_range",
+  "Face Value": "face_value",
   "Stock P/E": "pe",
   "Industry PE": "pe",
   "PEG Ratio": "peg_ratio",
@@ -206,6 +215,22 @@ export function DeepDive({
                         .filter((k) => ratiosMap[k] != null)
                         .map((k) => { usedKeys.add(k); return [k, ratiosMap[k]] as [string, string]; });
                       if (entries.length === 0) return null;
+                      const VISUAL_PANELS: Record<string, ComponentType<{ ratiosMap: Record<string, string> }>> = {
+                        Valuation: ValuationPanel,
+                        "Returns & Margins": ReturnsPanel,
+                        "Leverage & Debt": LeveragePanel,
+                        Technicals: TechnicalsPanel,
+                        "Ownership & Liquidity": OwnershipLiquidityPanel,
+                      };
+                      const Panel = VISUAL_PANELS[group.label];
+                      if (Panel) {
+                        return (
+                          <div key={group.label}>
+                            <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">{group.label}</p>
+                            <Panel ratiosMap={ratiosMap} />
+                          </div>
+                        );
+                      }
                       return (
                         <div key={group.label}>
                           <p className="text-xs font-semibold uppercase tracking-widest text-chalk-300/40 mb-3">{group.label}</p>

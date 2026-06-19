@@ -30,31 +30,27 @@ export function StickyVerdict({ name, score, classification, heroId = "overview"
   if (!visible) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40 border-b border-[rgb(var(--chalk-100)_/_0.1)] bg-ink-950/90 backdrop-blur-xl shadow-sm">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between h-11 gap-4">
-        <div className="flex items-center gap-2 shrink-0">
-          <span className={clsx("num text-sm font-bold", scoreColor(score))}>
-            {score.toFixed(1)}
-          </span>
-          {classification && (
-            <span
-              className={clsx(
-                "hidden sm:inline-block rounded border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                classificationStyle(classification),
-              )}
-            >
-              {classificationLabel(classification)}
-            </span>
+    <div className="fixed top-16 right-1 sm:right-3 z-30 flex flex-col items-center gap-1.5 rounded-b-xl border border-t-0 border-[rgb(var(--chalk-100)_/_0.1)] bg-ink-950/90 backdrop-blur-xl shadow-lg px-4 py-2.5 max-w-[200px]">
+      <span className={clsx("num text-base font-bold leading-none", scoreColor(score))}>
+        {score.toFixed(1)}
+      </span>
+      {classification && (
+        <span
+          className={clsx(
+            "shrink-0 rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
+            classificationStyle(classification),
           )}
-          <a
-            href="#overview"
-            className="text-xs text-chalk-300/40 hover:text-accent transition-colors ml-2"
-          >
-            ↑ Top
-          </a>
-        </div>
-        <p className="font-semibold text-chalk-50 text-sm truncate text-right">{name}</p>
-      </div>
+        >
+          {classificationLabel(classification)}
+        </span>
+      )}
+      <p className="font-semibold text-chalk-50 text-xs text-center leading-tight line-clamp-2">{name}</p>
+      <a
+        href="#overview"
+        className="text-[11px] text-chalk-300/40 hover:text-accent transition-colors mt-0.5"
+      >
+        ↑ Top
+      </a>
     </div>
   );
 }

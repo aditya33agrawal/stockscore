@@ -470,13 +470,14 @@ body {
   flex: none;
 }
 .tooltip-pop {
-  position: absolute;
+  /* Position is computed in viewport coordinates by Tooltip.tsx and applied
+     as inline top/left - `fixed` (rather than `absolute`) lets the popover
+     escape `overflow-x-auto` table wrappers instead of being clipped, and
+     the JS clamps it to the viewport instead of running off-screen. */
+  position: fixed;
   z-index: 60;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
   width: max-content;
-  max-width: 320px;
+  max-width: min(320px, calc(100vw - 16px));
   padding: 10px 12px;
   border-radius: 10px;
   background: rgb(var(--ink-900));
@@ -485,22 +486,15 @@ body {
   font-size: 12px;
   line-height: 1.45;
   box-shadow: 0 6px 20px rgba(74, 74, 74, 0.18);
+  /* Triggers commonly sit inside table cells with `whitespace-nowrap` - since
+     CSS inheritance follows the DOM tree (not layout/position), this popover
+     would otherwise inherit that nowrap and overflow instead of wrapping. */
+  white-space: normal;
+  overflow-wrap: break-word;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;
 }
-/* Horizontal placement overrides (default is centered) */
-.tooltip-pop[data-align="start"] {
-  left: 0;
-  transform: translateX(0);
-}
-.tooltip-pop[data-align="end"] {
-  left: auto;
-  right: 0;
-  transform: translateX(0);
-}
-.tooltip-wrap:hover .tooltip-pop,
-.tooltip-wrap:focus-within .tooltip-pop,
 .tooltip-wrap[data-open="true"] .tooltip-pop {
   opacity: 1;
   pointer-events: auto;
