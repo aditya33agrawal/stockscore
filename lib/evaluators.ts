@@ -33,6 +33,30 @@ export function evaluatePE(raw: CompanyRaw): Evaluation {
   };
 }
 
+export function evaluatePB(raw: CompanyRaw, cmp?: number): Evaluation {
+  const pbv = raw.pbv ?? (raw.book_value && cmp ? cmp / raw.book_value : undefined);
+  if (!pbv) return { sentence: "Book value data not available.", tone: "neutral" };
+  if (pbv < 1)
+    return {
+      sentence: `Trading below book value (P/B ${pbv.toFixed(2)}x) - could be a bargain, or a sign the market expects the business to keep destroying value. Check why before assuming it's cheap.`,
+      tone: "neutral",
+    };
+  if (pbv <= 3)
+    return {
+      sentence: `P/B of ${pbv.toFixed(2)}x is a normal premium over book value for a profitable business.`,
+      tone: "good",
+    };
+  if (pbv <= 6)
+    return {
+      sentence: `P/B of ${pbv.toFixed(2)}x is rich - only justified if returns on those assets (ROE/ROCE) are well above average.`,
+      tone: "warn",
+    };
+  return {
+    sentence: `P/B of ${pbv.toFixed(2)}x is very high - you're paying many multiples of net worth, which only makes sense for exceptional, capital-light compounders.`,
+    tone: "bad",
+  };
+}
+
 export function evaluateROE(raw: CompanyRaw): Evaluation {
   const roe = raw.roe;
   if (!roe) return { sentence: "ROE data not available.", tone: "neutral" };

@@ -14,7 +14,7 @@ interface Props {
   refreshedAt?: string;
 }
 
-function trendChipStyle(trend: string, strength: string): string {
+export function trendChipStyle(trend: string, strength: string): string {
   if (trend === "up" && strength === "strong")
     return "border-accent bg-accent/20 text-accent";
   if (trend === "up")
@@ -26,16 +26,6 @@ function trendChipStyle(trend: string, strength: string): string {
   return "border-warn/40 bg-warn/10 text-warn";
 }
 
-function buildTldr(co: Company): string {
-  const top = co.strengths[0];
-  const risk = co.weaknesses[0];
-  if (top && risk)
-    return `${top.label} is a key strength; watch ${risk.label.toLowerCase()}.`;
-  if (top) return `Key strength: ${top.label}.`;
-  if (risk) return `Key risk to watch: ${risk.label}.`;
-  return "";
-}
-
 function formatRefreshed(at: string): string {
   const diff = Math.floor((Date.now() - new Date(at).getTime()) / 86400000);
   if (diff === 0) return "today";
@@ -44,8 +34,6 @@ function formatRefreshed(at: string): string {
 }
 
 export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
-  const tldr = buildTldr(co);
-
   return (
     <header id="overview" className="glass border-subtle rounded-2xl p-6 sm:p-8 mb-8 scroll-mt-24">
       {/* Breadcrumb */}
@@ -71,7 +59,7 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
           {/* Secondary line */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-chalk-300/50 num mb-4">
             <span className="font-semibold text-chalk-100">{co.ticker}</span>
-            <Tooltip content={{ body: "Current market price - the last traded price on the exchange." }}>
+            <Tooltip content={{ body: "Current market price - the latest traded price on the exchange as of the most recent data update on out end." }}>
               <span>CMP ₹{co.cmp.toLocaleString("en-IN")}</span>
             </Tooltip>
             {co.raw.pe && (
@@ -80,7 +68,7 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
               </Tooltip>
             )}
             {co.raw.industry_pe && (
-              <Tooltip content={{ body: "Average P/E across the company's sector on Screener.in - use it to judge whether this stock is cheap or expensive relative to peers." }}>
+              <Tooltip content={{ body: "Average P/E across the company's sector - use it to judge whether this stock is cheap or expensive relative to peers." }}>
                 <span>Ind P/E {co.raw.industry_pe.toFixed(1)}</span>
               </Tooltip>
             )}
@@ -113,13 +101,6 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
               </Tooltip>
             )}
           </div>
-
-          {/* TL;DR verdict sentence */}
-          {tldr && (
-            <p className="text-sm text-chalk-200 leading-relaxed italic mb-4 border-l-2 border-accent/30 pl-3">
-              {tldr}
-            </p>
-          )}
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">

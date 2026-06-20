@@ -10,9 +10,11 @@ import {
   ChevronUp,
   Copy,
   Check,
+  AlertTriangle,
 } from "lucide-react";
 import clsx from "clsx";
-import type { RefreshSummary, Phase } from "@/lib/refresh/run";
+import type { Phase } from "@/lib/refresh/run";
+import { useRefreshRun } from "@/components/admin/RefreshRunContext";
 
 interface SectorConfig {
   slug: string;
@@ -23,8 +25,6 @@ interface Props {
   sectors: SectorConfig[];
 }
 
-type RunState = "idle" | "running" | "done" | "error";
-
 const ALL_PHASES: { id: Phase; label: string }[] = [
   { id: "sectors", label: "Sectors / Companies" },
   { id: "market", label: "Market Overview" },
@@ -32,19 +32,15 @@ const ALL_PHASES: { id: Phase; label: string }[] = [
 ];
 
 export function RefreshConsole({ sectors }: Props) {
-  const [runState, setRunState] = useState<RunState>("idle");
+  const { runState, rawLines, summary, errorMsg, startRun: startRunCtx, reset: resetCtx } = useRefreshRun();
   const [selectedPhases, setSelectedPhases] = useState<Phase[]>(["sectors"]);
   const [selectedSectors, setSelectedSectors] = useState<string[]>([]);
   const [force, setForce] = useState(false);
-  const [rawLines, setRawLines] = useState<string[]>([]);
-  const [summary, setSummary] = useState<RefreshSummary | null>(null);
-  const [errorMsg, setErrorMsg] = useState("");
   const [errorsExpanded, setErrorsExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [sectorFilter, setSectorFilter] = useState("");
 
   const logRef = useRef<HTMLDivElement>(null);
-  const abortRef = useRef<AbortController | null>(null);
 
   // Pre-select phases from a ?phases=sectors,market,charts deep link
   // (used by the dashboard "Quick actions").
@@ -91,88 +87,17 @@ export function RefreshConsole({ sectors }: Props) {
     }
   }, [rawLines]);
 
-  async function startRun() {
-    setRunState("running");
-    setRawLines([]);
-    setSummary(null);
-    setErrorMsg("");
+  function startRun() {
     setErrorsExpanded(false);
-
-    const ctrl = new AbortController();
-    abortRef.current = ctrl;
-
-    try {
-      const res = await fetch("/api/admin/refresh", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        signal: ctrl.signal,
-        body: JSON.stringify({
-          phases: selectedPhases,
-          sectors: selectedSectors.length ? selectedSectors : undefined,
-          force,
-        }),
-      });
-
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error?.message ?? `HTTP ${res.status}`);
-      }
-
-      if (!res.body) throw new Error("No response body");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const chunks = buffer.split("\n\n");
-        buffer = chunks.pop() ?? "";
-
-        for (const chunk of chunks) {
-          const msg = chunk.replace(/^data:\s*/m, "").trim();
-          if (!msg) continue;
-
-          if (msg === "DONE") {
-            setRunState("done");
-            return;
-          }
-
-          if (msg.startsWith("ERROR:")) {
-            setErrorMsg(msg.replace(/^ERROR:\s*/, ""));
-            setRunState("error");
-            return;
-          }
-
-          if (msg.startsWith("SUMMARY:")) {
-            try {
-              setSummary(JSON.parse(msg.slice("SUMMARY:".length)));
-            } catch {
-              // ignore parse error
-            }
-            continue;
-          }
-
-          setRawLines((prev) => [...prev, msg]);
-        }
-      }
-    } catch (err) {
-      if ((err as Error)?.name === "AbortError") return;
-      setErrorMsg(String(err));
-      setRunState("error");
-    }
+    startRunCtx({
+      phases: selectedPhases,
+      sectors: selectedSectors.length ? selectedSectors : undefined,
+      force,
+    });
   }
 
   function reset() {
-    abortRef.current?.abort();
-    setRunState("idle");
-    setRawLines([]);
-    setSummary(null);
-    setErrorMsg("");
+    resetCtx();
     setErrorsExpanded(false);
   }
 
@@ -363,6 +288,7 @@ export function RefreshConsole({ sectors }: Props) {
               {isRunning && <Loader2 className="h-3.5 w-3.5 animate-spin text-accent" />}
               {runState === "done" && <CheckCircle className="h-3.5 w-3.5 text-accent" />}
               {runState === "error" && <XCircle className="h-3.5 w-3.5 text-bad" />}
+              {runState === "interrupted" && <AlertTriangle className="h-3.5 w-3.5 text-warn" />}
               <span className="text-xs font-semibold text-chalk-100">Live log</span>
               <span className="num text-xs text-chalk-300/40 ml-1">{rawLines.length} lines</span>
             </div>
@@ -374,6 +300,13 @@ export function RefreshConsole({ sectors }: Props) {
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
+          {runState === "interrupted" && (
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-warn/15 bg-warn/5 text-xs text-warn">
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+              Connection to the live stream was lost (page reload). The run may have continued on
+              the server - check Run History for the final result, or reset and start a new one.
+            </div>
+          )}
           <div
             ref={logRef}
             className="max-h-96 overflow-y-auto p-4 font-mono text-[11px] text-chalk-300/70 leading-relaxed whitespace-pre-wrap break-all"

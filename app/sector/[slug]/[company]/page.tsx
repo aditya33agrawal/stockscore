@@ -15,6 +15,7 @@ import { AnnouncementList } from "@/components/AnnouncementList";
 import { CompanySideNav } from "@/components/CompanySideNav";
 import {
   evaluatePE,
+  evaluatePB,
   evaluateROE,
   evaluateROCE,
   evaluateOPM,
@@ -122,6 +123,25 @@ export default async function CompanyPage({
             formatter: "x",
           }
         : undefined,
+    });
+
+    const pbv = co.raw.pbv ?? (co.raw.book_value && co.cmp ? co.cmp / co.raw.book_value : undefined);
+    const bookValue = co.raw.book_value ?? (co.raw.pbv && co.cmp ? co.cmp / co.raw.pbv : undefined);
+    const evPB = evaluatePB(co.raw, co.cmp);
+    metricCards.push({
+      title: "Price to Book Value",
+      learnHref: "/learn#pb",
+      headline: pbv != null ? `${pbv.toFixed(2)}x` : "N/A",
+      badge: pbv != null
+        ? (() => {
+            if (pbv < 1) return { label: "Below book", tone: "neutral" as const };
+            if (pbv <= 3) return { label: "Normal premium", tone: "good" as const };
+            if (pbv <= 6) return { label: "Rich", tone: "warn" as const };
+            return { label: "Very expensive", tone: "bad" as const };
+          })()
+        : undefined,
+      sentence: bookValue != null ? `${evPB.sentence} Book value ₹${bookValue.toFixed(0)}/share.` : evPB.sentence,
+      sentenceTone: evPB.tone,
     });
 
     const evROE = evaluateROE(co.raw);
@@ -426,8 +446,10 @@ export default async function CompanyPage({
       {/* Sticky verdict mini-bar (appears when hero scrolls off) */}
       <StickyVerdict
         name={co.name}
+        ticker={co.ticker}
         score={co.final_score}
         classification={co.classification}
+        trend={{ label: trendInfo.label, trend: trendInfo.trend, strength: trendInfo.strength }}
       />
 
       {/* Fixed side navigation */}

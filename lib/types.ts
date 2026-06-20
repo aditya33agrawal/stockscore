@@ -55,6 +55,7 @@ export interface CompanyRaw {
   pe?: number;
   industry_pe?: number;
   pbv?: number;
+  book_value?: number;
   roe?: number;
   roce?: number;
   opm?: number;

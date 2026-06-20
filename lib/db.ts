@@ -180,4 +180,17 @@ export async function ensureTables() {
     )
   `;
   await sql`CREATE INDEX IF NOT EXISTS refresh_errors_run_idx ON refresh_errors(run_id)`;
+
+  // Asset allocation history - saved computations per user
+  await sql`
+    CREATE TABLE IF NOT EXISTS allocation_history (
+      id          BIGSERIAL PRIMARY KEY,
+      user_id     BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      mode        TEXT NOT NULL,
+      input       JSONB NOT NULL,
+      result      JSONB NOT NULL,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS allocation_history_user_idx ON allocation_history(user_id, created_at DESC)`;
 }

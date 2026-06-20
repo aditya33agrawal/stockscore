@@ -84,7 +84,7 @@ export default async function OG() {
             a stock scores high.
           </div>
           <div style={{ fontSize: 26, color: "rgba(255,255,227,0.65)", maxWidth: 900, lineHeight: 1.35 }}>
-            Transparent, rule-based fundamental analysis across 10 categories. Every +/− traceable to a rule.
+            Transparent, rule based fundamental analysis across 10 categories. Every +/− traceable to a rule.
           </div>
         </div>
 

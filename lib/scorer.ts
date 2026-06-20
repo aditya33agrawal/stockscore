@@ -2131,6 +2131,7 @@ export function scoreCompany(
     pe: m.pe || undefined,
     industry_pe: m.peerPeMedian || undefined,
     pbv,
+    book_value: m.bookValue > 0 ? m.bookValue : undefined,
     roe: m.roe || undefined,
     roce: m.roce || undefined,
     opm: (last(m.annualOpm) as number) || undefined,

@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { compose } from "@/lib/api/compose";
 import { withErrorHandler } from "@/lib/api/with-error-handler";
 import { withMethods } from "@/lib/api/with-methods";
@@ -79,6 +80,15 @@ export const POST = compose(
         summary = await runRefresh(refreshReq, send);
         send(`SUMMARY:${JSON.stringify(summary)}`);
         send("DONE");
+        // Bust the cached sector/company/hero reads so the refreshed data
+        // shows up immediately instead of waiting for the 1h/6h revalidate window.
+        if (summary?.ok) {
+          revalidateTag("scores-data");
+          revalidatePath("/");
+          revalidatePath("/companies");
+          revalidatePath("/sectors");
+          revalidatePath("/sectors/compare");
+        }
       } catch (err) {
         send(`ERROR: ${String(err)}`);
       } finally {

@@ -4,6 +4,27 @@ import { ArrowLeft } from "lucide-react";
 import sql from "@/lib/db";
 import type { SectorRow } from "@/lib/sector-scraper/types";
 import { SectorsCompareTable } from "@/components/SectorsCompareTable";
+import { loadSectorIndex } from "@/lib/data";
+
+// Normalizes an industry name so Screener's market-overview names can be
+// matched against our internal sectors.slug/name without fuzzy guessing -
+// only exact normalized matches count.
+function normalizeName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+async function buildInternalSlugMap(): Promise<Map<string, string>> {
+  const internalSectors = await loadSectorIndex();
+  const map = new Map<string, string>();
+  for (const s of internalSectors) {
+    map.set(normalizeName(s.name), s.slug);
+  }
+  return map;
+}
 
 // Data only changes on the weekly refresh pipeline - cache the rendered page
 // and revalidate hourly instead of re-querying Postgres on every request.
@@ -14,14 +35,22 @@ export const metadata = {
   description: "Industry-level overview: market cap, P/E, OPM, ROCE, and returns across every Indian sector.",
 };
 
-async function loadMarketSectors(): Promise<{ rows: SectorRow[]; refreshedAt: string | null }> {
+export type CompareSectorRow = SectorRow & { internalSlug: string | null };
+
+async function loadMarketSectors(): Promise<{ rows: CompareSectorRow[]; refreshedAt: string | null }> {
   try {
-    const dbRows = await sql<{ name: string; slug: string; refreshed_at: string; metrics: unknown }[]>`
-      SELECT name, slug, refreshed_at::text AS refreshed_at, metrics
-      FROM market_sectors
-      ORDER BY (metrics->>'totalMarketCap')::numeric DESC NULLS LAST
-    `;
-    const rows = dbRows.map((r) => r.metrics as SectorRow);
+    const [dbRows, slugMap] = await Promise.all([
+      sql<{ name: string; slug: string; refreshed_at: string; metrics: unknown }[]>`
+        SELECT name, slug, refreshed_at::text AS refreshed_at, metrics
+        FROM market_sectors
+        ORDER BY (metrics->>'totalMarketCap')::numeric DESC NULLS LAST
+      `,
+      buildInternalSlugMap(),
+    ]);
+    const rows: CompareSectorRow[] = dbRows.map((r) => {
+      const metrics = r.metrics as SectorRow;
+      return { ...metrics, internalSlug: slugMap.get(normalizeName(metrics.name)) ?? null };
+    });
     const refreshedAt = dbRows[0]?.refreshed_at ?? null;
     return { rows, refreshedAt };
   } catch {
@@ -69,7 +98,7 @@ export default async function SectorsComparePage() {
   );
 }
 
-function SectorAnalytics({ rows }: { rows: SectorRow[] }) {
+function SectorAnalytics({ rows }: { rows: CompareSectorRow[] }) {
   const safe = rows.filter((r) => r.medianPE != null);
 
   const topRoce = [...safe]
@@ -88,17 +117,17 @@ function SectorAnalytics({ rows }: { rows: SectorRow[] }) {
       <LeaderboardCard
         title="Highest capital efficiency"
         subtitle="By weighted-average sector ROCE"
-        rows={topRoce.map((r) => [r.name, r.slug, `${(r.wtdAvgROCE ?? 0).toFixed(1)}%`])}
+        rows={topRoce.map((r) => [r.name, r.internalSlug, `${(r.wtdAvgROCE ?? 0).toFixed(1)}%`])}
       />
       <LeaderboardCard
         title="Cheapest by P/E"
         subtitle="Lower median P/E means the market is less optimistic"
-        rows={cheapest.map((r) => [r.name, r.slug, `${(r.medianPE ?? 0).toFixed(1)}×`])}
+        rows={cheapest.map((r) => [r.name, r.internalSlug, `${(r.medianPE ?? 0).toFixed(1)}×`])}
       />
       <LeaderboardCard
         title="Best operating margins"
         subtitle="Per-rupee profit after running the business"
-        rows={topOpm.map((r) => [r.name, r.slug, `${(r.wtdAvgOPM ?? 0).toFixed(1)}%`])}
+        rows={topOpm.map((r) => [r.name, r.internalSlug, `${(r.wtdAvgOPM ?? 0).toFixed(1)}%`])}
       />
     </section>
   );
@@ -111,23 +140,27 @@ function LeaderboardCard({
 }: {
   title: string;
   subtitle: string;
-  rows: [string, string, string][];
+  rows: [string, string | null, string][];
 }) {
   return (
     <div className="glass border-subtle rounded-2xl p-5">
       <h3 className="text-sm font-semibold text-chalk-50">{title}</h3>
       <p className="text-xs text-chalk-300/60 mt-0.5 mb-3">{subtitle}</p>
       <ol className="space-y-1.5">
-        {rows.map(([name, slug, value], i) => (
-          <li key={slug} className="flex items-baseline justify-between text-sm">
+        {rows.map(([name, internalSlug, value], i) => (
+          <li key={name} className="flex items-baseline justify-between text-sm">
             <span className="flex items-baseline gap-2 min-w-0">
               <span className="num text-xs text-chalk-300/40 w-4">{i + 1}.</span>
-              <Link
-                href={`/sector/${slug}`}
-                className="text-chalk-100 hover:text-accent truncate"
-              >
-                {name}
-              </Link>
+              {internalSlug ? (
+                <Link
+                  href={`/sector/${internalSlug}`}
+                  className="text-chalk-100 hover:text-accent truncate"
+                >
+                  {name}
+                </Link>
+              ) : (
+                <span className="text-chalk-300/60 truncate cursor-default">{name}</span>
+              )}
             </span>
             <span className="num text-chalk-300 shrink-0">{value}</span>
           </li>

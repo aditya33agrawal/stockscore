@@ -3,7 +3,7 @@ import { AssetAllocator } from "@/components/AssetAllocator";
 export const metadata = {
   title: "Asset Allocation",
   description:
-    "Get a personalised asset allocation across stocks, MFs, gold, bonds, US market, and real estate based on your age, goal, and risk profile.",
+    "Build a wealth-creation portfolio mix or a goal-based allocation across equity, debt, metal, real estate, bonds, foreign markets, and cash - based on your amount, age, risk appetite, and time horizon.",
 };
 
 export default function AssetAllocationPage() {
@@ -17,9 +17,11 @@ export default function AssetAllocationPage() {
           Build your portfolio mix
         </h1>
         <p className="mt-3 text-chalk-300 max-w-2xl">
-          Tell us your goal, age, and risk appetite - and see a recommended
-          allocation across Indian stocks, mutual funds, US market, gold, bonds,
-          and real estate. Updates live as you adjust the inputs.
+          Choose <strong className="text-chalk-100">Wealth Creation</strong> to size a full
+          portfolio across equity, debt, metal, real estate, bonds &amp; bills, foreign
+          markets, and cash - or <strong className="text-chalk-100">Goal-Based</strong> to
+          plan around a specific lump sum or SIP goal. Sign in to save each computation to
+          your history.
         </p>
       </header>
       <AssetAllocator />

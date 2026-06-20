@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, TrendingUp, Shield, AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { ScoreCurve } from "@/components/methodology/ScoreCurve";
 import { CategoryJumpLink } from "@/components/methodology/CategoryJumpLink";
+import { SectionNav } from "@/components/methodology/SectionNav";
 
 export const metadata = {
   title: "Methodology – How the score works",
@@ -88,8 +89,11 @@ export default function MethodologyPage() {
   return (
     <div className="relative mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
 
-      {/* ── JUMP NAV ── */}
-      <nav className="mb-10 flex flex-wrap gap-2" aria-label="Jump to section">
+      {/* ── DESKTOP GUTTER NAV (scroll-spy) ── */}
+      <SectionNav />
+
+      {/* ── MOBILE/TABLET JUMP NAV ── */}
+      <nav className="xl:hidden mb-10 flex flex-wrap gap-2" aria-label="Jump to section">
         {[
           ["#philosophy", "Philosophy"],
           ["#math", "Scoring math"],
@@ -415,41 +419,46 @@ export default function MethodologyPage() {
           Click any row to jump straight to that category's full breakdown below.
         </p>
         <div className="space-y-2.5">
-          {[
-            { name: "Quality of Business", id: "cat-quality-of-business", pts: 18, why: "Foundation of any investment. A great business is the hardest moat to replicate.", color: "#6D8196" },
-            { name: "Growth", id: "cat-growth", pts: 16, why: "Compounding requires consistent growth. Scale advantages come from volume.", color: "#7C3AED" },
-            { name: "Valuation", id: "cat-valuation", pts: 14, why: "Price paid is the biggest determinant of absolute return. Fundamentals × price = outcome.", color: "#B8862B" },
-            { name: "Balance Sheet", id: "cat-balance-sheet", pts: 12, why: "Solvency absorbs downturns. Leverage amplifies both gains and losses.", color: "#9A8C7C" },
-            { name: "Cash Flow", id: "cat-cash-flow", pts: 10, why: "Accounting profits can be engineered. Cash cannot.", color: "#6D8196" },
-            { name: "Quarterly Momentum", id: "cat-quarterly-momentum", pts: 10, why: "Current trajectory matters. Even great businesses can decelerate.", color: "#7C3AED" },
-            { name: "Shareholding", id: "cat-shareholding", pts: 8, why: "Insider selling is an early warning sign rarely captured in financials.", color: "#B8862B" },
-            { name: "Peer Composite", id: "cat-peer-composite", pts: 6, why: "Relative ranking confirms whether quality translates to competitive advantage.", color: "#9A8C7C" },
-            { name: "Price & Technical", id: "cat-price-technical", pts: 4, why: "Price action can confirm or challenge a fundamental thesis.", color: "#6D8196" },
-            { name: "Size & Liquidity", id: "cat-size-liquidity", pts: 2, why: "Not a quality signal - a liquidity tax. Small-caps carry access and execution risk.", color: "#9A8C7C" },
-          ].map((c, i) => (
-            <CategoryJumpLink key={c.name} targetId={c.id} className="group/row block">
-              <div className="flex items-center gap-3 rounded-xl px-2 py-1.5 -mx-2 transition-colors hover:bg-ink-800/30 cursor-pointer">
-                <span className="num text-[10px] text-chalk-300/30 w-4 shrink-0 text-right">{i + 1}</span>
-                <span className="text-xs text-chalk-200 w-40 shrink-0 truncate whitespace-nowrap group-hover/row:text-accent transition-colors">
-                  {c.name}
-                </span>
-                <div className="flex-1 h-5 rounded-full bg-ink-800/60 overflow-hidden relative">
-                  <div
-                    className="h-full rounded-full transition-all"
-                    style={{ width: `${c.pts}%`, background: c.color, opacity: 0.75 }}
-                  />
-                  <div className="absolute inset-0 flex items-center px-2">
-                    <span className="text-[10px] num font-semibold text-chalk-100/70">{c.pts} pts</span>
+          {(() => {
+            const rows = [
+              { name: "Quality of Business", id: "cat-quality-of-business", pts: 18, why: "Foundation of any investment. A great business is the hardest moat to replicate.", color: "#6D8196" },
+              { name: "Growth", id: "cat-growth", pts: 16, why: "Compounding requires consistent growth. Scale advantages come from volume.", color: "#7C3AED" },
+              { name: "Valuation", id: "cat-valuation", pts: 14, why: "Price paid is the biggest determinant of absolute return. Fundamentals × price = outcome.", color: "#B8862B" },
+              { name: "Balance Sheet", id: "cat-balance-sheet", pts: 12, why: "Solvency absorbs downturns. Leverage amplifies both gains and losses.", color: "#9A8C7C" },
+              { name: "Cash Flow", id: "cat-cash-flow", pts: 10, why: "Accounting profits can be engineered. Cash cannot.", color: "#6D8196" },
+              { name: "Quarterly Momentum", id: "cat-quarterly-momentum", pts: 10, why: "Current trajectory matters. Even great businesses can decelerate.", color: "#7C3AED" },
+              { name: "Shareholding", id: "cat-shareholding", pts: 8, why: "Insider selling is an early warning sign rarely captured in financials.", color: "#B8862B" },
+              { name: "Peer Composite", id: "cat-peer-composite", pts: 6, why: "Relative ranking confirms whether quality translates to competitive advantage.", color: "#9A8C7C" },
+              { name: "Price & Technical", id: "cat-price-technical", pts: 4, why: "Price action can confirm or challenge a fundamental thesis.", color: "#6D8196" },
+              { name: "Size & Liquidity", id: "cat-size-liquidity", pts: 2, why: "Not a quality signal - a liquidity tax. Small-caps carry access and execution risk.", color: "#9A8C7C" },
+            ];
+            const maxPts = Math.max(...rows.map((r) => r.pts));
+            return rows.map((c, i) => (
+              <CategoryJumpLink key={c.name} targetId={c.id} className="group/row block">
+                <div className="flex items-center gap-3 rounded-xl px-2 py-1.5 -mx-2 transition-colors hover:bg-ink-800/30 cursor-pointer">
+                  <span className="num text-[10px] text-chalk-300/30 w-4 shrink-0 text-right">{i + 1}</span>
+                  <span className="text-xs text-chalk-200 w-40 shrink-0 truncate whitespace-nowrap group-hover/row:text-accent transition-colors">
+                    {c.name}
+                  </span>
+                  <div className="flex-1 h-5 rounded-full bg-ink-800/60 overflow-hidden relative">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${(c.pts / maxPts) * 100}%`, background: c.color, opacity: 0.75 }}
+                    />
+                    <div className="absolute inset-0 flex items-center px-2">
+                      <span className="text-[10px] num font-semibold text-chalk-100/70">{c.pts} pts</span>
+                    </div>
                   </div>
+                  <span className="text-[10px] num text-chalk-300/50 w-8 text-right shrink-0">{c.pts}%</span>
+                  <ArrowRight className="h-3 w-3 text-chalk-300/0 group-hover/row:text-accent/60 transition-colors shrink-0" />
                 </div>
-                <span className="text-[10px] num text-chalk-300/50 w-8 text-right shrink-0">{c.pts}%</span>
-                <ArrowRight className="h-3 w-3 text-chalk-300/0 group-hover/row:text-accent/60 transition-colors shrink-0" />
-              </div>
-            </CategoryJumpLink>
-          ))}
+              </CategoryJumpLink>
+            ));
+          })()}
         </div>
         <p className="mt-4 text-xs text-chalk-300/50">
-          Bonuses (max +5) and penalties (max −14) apply on top. Industry ceiling: tobacco → 75, cyclical sectors → 90, others → 100.
+          Bar length is relative to the largest category (Quality of Business, 18 pts). Bonuses (max +5) and
+          penalties (max −14) apply on top. Industry ceiling: tobacco → 75, cyclical sectors → 90, others → 100.
         </p>
       </section>
 
@@ -1120,14 +1129,14 @@ export default function MethodologyPage() {
               label: "Exceptional",
               range: "85+",
               tone: "good" as const,
-              desc: "Top-decile business. Exceptional quality, growth, and reasonable valuation in combination. Rare - about 5% of scored companies hit this band. Size up when you find one at a reasonable entry.",
+              desc: "Top-decile business. Exceptional quality, growth, and reasonable valuation in combination. Rare - about > 0.1% of scored companies hit this band. Size up when you find one at a reasonable entry.",
               tip: "Don't wait for the 'perfect' price on an Exceptional business. The compounding works against you if you wait years for a 10% discount.",
             },
             {
               label: "Invest-grade",
               range: "70–84",
               tone: "good" as const,
-              desc: "Compounder candidate. Strong across most categories, no disqualifying red flags. Suitable as a core position. About 25% of scored companies are in this band.",
+              desc: "Compounder candidate. Strong across most categories, no disqualifying red flags. Suitable as a core position. About 1% of scored companies are in this band.",
               tip: "The sweet spot for long-term investors. High enough quality that normal business cycles won't permanently impair it.",
             },
             {
@@ -1174,22 +1183,22 @@ export default function MethodologyPage() {
           <p className="text-xs font-semibold uppercase tracking-wide text-chalk-300/60 mb-3">Target distribution</p>
           <div className="flex h-3 w-full overflow-hidden rounded-full">
             {[
-              { pct: 10, color: "rgb(var(--bad))", label: "Avoid 10%" },
-              { pct: 25, color: "rgb(var(--warn))", label: "Watchlist 25%" },
-              { pct: 35, color: "rgb(var(--accent))", label: "Accumulate 35%" },
-              { pct: 25, color: "rgb(var(--good) / 0.72)", label: "Invest 25%" },
-              { pct: 5, color: "rgb(var(--good))", label: "Exceptional 5%" },
+              { pct: 39, color: "rgb(var(--bad))", label: "Avoid 39%" },
+              { pct: 35, color: "rgb(var(--warn))", label: "Watchlist 35%" },
+              { pct: 20, color: "rgb(var(--accent))", label: "Accumulate 20%" },
+              { pct: 5, color: "rgb(var(--good) / 0.72)", label: "Invest 5%" },
+              { pct: 1, color: "rgb(var(--good))", label: "Exceptional 1%" },
             ].map((s) => (
               <div key={s.label} style={{ width: `${s.pct}%`, background: s.color }} title={s.label} />
             ))}
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2.5">
             {[
-              { label: "Avoid", pct: "10%", tone: "bad" as const },
-              { label: "Watchlist", pct: "25%", tone: "warn" as const },
-              { label: "Accumulate", pct: "35%", tone: "neutral" as const },
-              { label: "Invest-grade", pct: "25%", tone: "good" as const },
-              { label: "Exceptional", pct: "5%", tone: "good" as const },
+              { label: "Avoid", pct: "39%", tone: "bad" as const },
+              { label: "Watchlist", pct: "35%", tone: "warn" as const },
+              { label: "Accumulate", pct: "20%", tone: "neutral" as const },
+              { label: "Invest-grade", pct: "5%", tone: "good" as const },
+              { label: "Exceptional", pct: "1%", tone: "good" as const },
             ].map((s) => (
               <span key={s.label} className="text-[11px] text-chalk-300/60">
                 <span className={s.tone === "bad" ? "text-bad" : s.tone === "warn" ? "text-warn" : s.tone === "good" ? "text-good" : "text-accent"}>

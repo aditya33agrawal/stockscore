@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { AdminTabs } from "@/components/admin/AdminTabs";
+import { RefreshRunProvider } from "@/components/admin/RefreshRunContext";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="mx-auto max-w-5xl px-6 py-12">
       <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-2">Admin</p>
       <AdminTabs />
-      <div className="mt-8">{children}</div>
+      <RefreshRunProvider>
+        <div className="mt-8">{children}</div>
+      </RefreshRunProvider>
     </div>
   );
 }

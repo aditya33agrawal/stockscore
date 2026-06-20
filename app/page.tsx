@@ -100,15 +100,20 @@ export default async function Home() {
       {/* ── LIVE TIER DISTRIBUTION ────────────────────── */}
       {tierTotal > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 mt-10 sm:mt-14">
-          <div className="glass border-subtle rounded-2xl p-5 sm:p-6">
+          <Link
+            href="/companies"
+            className="group block glass border-subtle rounded-2xl p-5 sm:p-6 hover:border-[rgb(var(--accent)_/_0.25)] transition-colors"
+          >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="live-dot h-1.5 w-1.5 rounded-full bg-good" />
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-chalk-200">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-chalk-200 group-hover:text-accent transition-colors">
                   How {tierTotal} scored companies stack up
                 </p>
               </div>
-              <p className="text-[11px] text-chalk-300/60">By classification tier</p>
+              <p className="text-[11px] text-chalk-300/60 group-hover:text-accent transition-colors">
+                By classification tier · Browse all →
+              </p>
             </div>
 
             {/* Proportional stacked bar */}
@@ -141,7 +146,7 @@ export default async function Home() {
                 </div>
               ))}
             </div>
-          </div>
+          </Link>
         </section>
       )}
 

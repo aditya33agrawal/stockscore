@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { SectorRow } from "@/lib/sector-scraper/types";
 import { HeaderHelp } from "./HeaderHelp";
 
+type CompareRow = SectorRow & { internalSlug: string | null };
+
 interface Props {
-  rows: SectorRow[];
+  rows: CompareRow[];
   refreshedAt: string | null;
 }
 
@@ -205,14 +208,16 @@ export function SectorsCompareTable({ rows, refreshedAt }: Props) {
                 }`}
               >
                 <td className="px-4 py-3">
-                  <a
-                    href={row.url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="text-chalk-100 hover:text-accent transition-colors font-medium"
-                  >
-                    {row.name}
-                  </a>
+                  {row.internalSlug ? (
+                    <Link
+                      href={`/sector/${row.internalSlug}`}
+                      className="text-chalk-100 hover:text-accent transition-colors font-medium"
+                    >
+                      {row.name}
+                    </Link>
+                  ) : (
+                    <span className="text-chalk-300/50 font-medium cursor-default">{row.name}</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 num text-chalk-300 text-right">{row.companyCount ?? "-"}</td>
                 <td className="px-4 py-3 num text-chalk-300 text-right">{fmtNum(row.totalMarketCap, "Cr")}</td>

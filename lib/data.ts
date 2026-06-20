@@ -17,7 +17,7 @@ function withTimeout<T>(promise: Promise<T>, ms = 10000): Promise<T> {
 
 export { scoreColor, scoreBg, pointsColor, formatDate } from "./format";
 
-export async function loadSectorIndex(): Promise<SectorIndexEntry[]> {
+async function _loadSectorIndex(): Promise<SectorIndexEntry[]> {
   try {
     const rows = await withTimeout(
       sql<
@@ -60,6 +60,14 @@ export async function loadSectorIndex(): Promise<SectorIndexEntry[]> {
   }
 }
 
+// Cached for 1h (matches page-level revalidate) - de-dupes the sectors-table
+// read across the home, /sectors, and /sectors/compare routes instead of each
+// hitting Postgres independently within the same hour.
+export const loadSectorIndex = unstable_cache(_loadSectorIndex, ["sector-index-v1"], {
+  revalidate: 3600,
+  tags: ["scores-data"],
+});
+
 export interface SectorConfigEntry {
   slug: string;
   name: string;
@@ -69,7 +77,7 @@ export interface SectorConfigEntry {
   companies: string[];
 }
 
-export async function loadSectorsConfig(): Promise<SectorConfigEntry[]> {
+async function _loadSectorsConfig(): Promise<SectorConfigEntry[]> {
   // Try DB first - populated by `npm run sync:config`
   try {
     const rows = await withTimeout(
@@ -114,7 +122,12 @@ export async function loadSectorsConfig(): Promise<SectorConfigEntry[]> {
   return config.sectors;
 }
 
-export async function loadSector(slug: string): Promise<SectorData | null> {
+export const loadSectorsConfig = unstable_cache(_loadSectorsConfig, ["sectors-config-v1"], {
+  revalidate: 3600,
+  tags: ["scores-data"],
+});
+
+async function _loadSector(slug: string): Promise<SectorData | null> {
   const rows = await withTimeout(
     sql<
       {
@@ -156,6 +169,11 @@ export async function loadSector(slug: string): Promise<SectorData | null> {
   };
 }
 
+export const loadSector = unstable_cache(_loadSector, ["sector-detail-v1"], {
+  revalidate: 3600,
+  tags: ["scores-data"],
+});
+
 export interface CompanyIndexEntry {
   name: string;
   ticker: string;
@@ -165,7 +183,7 @@ export interface CompanyIndexEntry {
   final_score: number;
 }
 
-export async function loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
+async function _loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
   try {
     const rows = await withTimeout(
       sql<{ slug: string; name: string; companies: unknown }[]>`
@@ -202,6 +220,11 @@ export async function loadCompaniesIndex(): Promise<CompanyIndexEntry[]> {
     return [];
   }
 }
+
+export const loadCompaniesIndex = unstable_cache(_loadCompaniesIndex, ["companies-index-v1"], {
+  revalidate: 3600,
+  tags: ["scores-data"],
+});
 
 // ── Hero radar + tier distribution ──────────────────────────────────────────
 // Short axis labels keyed to the scorer's category names (lib/scorer.ts).
@@ -465,6 +488,7 @@ async function _loadHeroData(): Promise<HeroData> {
 // on the weekly refresh, so the hero never re-hits the DB on ordinary requests.
 export const loadHeroData = unstable_cache(_loadHeroData, ["hero-data-v2"], {
   revalidate: 21600,
+  tags: ["scores-data"],
 });
 
 export async function allSectorSlugs(): Promise<string[]> {

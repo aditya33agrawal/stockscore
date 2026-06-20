@@ -50,6 +50,10 @@ export function ScoreBarChart({ companies }: { companies: Company[] }) {
               }}
               labelStyle={{ color: "#EEF2F7" }}
               formatter={(v: number) => [v.toFixed(1), "Score"]}
+              labelFormatter={(ticker: string) => {
+                const row = data.find((d) => d.ticker === ticker);
+                return row ? `${row.name} (${ticker})` : ticker;
+              }}
             />
             <Bar dataKey="score" radius={[6, 6, 0, 0]}>
               {data.map((d, i) => (

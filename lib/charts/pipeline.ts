@@ -66,14 +66,17 @@ async function fetchIncremental(
   try {
     const period1 = Math.floor(new Date(fromDate).getTime() / 1000);
     const candles = await fetchYahooCandles(ticker, { period1 });
-    if (candles.length) {
-      return {
-        candles: candles.filter((c) => c.t >= fromDate),
-        source: "yahoo",
-      };
-    }
+    // A successful (non-throwing) Yahoo call means the source has nothing
+    // new to report (e.g. today's bar hasn't posted yet) - that's not a
+    // failure, so don't fall through to the NSE fallback for it.
+    return {
+      candles: candles.filter((c) => c.t >= fromDate),
+      source: "yahoo",
+    };
   } catch (err) {
-    log(`    yahoo incremental failed for ${ticker}: ${String(err)}`);
+    log(
+      `    yahoo incremental failed for ${ticker}: ${String(err)} - falling back to NSE`,
+    );
   }
   // For NSE-sourced rows, just re-fetch 1y and let merge handle it.
   try {
@@ -113,6 +116,9 @@ export async function refreshSymbol(
     const delta = await fetchIncremental(ticker, fromDate, log);
     if (!delta) {
       return { status: "errored" };
+    }
+    if (delta.candles.length === 0) {
+      return { status: "skipped" };
     }
     candles = trimToTenYears(
       mergeCandles(existing.payload.candles, delta.candles),

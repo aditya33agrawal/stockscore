@@ -24,10 +24,16 @@ const PALETTE = [
   "#34D399",  // green-soft
 ];
 
-export function RadarCompare({ companies }: { companies: Company[] }) {
+export function RadarCompare({ companies: rawCompanies }: { companies: Company[] }) {
+  // Order by final score (top scorer first) so the toggle list and color
+  // assignment both reflect ranking within the sector.
+  const companies = [...rawCompanies].sort((a, b) => b.final_score - a.final_score);
+
   const [enabled, setEnabled] = useState<Record<string, boolean>>(
     Object.fromEntries(companies.map((c) => [c.slug, true])),
   );
+
+  const scoreByTicker = new Map(companies.map((c) => [c.ticker, c.final_score]));
 
   const categories = companies[0]?.categories.map((c) => c.name) ?? [];
   // Short labels avoid overlap with chart spokes on small containers
@@ -122,6 +128,11 @@ export function RadarCompare({ companies }: { companies: Company[] }) {
               }}
               labelStyle={{ color: "#FFFFE3", fontWeight: 600, marginBottom: 4 }}
               itemStyle={{ color: "#B8D0EC" }}
+              formatter={(value: number, name: string) => {
+                const score = scoreByTicker.get(name);
+                const label = score != null ? `${name} · Final score ${score.toFixed(1)}` : name;
+                return [`${value}% of max`, label];
+              }}
             />
           </RadarChart>
         </ResponsiveContainer>
