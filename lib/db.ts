@@ -112,9 +112,19 @@ export async function ensureTables() {
   `;
   await sql`CREATE INDEX IF NOT EXISTS sessions_user_idx ON sessions(user_id)`;
 
-  // Bookmarks
+  // Watchlist (formerly "bookmarks" — rebranded). Rename the legacy table in
+  // place so existing saved rows carry over. Guarded so it is a no-op on a
+  // fresh DB, an already-migrated DB, or the (unexpected) both-exist edge.
   await sql`
-    CREATE TABLE IF NOT EXISTS bookmarks (
+    DO $$ BEGIN
+      IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'bookmarks')
+         AND NOT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'watchlist') THEN
+        ALTER TABLE bookmarks RENAME TO watchlist;
+      END IF;
+    END $$;
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS watchlist (
       user_id        BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       sector_slug    TEXT NOT NULL,
       company_slug   TEXT NOT NULL,
@@ -124,10 +134,10 @@ export async function ensureTables() {
       PRIMARY KEY (user_id, sector_slug, company_slug)
     )
   `;
-  // Score snapshot columns (added in bookmark-score-tracking feature)
-  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS score_snapshot    JSONB`;
-  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS snapshot_taken_at TIMESTAMPTZ`;
-  await sql`ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS is_backfilled     BOOLEAN NOT NULL DEFAULT false`;
+  // Score snapshot columns (added in watchlist-score-tracking feature)
+  await sql`ALTER TABLE watchlist ADD COLUMN IF NOT EXISTS score_snapshot    JSONB`;
+  await sql`ALTER TABLE watchlist ADD COLUMN IF NOT EXISTS snapshot_taken_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE watchlist ADD COLUMN IF NOT EXISTS is_backfilled     BOOLEAN NOT NULL DEFAULT false`;
 
   // Feedback / contact form submissions
   await sql`

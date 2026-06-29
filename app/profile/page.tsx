@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Bookmark, Mail, User as UserIcon } from "lucide-react";
+import { Star, Mail, User as UserIcon } from "lucide-react";
 import sql from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
@@ -13,13 +13,13 @@ export default async function ProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const [{ bookmarkCount, sectorCount }] = await sql<
-    { bookmarkCount: number; sectorCount: number }[]
+  const [{ watchlistCount, sectorCount }] = await sql<
+    { watchlistCount: number; sectorCount: number }[]
   >`
     SELECT
-      COUNT(*)::int                          AS "bookmarkCount",
+      COUNT(*)::int                          AS "watchlistCount",
       COUNT(DISTINCT sector_slug)::int       AS "sectorCount"
-    FROM bookmarks WHERE user_id = ${user.id}
+    FROM watchlist WHERE user_id = ${user.id}
   `;
 
   const displayName = user.name?.trim() || user.email.split("@")[0];
@@ -64,15 +64,15 @@ export default async function ProfilePage() {
       </div>
 
       <Link
-        href="/bookmarks"
+        href="/watchlist"
         className="glass border-subtle rounded-2xl px-5 py-4 flex items-center justify-between hover:border-[rgb(var(--accent)_/_0.2)] transition-all"
       >
         <div className="flex items-center gap-3">
-          <Bookmark className="h-5 w-5 text-accent" />
+          <Star className="h-5 w-5 text-accent" />
           <div>
-            <p className="font-semibold text-chalk-50">My Bookmarks</p>
+            <p className="font-semibold text-chalk-50">My Watchlist</p>
             <p className="text-xs text-chalk-300/60 mt-0.5 num">
-              {bookmarkCount} saved across {sectorCount} sector{sectorCount === 1 ? "" : "s"}
+              {watchlistCount} saved across {sectorCount} sector{sectorCount === 1 ? "" : "s"}
             </p>
           </div>
         </div>

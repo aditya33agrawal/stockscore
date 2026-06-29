@@ -5,7 +5,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { ArrowRight, ChevronDown, ChevronUp, Sparkles, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { classificationLabel, classificationStyle, formatDate } from "@/lib/format";
-import type { ScoreDiff } from "@/lib/bookmark-diff";
+import type { ScoreDiff } from "@/lib/watchlist-diff";
 
 interface Props {
   sectorSlug:  string;
@@ -181,7 +181,7 @@ function CmpRow({ before, after, delta, pctDelta }: {
 
 // ─── Main card ───────────────────────────────────────────────────────────────
 
-export function BookmarkCard({
+export function WatchlistCard({
   sectorSlug,
   companySlug,
   companyName,
@@ -248,12 +248,12 @@ export function BookmarkCard({
           <p className="text-[11px] text-chalk-300/40">
             {hasDiff && snapshotScore !== null
               ? <>
-                  {diff.isBackfilled ? "Baseline set" : "Saved"}{" "}
+                  {diff.isBackfilled ? "Baseline set" : "Added"}{" "}
                   {snapshotTakenAt ? formatDate(snapshotTakenAt) : formatDate(createdAt)}
                   {" · "}score was{" "}
                   <span className="num text-chalk-300/60 font-semibold">{snapshotScore}</span>
                 </>
-              : <>Saved {formatDate(createdAt)}</>
+              : <>Added {formatDate(createdAt)}</>
             }
           </p>
 

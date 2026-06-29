@@ -35,7 +35,7 @@ export function ForgotPasswordForm() {
         return;
       }
       toast.success("Password reset - signing you in");
-      router.push("/bookmarks");
+      router.push("/watchlist");
       router.refresh();
     } catch {
       setError("Network error - check your connection and try again.");

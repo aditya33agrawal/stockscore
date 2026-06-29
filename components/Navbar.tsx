@@ -154,7 +154,7 @@ export function Navbar() {
       {open && (
         <nav className="md:hidden relative z-40 border-t border-[rgb(var(--accent)_/_0.07)] bg-ink-950 px-4 py-3 drawer-down">
           <ul className="space-y-0.5">
-            {[...NAV_LINKS, { href: "/contact", label: "Contact" }, { href: "/profile", label: "Profile" }, { href: "/bookmarks", label: "My Bookmarks" }].map((l) => {
+            {[...NAV_LINKS, { href: "/contact", label: "Contact" }, { href: "/profile", label: "Profile" }, { href: "/watchlist", label: "Watchlist" }].map((l) => {
               const active = pathname === l.href || pathname.startsWith(l.href + "/");
               return (
                 <li key={l.href}>

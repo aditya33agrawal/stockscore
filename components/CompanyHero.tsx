@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import clsx from "clsx";
 import { ScoreBadge } from "@/components/ScoreBadge";
-import { BookmarkButton } from "@/components/BookmarkButton";
+import { WatchlistButton } from "@/components/WatchlistButton";
 import { Tooltip } from "@/components/Tooltip";
 import type { Company, SectorData } from "@/lib/types";
 import type { TrendResult } from "@/lib/evaluators";
@@ -112,7 +112,7 @@ export function CompanyHero({ co, sector, trendInfo, refreshedAt }: Props) {
             >
               View on Screener <ExternalLink className="h-3 w-3" />
             </a>
-            <BookmarkButton
+            <WatchlistButton
               sectorSlug={sector.slug}
               companySlug={co.slug}
               companyTicker={co.ticker}

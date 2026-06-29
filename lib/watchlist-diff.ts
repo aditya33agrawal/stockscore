@@ -1,15 +1,15 @@
 /**
- * bookmark-diff.ts
+ * watchlist-diff.ts
  *
- * Pure utility for computing the score / metric diff between a bookmark snapshot
- * (captured when the user saved the company) and the current live company data.
+ * Pure utility for computing the score / metric diff between a watchlist snapshot
+ * (captured when the user added the company) and the current live company data.
  *
  * No DB access - purely functional so it is easy to test and reuse.
  */
 
-// ─── Snapshot shape (stored as JSONB in bookmarks.score_snapshot) ────────────
+// ─── Snapshot shape (stored as JSONB in watchlist.score_snapshot) ────────────
 
-export interface BookmarkSnapshot {
+export interface WatchlistSnapshot {
   final_score: number;
   classification: string; // e.g. "Accumulate"
   cmp: number;
@@ -64,14 +64,14 @@ export interface ScoreDiff {
   metricDeltas: MetricDelta[];
   categoryDeltas: CategoryDelta[];
   /**
-   * True when the company data was refreshed AFTER the bookmark was created,
+   * True when the company data was refreshed AFTER the watchlist entry was created,
    * meaning there is genuinely newer information available.
    */
   hasNewData: boolean;
   /**
    * True when the snapshot was written as a backfill baseline rather than at
-   * the actual moment of bookmarking - so delta is relative to "when baseline
-   * was set", not "when user originally bookmarked".
+   * the actual moment of adding - so delta is relative to "when baseline
+   * was set", not "when user originally added the stock".
    */
   isBackfilled: boolean;
 }
@@ -80,7 +80,7 @@ export interface ScoreDiff {
 
 interface MetricDef {
   label: string;
-  key: keyof BookmarkSnapshot["raw"];
+  key: keyof WatchlistSnapshot["raw"];
   unit: MetricDelta["unit"];
   higherIsBetter: boolean;
 }
@@ -103,9 +103,9 @@ const METRIC_DEFS: MetricDef[] = [
 // ─── Main function ────────────────────────────────────────────────────────────
 
 export function computeScoreDiff(
-  snapshot: BookmarkSnapshot,
-  current: BookmarkSnapshot,
-  bookmarkedAt: Date,
+  snapshot: WatchlistSnapshot,
+  current: WatchlistSnapshot,
+  addedAt: Date,
   currentRefreshedAt: Date,
   isBackfilled: boolean,
 ): ScoreDiff {
@@ -165,8 +165,8 @@ export function computeScoreDiff(
     })
     .filter((x): x is CategoryDelta => x !== null && x.delta !== 0);
 
-  // Has new data: current company was refreshed AFTER the bookmark was created
-  const hasNewData = currentRefreshedAt > bookmarkedAt;
+  // Has new data: current company was refreshed AFTER the watchlist entry was created
+  const hasNewData = currentRefreshedAt > addedAt;
 
   return {
     scoreDelta,
@@ -184,11 +184,11 @@ export function computeScoreDiff(
   };
 }
 
-// ─── Helper: build a BookmarkSnapshot from a Company object ──────────────────
+// ─── Helper: build a WatchlistSnapshot from a Company object ──────────────────
 
 import type { Company } from "@/lib/types";
 
-export function snapshotFromCompany(company: Company): BookmarkSnapshot {
+export function snapshotFromCompany(company: Company): WatchlistSnapshot {
   return {
     final_score: company.final_score,
     classification: company.classification ?? "",

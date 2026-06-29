@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Bookmark, LogIn, LogOut, User, RefreshCw } from "lucide-react";
+import { Star, LogIn, LogOut, User, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface SessionUser {
@@ -120,12 +120,12 @@ export function UserMenu() {
               <User className="h-4 w-4 text-chalk-300/70" /> Profile
             </Link>
             <Link
-              href="/bookmarks"
+              href="/watchlist"
               onClick={() => setOpen(false)}
               role="menuitem"
               className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-chalk-200 hover:bg-ink-800 hover:text-chalk-50 transition-colors"
             >
-              <Bookmark className="h-4 w-4 text-chalk-300/70" /> My Bookmarks
+              <Star className="h-4 w-4 text-chalk-300/70" /> Watchlist
             </Link>
             {isAdmin && (
               <Link

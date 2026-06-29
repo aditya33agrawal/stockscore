@@ -24,7 +24,7 @@ function passwordStrength(pw: string): { score: 0 | 1 | 2 | 3 | 4; label: string
 export function AuthForm({ mode }: Props) {
   const router = useRouter();
   const search = useSearchParams();
-  const next = search?.get("next") || "/bookmarks";
+  const next = search?.get("next") || "/watchlist";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -86,8 +86,8 @@ export function AuthForm({ mode }: Props) {
       </h1>
       <p className="text-sm text-chalk-300/60 mb-8">
         {isSignup
-          ? "Sign up to save your favourite companies and track them across sectors."
-          : "Sign in to access your bookmarks."}
+          ? "Sign up to build a watchlist and track your stocks across sectors."
+          : "Sign in to access your watchlist."}
       </p>
 
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
@@ -189,9 +189,9 @@ export function AuthForm({ mode }: Props) {
 
       <p className="mt-6 text-center text-sm text-chalk-300/60">
         {isSignup ? (
-          <>Already have an account? <Link href={`/login${next !== "/bookmarks" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline">Sign in</Link></>
+          <>Already have an account? <Link href={`/login${next !== "/watchlist" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline">Sign in</Link></>
         ) : (
-          <>Don&apos;t have an account? <Link href={`/signup${next !== "/bookmarks" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline">Sign up</Link></>
+          <>Don&apos;t have an account? <Link href={`/signup${next !== "/watchlist" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline">Sign up</Link></>
         )}
       </p>
     </div>

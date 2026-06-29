@@ -3,16 +3,26 @@ import sql from "@/lib/db";
 import { ensureTables } from "@/lib/db";
 import { type SessionUser } from "@/lib/auth";
 import type { Company } from "@/lib/types";
-import { snapshotFromCompany } from "@/lib/bookmark-diff";
+import { snapshotFromCompany } from "@/lib/watchlist-diff";
+import { WATCHLIST_MAX } from "@/lib/watchlist";
 import { compose } from "@/lib/api/compose";
 import { withErrorHandler } from "@/lib/api/with-error-handler";
 import { withAuth } from "@/lib/api/with-auth";
 import { withSchema, str, optStr } from "@/lib/api/with-schema";
-import { ValidationError } from "@/lib/api/errors";
+import { ApiError, ValidationError } from "@/lib/api/errors";
 
 export const dynamic = "force-dynamic";
 
-// ─── GET /api/bookmarks ───────────────────────────────────────────────────────
+// ─── Helper: current watchlist size for a user ────────────────────────────────
+
+async function countFor(userId: number): Promise<number> {
+  const rows = await sql<{ count: number }[]>`
+    SELECT COUNT(*)::int AS count FROM watchlist WHERE user_id = ${userId}
+  `;
+  return rows[0]?.count ?? 0;
+}
+
+// ─── GET /api/watchlist ───────────────────────────────────────────────────────
 
 export const GET = compose(
   withErrorHandler,
@@ -22,23 +32,23 @@ export const GET = compose(
 
   const rows = await sql`
     SELECT
-      b.sector_slug,
-      b.company_slug,
-      b.company_ticker,
-      b.company_name,
-      b.created_at,
-      b.score_snapshot,
-      b.snapshot_taken_at,
-      b.is_backfilled,
+      w.sector_slug,
+      w.company_slug,
+      w.company_ticker,
+      w.company_name,
+      w.created_at,
+      w.score_snapshot,
+      w.snapshot_taken_at,
+      w.is_backfilled,
       c.data          AS current_data,
       c.refreshed_at  AS current_refreshed_at
-    FROM bookmarks b
-    LEFT JOIN companies c ON c.symbol = b.company_ticker
-    WHERE b.user_id = ${user.id}
-    ORDER BY b.created_at DESC
+    FROM watchlist w
+    LEFT JOIN companies c ON c.symbol = w.company_ticker
+    WHERE w.user_id = ${user.id}
+    ORDER BY w.created_at DESC
   `;
 
-  // Backfill snapshots for old bookmarks that have no snapshot yet
+  // Backfill snapshots for old entries that have no snapshot yet
   const backfillTargets = rows.filter(
     (r) => !r.score_snapshot && r.current_data,
   );
@@ -49,7 +59,7 @@ export const GET = compose(
           const company = r.current_data as Company;
           const snapshot = snapshotFromCompany(company);
           await sql`
-            UPDATE bookmarks
+            UPDATE watchlist
             SET score_snapshot    = ${JSON.stringify(snapshot)},
                 snapshot_taken_at = ${r.current_refreshed_at},
                 is_backfilled     = true
@@ -67,19 +77,23 @@ export const GET = compose(
     );
   }
 
-  return NextResponse.json({ bookmarks: rows });
+  return NextResponse.json({
+    watchlist: rows,
+    count: rows.length,
+    max: WATCHLIST_MAX,
+  });
 });
 
-// ─── POST /api/bookmarks ──────────────────────────────────────────────────────
+// ─── POST /api/watchlist ──────────────────────────────────────────────────────
 
-interface BookmarkBody {
+interface WatchlistBody {
   sector_slug: string;
   company_slug: string;
   company_ticker: string | null;
   company_name: string | null;
 }
 
-function validateBookmark(raw: unknown): BookmarkBody {
+function validateWatchlist(raw: unknown): WatchlistBody {
   if (typeof raw !== "object" || raw === null)
     throw new ValidationError("body required");
   const obj = raw as Record<string, unknown>;
@@ -98,15 +112,35 @@ function validateBookmark(raw: unknown): BookmarkBody {
 export const POST = compose(
   withErrorHandler,
   withAuth,
-  withSchema(validateBookmark),
+  withSchema(validateWatchlist),
 )(async (
   _req: NextRequest,
-  { user, body }: { user: SessionUser; body: BookmarkBody },
+  { user, body }: { user: SessionUser; body: WatchlistBody },
 ) => {
   await ensureTables();
 
+  // Enforce the cap: reject only genuinely new entries once the list is full.
+  // Re-adding a stock already on the list (a no-op) is always allowed.
+  const existing = await sql`
+    SELECT 1 FROM watchlist
+    WHERE user_id     = ${user.id}
+      AND sector_slug  = ${body.sector_slug}
+      AND company_slug = ${body.company_slug}
+    LIMIT 1
+  `;
+  if (existing.length === 0) {
+    const count = await countFor(user.id);
+    if (count >= WATCHLIST_MAX) {
+      throw new ApiError(
+        409,
+        `Watchlist full (${WATCHLIST_MAX}/${WATCHLIST_MAX}) — remove a stock to add another.`,
+        "WATCHLIST_FULL",
+      );
+    }
+  }
+
   await sql`
-    INSERT INTO bookmarks (user_id, sector_slug, company_slug, company_ticker, company_name)
+    INSERT INTO watchlist (user_id, sector_slug, company_slug, company_ticker, company_name)
     VALUES (${user.id}, ${body.sector_slug}, ${body.company_slug}, ${body.company_ticker}, ${body.company_name})
     ON CONFLICT (user_id, sector_slug, company_slug) DO NOTHING
   `;
@@ -123,7 +157,7 @@ export const POST = compose(
       if (companyRows.length > 0) {
         const snapshot = snapshotFromCompany(companyRows[0].data as Company);
         await sql`
-          UPDATE bookmarks
+          UPDATE watchlist
           SET score_snapshot    = ${JSON.stringify(snapshot)},
               snapshot_taken_at = ${companyRows[0].refreshed_at},
               is_backfilled     = false
@@ -133,14 +167,14 @@ export const POST = compose(
         `;
       }
     } catch {
-      // Non-fatal - bookmark is saved, snapshot is best-effort
+      // Non-fatal - entry is saved, snapshot is best-effort
     }
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, count: await countFor(user.id) });
 });
 
-// ─── DELETE /api/bookmarks ────────────────────────────────────────────────────
+// ─── DELETE /api/watchlist ────────────────────────────────────────────────────
 
 export const DELETE = compose(
   withErrorHandler,
@@ -159,10 +193,10 @@ export const DELETE = compose(
   }
 
   await sql`
-    DELETE FROM bookmarks
+    DELETE FROM watchlist
     WHERE user_id     = ${user.id}
       AND sector_slug  = ${sectorSlug}
       AND company_slug = ${companySlug}
   `;
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, count: await countFor(user.id) });
 });
